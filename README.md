@@ -17,7 +17,7 @@ tar -xzf
 - You will see Hello World! on your terminal. 
 
 # How to contribute
-Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1]([https://github.com/cis3296s22/patreon-discord-announcer/projects/1])  
+Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)  
 
 ### How to build
 - Use this github repository: ... 
