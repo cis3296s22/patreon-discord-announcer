@@ -4,21 +4,21 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.IOException;
 import java.util.List;
 
 public class PDA {
 	// Build-configurations that will go into a JSON file later on
-	static final String chromeDriverExecutableName = "chromedriver";
+	static String chromeDriverExecutableName = "chromedriver";
 
 	public static void main(String[] arg) throws InterruptedException {
-		// Ensure the user configured the program before running
-		if (chromeDriverExecutableName.isEmpty()) {
-			System.out.println("You have built the program without modifying the 'chromeDriverExecutableName' variable inside of PDA.java.  Exiting...");
-			System.exit(1);
-		}
+		String osName = System.getProperty("os.name");
+
+		if (osName.contains("Window"))
+			chromeDriverExecutableName += ".exe";
 
 		// Set the browser path
-		System.setProperty("webdriver.chrome.driver","drivers/" + chromeDriverExecutableName);
+		System.setProperty("webdriver.chrome.driver", chromeDriverExecutableName);
 
 		// Create options to run the driver headlessly
 		ChromeOptions options = new ChromeOptions();
@@ -27,6 +27,22 @@ public class PDA {
 		System.out.println("Loading the driver...");
 		// Create and initialize the browser
 		WebDriver driver = new ChromeDriver(options);
+
+		// Load the login page to pass Geetest, ensuring we're allowed to see post
+		System.out.println("Loading the login page for Geetest");
+		driver.get("https://www.patreon.com/login");
+
+		Thread.sleep(2000);
+
+		if (!driver.getPageSource().contains("New to Patreon?")) {
+			System.out.println("Pass the test on the screen, then press enter in this console to continue...");
+
+			try {
+				System.in.read();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		System.out.println("Loading the webpage...");
 		driver.get("https://www.patreon.com/pda_example");
@@ -41,7 +57,7 @@ public class PDA {
 
 		// Display every post found on the front page
 		for (WebElement currentPost : publicPosts)
-			System.out.println("\n\n----- Post -----\n" + currentPost.getText());
+			System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
 
 		driver.close();
 	}
