@@ -4,25 +4,42 @@ Adding an screenshot or a mockup of your application in action would be nice.
 
 ![This is a screenshot.](images.png)
 # How to run
+### Requirements
+- Java 8 or greater
+- Google Chrome 98 or greater
+
+After downloading the PDA release binary you must now 
+
 Provide here instructions on how to use your application.   
-- Download the latest binary from the Release section on the right on GitHub.  
-- On the command line uncompress using
-```
-tar -xzf  
-```
-- On the command line run with
-```
-./hello
-```
-- You will see Hello World! on your terminal. 
+- Download the latest PDA binary from the Release section on the right on GitHub
+- Navigate to [ChromeDriver downloads](https://chromedriver.chromium.org/downloads) and download the release that best matches your version of Google Chrome.  **Ensure the binary you download does not exceed your version of Google Chrome**
+- Put both the PDA binary and the ChromeDriver in the same directory
+- Run `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` in the terminal to run PDA.  **Ensure x.x is changed to the appropriate version number**
+- Pay attention to the output of the console, it may ask you to assist it in passing a bot-check that is being displayed on the web browser.  After doing so, follow the instructions in the terminal.
+- The console shall then display all posts on the page shown, close the Google Chrome instance, then terminate peacefully.
 
 # How to contribute
-Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)  
+Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)
 
-### How to build
-- Use this github repository: ... 
-- Specify what branch to use for a more stable release or for cutting edge development.  
-- Use InteliJ 11
-- Specify additional library to download if needed 
-- What file and target to compile and run. 
-- What is expected to happen when the app start. 
+# Building From Source
+## Requirements
+- Java JDK >= 8
+
+## Manually (with Maven)
+- Clone this repository
+- Enter the project folder
+- Use Maven to package the project by running `mvn package`
+- Either go into the **target** folder and run **patreon-discord-announcer-x.x-jar-with-dependencies.jar** (replace x.x with the version number) or move the file to your current directory with `mv /target/patreon-discord-announcer-0.1-jar-with-dependencies.jar .`
+
+## Manually (with IntelliJ IDEA >= 2021.3.x)
+- Open IntelliJ and clone this repository
+- After the project is cloned and opened, at the top of IntelliJ, go to **View** -> **Tool Windows** -> **Maven**
+- You can now build the package using Maven by going to **PDA** -> **Lifecycle** -> **package**
+
+## Automatically
+```
+git clone https://github.com/cis3296s22/patreon-discord-announcer.git
+cd patreon-discord-announcer
+mvn package
+mv /target/patreon-discord-announcer-0.1-jar-with-dependencies.jar .
+```
