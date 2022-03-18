@@ -27,7 +27,7 @@ Follow this project board to know the latest status of the project: [https://git
 - Clone this repository
 - Enter the project folder
 - Use Maven to package the project by running `mvn package`
-- Either go into the **target** folder and run **patreon-discord-announcer-x.x-jar-with-dependencies.jar** (replace x.x with the version number) or move the file to your current directory with `mv /target/patreon-discord-announcer-0.1-jar-with-dependencies.jar .`
+- Either go into the **target** folder and run **patreon-discord-announcer-x.x-jar-with-dependencies.jar** (replace x.x with the version number) or move the file to your current directory with `mv target/patreon-discord-announcer-*.jar .`
 
 ### Manually (with IntelliJ IDEA >= 2021.3.x)
 - Open IntelliJ and clone this repository
