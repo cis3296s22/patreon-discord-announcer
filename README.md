@@ -23,7 +23,7 @@ Follow this project board to know the latest status of the project: [https://git
 ### Requirements
 - Java JDK >= 8
 
-### Manually (with Maven)
+### Manually (with Maven >= 3)
 - Clone this repository
 - Enter the project folder
 - Use Maven to package the project by running `mvn package`
