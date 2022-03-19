@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.io.IOException;
 import java.util.List;
 
+// contribution comment: Alex Sawicki
+
 public class PDA {
 	// Build-configurations that will go into a JSON file later on
 	static String chromeDriverExecutableName = "chromedriver";
