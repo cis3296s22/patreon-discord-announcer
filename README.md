@@ -3,7 +3,7 @@ Put here a short paragraph describing your project.
 Adding an screenshot or a mockup of your application in action would be nice.  
 
 ![This is a screenshot.](images.png)
-# How to run
+# How to Run
 ### Requirements
 - Java 8 or greater
 - Google Chrome 98 or greater
@@ -16,7 +16,7 @@ Adding an screenshot or a mockup of your application in action would be nice.
 6) Pay attention to the output of the console, it may ask you to assist it in passing a bot-check that is being displayed on the web browser.  After doing so, follow the instructions in the terminal.
 7) The console shall then display all posts on the page shown, close the Google Chrome instance, then terminate peacefully.
 
-# How to contribute
+# How to Contribute
 Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)
 
 # Building From Source
