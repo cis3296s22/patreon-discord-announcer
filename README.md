@@ -1,6 +1,5 @@
-# Project Name
-Put here a short paragraph describing your project. 
-Adding an screenshot or a mockup of your application in action would be nice.  
+# Patreon Discord Announcer(PDA)
+This document proposes a software application that allows a user to add a bot to their Discord server that sends out a Discord message (through webhooks or authorized bot) of any new Patreon post from a designated Patreon board to desired Discord channels. The Patreon Discord Announcer software application, after being properly configured and built, will run in a terminal/console window and immediately load locally stored data of all of the previously announced patreon posts. Doing so is required to avoid announcing posts that have already been anounced. The software will output in the terminal how many announcements were previously stored and loaded then load a headless browser to continuously scan the user configured Patreon board. The moment the software finds a new post on the designated board it will output to the designated Discord server through a Discord bot or webhooks if the user has not configured a bot.
 
 ![This is a screenshot.](images.png)
 # How to Run
