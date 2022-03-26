@@ -1,23 +1,19 @@
 public class PDA {
-	// Build-configurations that will go into a JSON file later on
-	static String webDriverExecutableName = "chromedriver";
+	// TODO: User settings that will be loaded from a configuration file later on
+	static String webDriverExecutable = "chromedriver";
+	static String patreonUrl = "https://www.patreon.com/pda_example";
 
 	public static void main(String[] arg) throws InterruptedException {
-		String osName = System.getProperty("os.name");
+		setWebDriverProperty(webDriverExecutable);
 
-		if (osName.contains("Window"))
-			webDriverExecutableName += ".exe";
-
-		setWebDrivers(webDriverExecutableName);
-
-		PatreonThread testThread = new PatreonThread();
+		PatreonThread testThread = new PatreonThread(patreonUrl);
 		testThread.start();
 		testThread.join();
 
 		System.out.println("Finished!");
 	}
 
-	private static void setWebDrivers(String webDriverExecutableName) {
+	private static void setWebDriverProperty(String webDriverExecutableName) {
 		// Set the executable path for all possible drivers
 		System.setProperty("webdriver.chrome.driver", webDriverExecutableName);
 		System.setProperty("webdriver.edge.driver", webDriverExecutableName);
