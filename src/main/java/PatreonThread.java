@@ -1,3 +1,5 @@
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.external.JDAWebhookClient;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,9 +19,11 @@ import java.util.Random;
 public class PatreonThread extends Thread {
 
 	String patreonUrl;
+	String webhookUrl;
 
-	public PatreonThread(String patreonUrl) {
+	public PatreonThread(String patreonUrl, String webhookUrl) {
 		this.patreonUrl = patreonUrl;
+		this.webhookUrl = webhookUrl;
 	}
 
 	@Override
@@ -48,6 +52,11 @@ public class PatreonThread extends Thread {
 
 		System.out.println("Finding all posts on the front page...");
 		// Get any public posts
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		List<WebElement> publicPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
 
 		try {
@@ -57,9 +66,15 @@ public class PatreonThread extends Thread {
 		}
 
 		// Display every post found on the front page
-		for (WebElement currentPost : publicPosts)
+		// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
+		DiscordWebhook client = new DiscordWebhook(webhookUrl);
+		for (WebElement currentPost : publicPosts) {
 			System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
-
+			client.setTitle(currentPost.getText());
+			client.setDescription(currentPost.getText());
+			client.send();
+		}
+		client.close();
 		driver.close();
 	}
 
@@ -115,7 +130,7 @@ public class PatreonThread extends Thread {
 			// Switch the web driver context to the iframe
 			driver.switchTo().frame(iFrame);
 
-			// Wait until the GeeTest clickable verification button is laoded
+			// Wait until the GeeTest clickable verification button is loaded
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("geetest_radar_btn")));
 
 			// Store the GeeTest verification button

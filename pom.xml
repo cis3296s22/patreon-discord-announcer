@@ -159,6 +159,17 @@
             <artifactId>selenium-firefox-driver</artifactId>
             <version>4.1.2</version>
         </dependency>
+
+        <!-- Required for Discord Webhooks -->
+        <!-- https://mvnrepository.com/artifact/club.minnced/discord-webhooks -->
+        <dependency>
+            <groupId>club.minnced</groupId>
+            <artifactId>discord-webhooks</artifactId>
+            <version>0.5.7</version>
+        </dependency>
+
+
+
     </dependencies>
 
     <developers>
