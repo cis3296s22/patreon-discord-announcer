@@ -20,10 +20,12 @@ public class PatreonThread extends Thread {
 
 	String patreonUrl;
 	String webhookUrl;
+	DiscordBot bot;
 
-	public PatreonThread(String patreonUrl, String webhookUrl) {
+	public PatreonThread(String patreonUrl, String webhookUrl, DiscordBot bot) {
 		this.patreonUrl = patreonUrl;
 		this.webhookUrl = webhookUrl;
+		this.bot = bot;
 	}
 
 	@Override
@@ -68,11 +70,22 @@ public class PatreonThread extends Thread {
 		// Display every post found on the front page
 		// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
 		DiscordWebhook client = new DiscordWebhook(webhookUrl);
+		bot.setChannel("919061413178261565"); // will either get channel from user or from config file in the future
+
 		for (WebElement currentPost : publicPosts) {
 			System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
+
+			// bot start
+			bot.setTitle(currentPost.getText());
+			bot.setDescription(currentPost.getText());
+			bot.send();
+			// bot end
+
+			// webhook start
 			client.setTitle(currentPost.getText());
 			client.setDescription(currentPost.getText());
 			client.send();
+			// webhook end
 		}
 		client.close();
 		driver.close();

@@ -1,24 +1,20 @@
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
 
 public class DiscordWebhook {
 
-    public WebhookClient client;
-    WebhookEmbedBuilder embed;
+    private WebhookClient client;
+    private WebhookEmbedBuilder embed;
 
     DiscordWebhook(String webhookUrl){
         client = WebhookClient.withUrl(webhookUrl);
         embed = new WebhookEmbedBuilder();
         embed.setTimestamp(OffsetDateTime.now()); // this line might not be useful, its just to test what we can currently do
-        embed.setAuthor(new WebhookEmbed.EmbedAuthor("PDA", "https://i.imgur.com/KlveixN.png", "https://github.com/cis3296s22/patreon-discord-announcer"));
+        embed.setAuthor(new WebhookEmbed.EmbedAuthor("PDA", "https://i.imgur.com/a/KlveixN.png", "https://github.com/cis3296s22/patreon-discord-announcer"));
         // TODO: the "https://i.imgur.com/KlveixN.png" needs to be changed/fixed
-
     }
 
     // layer of abstraction between WebhookEmbedBuilder and the code to only use what we need
