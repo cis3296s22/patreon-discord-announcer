@@ -25,7 +25,13 @@ public class DiscordBot {
     }
 
     public void setChannel(String channelId){
-        this.channel = jda.getTextChannelById(channelId);
+
+        // JDA has another overloaded getTextChannelById() method that uses a long instead of a String
+        // for some reason it will print a NumberFormatException error when using the String version even though it works
+        try{
+            this.channel = jda.getTextChannelById(channelId);
+        }
+        catch(NumberFormatException ignored){ }
     }
 
     public void setDescription(String description){
