@@ -1,66 +1,58 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import javax.security.auth.login.LoginException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-
-// contribution comment: Alex Sawicki
 
 public class PDA {
-	// Build-configurations that will go into a JSON file later on
-	static String chromeDriverExecutableName = "chromedriver";
+	// TODO: User settings that will be loaded from a configuration file later on
+	static String patreonUrl = "https://www.patreon.com/pda_example";
+	static String webhookUrl = ""; // https://discord.com/api/webhooks/958181437402644520/Nw6LLM7JGm176hDd6KgtUK3h3FXif-m7fRcnSAvyjrWP7p1lHuIhRJFTZ76RD1sHL0C4
+	static String discordToken = "";
+	static String discordChannel = "";
 
-	public static void main(String[] arg) throws InterruptedException {
-		String osName = System.getProperty("os.name");
+	public static void main(String[] arg) throws InterruptedException, LoginException {
+		JSONParser parser = new JSONParser();
 
-		if (osName.contains("Window"))
-			chromeDriverExecutableName += ".exe";
+		try {
+			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
+			System.out.println(jsonObject);
+			Object token = jsonObject.get("TOKEN");
+			discordToken = token.toString();
+			discordToken = discordToken.replaceAll("[\\[\\](){}]", "");
+			System.out.println(discordToken);
+			Object channel = jsonObject.get("Channel");
+			discordChannel = channel.toString();
+			discordChannel = discordChannel.replaceAll("[\\[\\](){}]", "");
+			System.out.println(discordChannel);
 
-		// Set the browser path
-		System.setProperty("webdriver.chrome.driver", chromeDriverExecutableName);
 
-		// Create options to run the driver headlessly
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1920,1080");
 
-		System.out.println("Loading the driver...");
-		// Create and initialize the browser
-		WebDriver driver = new ChromeDriver(options);
-
-		// Load the login page to pass Geetest, ensuring we're allowed to see post
-		System.out.println("Loading the login page for Geetest");
-		driver.get("https://www.patreon.com/login");
-
-		Thread.sleep(2000);
-
-		if (!driver.getPageSource().contains("New to Patreon?")) {
-			System.out.println("Pass the test on the screen, then press enter in this console to continue...");
-
-			try {
-				System.in.read();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
 		}
 
-		System.out.println("Loading the webpage...");
-		driver.get("https://www.patreon.com/pda_example");
-//		driver.get("https://www.patreon.com/supermega");
 
-		// Sleep so we can ensure the page loads even if the connection is slow
-		Thread.sleep(5000);
+		DiscordBot bot = new DiscordBot(discordToken);
 
-		System.out.println("Finding all posts on the front page...");
-		// Get any public posts
-		List<WebElement> publicPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
+		PatreonThread testThread = new PatreonThread(patreonUrl, webhookUrl, bot, discordChannel);
+		testThread.start();
+		testThread.join();
 
-		// Display every post found on the front page
-		for (WebElement currentPost : publicPosts)
-			System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
+		System.out.println("Finished!");
+	}
 
-		driver.close();
+	private static void setWebDriverProperty(String webDriverExecutableName) {
+		// Set the executable path for all possible drivers
+		System.setProperty("webdriver.chrome.driver", webDriverExecutableName);
+		System.setProperty("webdriver.edge.driver", webDriverExecutableName);
+		System.setProperty("webdriver.gecko.driver", webDriverExecutableName);
 	}
 }

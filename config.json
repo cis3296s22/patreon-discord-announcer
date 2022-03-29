@@ -1,0 +1,14 @@
+{
+    "CID":"0",
+
+    "TOKEN":"0",
+
+    "Channel":"0",
+    
+    "drivers":
+    [
+        {"driver": "chromedriver"},
+        {"driver": "geckodriver"},
+        {"driver": "msedgedriver"}
+    ]
+}
