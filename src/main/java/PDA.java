@@ -4,16 +4,16 @@ public class PDA {
 	// TODO: User settings that will be loaded from a configuration file later on
 	static String webDriverExecutable = "chromedriver";
 	static String patreonUrl = "https://www.patreon.com/pda_example";
-	static String webhookUrl = "https://discord.com/api/webhooks/957725735152402542/Xrk6sY6bRCnCvF437K96XP7AcAw_J6HTC6_7bB2J6_aGYNYn__USzvhMoKsLtNlUMC6Z";
+	static String webhookUrl = ""; // https://discord.com/api/webhooks/958181437402644520/Nw6LLM7JGm176hDd6KgtUK3h3FXif-m7fRcnSAvyjrWP7p1lHuIhRJFTZ76RD1sHL0C4
 	static String discordToken = System.getenv("TOKEN");
-	static String discordClientId = System.getenv("CID");
+	static String discordChannel = "";
 
 	public static void main(String[] arg) throws InterruptedException, LoginException {
 		setWebDriverProperty(webDriverExecutable);
 
 		DiscordBot bot = new DiscordBot(discordToken);
 
-		PatreonThread testThread = new PatreonThread(patreonUrl, webhookUrl, bot);
+		PatreonThread testThread = new PatreonThread(patreonUrl, webhookUrl, bot, discordChannel);
 		testThread.start();
 		testThread.join();
 

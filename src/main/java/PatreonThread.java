@@ -21,11 +21,13 @@ public class PatreonThread extends Thread {
 	String patreonUrl;
 	String webhookUrl;
 	DiscordBot bot;
+	String discordChannel;
 
-	public PatreonThread(String patreonUrl, String webhookUrl, DiscordBot bot) {
+	public PatreonThread(String patreonUrl, String webhookUrl, DiscordBot bot, String discordChannel) {
 		this.patreonUrl = patreonUrl;
 		this.webhookUrl = webhookUrl;
 		this.bot = bot;
+		this.discordChannel = discordChannel;
 	}
 
 	@Override
@@ -69,8 +71,8 @@ public class PatreonThread extends Thread {
 
 		// Display every post found on the front page
 		// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
-		DiscordWebhook client = new DiscordWebhook(webhookUrl);
-		bot.setChannel("919061413178261565"); // will either get channel from user or from config file in the future
+		// DiscordWebhook client = new DiscordWebhook(webhookUrl);
+		bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
 
 		for (WebElement currentPost : publicPosts) {
 			System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
@@ -82,12 +84,12 @@ public class PatreonThread extends Thread {
 			// bot end
 
 			// webhook start
-			client.setTitle(currentPost.getText());
-			client.setDescription(currentPost.getText());
-			client.send();
+//			client.setTitle(currentPost.getText());
+//			client.setDescription(currentPost.getText());
+//			client.send();
 			// webhook end
 		}
-		client.close();
+//		client.close();
 		driver.close();
 	}
 
@@ -118,7 +120,7 @@ public class PatreonThread extends Thread {
 		if (!driver.getPageSource().contains("New to Patreon?")) {
 			System.out.println("Pass the test on the screen, then press enter in this console to continue...");
 
-			geeTest(driver);
+			// geeTest(driver); TODO: captcha not currently working
 
 			try {
 				System.in.read();
