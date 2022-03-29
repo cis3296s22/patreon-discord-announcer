@@ -7,9 +7,9 @@ This document proposes a software application that allows a user to add a bot to
 - Java 8 or greater
    
 1) Download the latest PDA binary from the Release section on the right on GitHub
-2) If you do not have a personal discord bot setup, follow the instructions in the "Setup Discord Bot" section.
-3) If your personal discord bot has not been added to the server where you want to use the PDA, follow the instructions in the "Add Discord Bot To A Server" section.
-4) If you do not have the developer mode on discord enabled, follow the instructions in the "Enable Developer Mode" section.
+2) If you do not have a personal discord bot setup, follow the instructions in the [Setup Discord Bot](#setup-discord-bot) section.
+3) If your personal discord bot has not been added to the server where you want to use the PDA, follow the instructions in the [Add Discord Bot To A Server](#add-discord-bot-to-a-server) section.
+4) If you do not have the developer mode on discord enabled, follow the instructions in the [Enable Developer Mode](#enable-developer-mode) section.
 5) Right click the channel where you want the bot to initially send messages, at the bottom of the pop-up, click "Copy ID".
 6) Inside of the config.json file, paste your discord bot's token value into the "TOKEN" variable(if you do not have this follow the instructions in the "Setup Discord Bot" section).
 7) Inside of the config.json file, paste your discord channel ID into the "Channel" variable.
