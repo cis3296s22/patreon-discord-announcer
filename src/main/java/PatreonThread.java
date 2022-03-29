@@ -1,8 +1,11 @@
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.external.JDAWebhookClient;
+import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,10 +14,16 @@ import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.Duration;
-import java.util.List;
-import java.util.Random;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import java.io.*;
+import java.util.*;
+import org.json.simple.*;
+
 
 public class PatreonThread extends Thread {
 
@@ -32,13 +41,48 @@ public class PatreonThread extends Thread {
 
 	@Override
 	public void run() {
-		// Create options to run the driver headlessly
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1920,1080");
+
+		JSONParser parser = new JSONParser();
+		int drivernum = 0; // add driver type here 0-Chrome, 1-Firefox, 2-Edge
+
+		try {
+			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
+			JSONArray checkconfig = (JSONArray) jsonObject.get("drivers");
+			JSONObject drivers = (JSONObject) checkconfig.get(drivernum);
+			String drivername = drivers.values().toString();
+			drivername = drivername.replaceAll("[\\[\\](){}]", "");
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("Loading the driver...");
+
+		WebDriver driver;
+		if (drivernum == 0)
+		{
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments(/*"--headless"*/);
+			driver = WebDriverManager.chromedriver().capabilities(options).create();
+		}
+		else if (drivernum == 1)
+		{
+			FirefoxOptions options = new FirefoxOptions();
+			options.addArguments(/*"--headless"*/);
+			driver = WebDriverManager.firefoxdriver().create();
+		}
+		else
+		{
+			EdgeOptions options = new EdgeOptions();
+			options.addArguments(/*"--headless"*/);
+			driver = WebDriverManager.edgedriver().capabilities(options).create();
+		}
+
 		// Create and initialize the browser
-		WebDriver driver = new ChromeDriver(options);
 
 		goToLoginPage(driver);
 
