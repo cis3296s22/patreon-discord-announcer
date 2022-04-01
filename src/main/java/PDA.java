@@ -1,4 +1,3 @@
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -30,7 +29,6 @@ public class PDA {
 			System.out.println(discordChannel);
 
 
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -47,12 +45,5 @@ public class PDA {
 		testThread.join();
 
 		System.out.println("Finished!");
-	}
-
-	private static void setWebDriverProperty(String webDriverExecutableName) {
-		// Set the executable path for all possible drivers
-		System.setProperty("webdriver.chrome.driver", webDriverExecutableName);
-		System.setProperty("webdriver.edge.driver", webDriverExecutableName);
-		System.setProperty("webdriver.gecko.driver", webDriverExecutableName);
 	}
 }
