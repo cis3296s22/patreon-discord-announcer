@@ -1,13 +1,15 @@
-import club.minnced.discord.webhook.WebhookClient;
-import club.minnced.discord.webhook.external.JDAWebhookClient;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.interactions.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.imageio.ImageIO;
@@ -17,12 +19,9 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.Duration;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import java.io.*;
-import java.util.*;
-import org.json.simple.*;
+import java.util.List;
+import java.util.Random;
 
 
 public class PatreonThread extends Thread {
@@ -62,27 +61,23 @@ public class PatreonThread extends Thread {
 
 		System.out.println("Loading the driver...");
 
+		// Create and initialize the browser
 		WebDriver driver;
-		if (drivernum == 0)
-		{
+
+		if (drivernum == 0) {
 			ChromeOptions options = new ChromeOptions();
-			options.addArguments(/*"--headless"*/);
+			options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1920,1080", "--log-level=3");
 			driver = WebDriverManager.chromedriver().capabilities(options).create();
-		}
-		else if (drivernum == 1)
-		{
+		} else if (drivernum == 1) {
 			FirefoxOptions options = new FirefoxOptions();
 			options.addArguments(/*"--headless"*/);
 			driver = WebDriverManager.firefoxdriver().create();
-		}
-		else
-		{
+		} else {
 			EdgeOptions options = new EdgeOptions();
-			options.addArguments(/*"--headless"*/);
+			options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1920,1080", "--log-level=3");
 			driver = WebDriverManager.edgedriver().capabilities(options).create();
 		}
 
-		// Create and initialize the browser
 
 		goToLoginPage(driver);
 
@@ -91,27 +86,13 @@ public class PatreonThread extends Thread {
 		waitForPageLoad(driver);
 //		driver.get("https://www.patreon.com/supermega");
 
-//		// Sleep so we can ensure the page loads even if the connection is slow
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-
 		System.out.println("Finding all posts on the front page...");
+
 		// Get any public posts
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		this.sleep(2000);
 		List<WebElement> publicPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		this.sleep(2000);
 
 		// Display every post found on the front page
 		// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
@@ -133,12 +114,13 @@ public class PatreonThread extends Thread {
 //			client.send();
 			// webhook end
 		}
+
 //		client.close();
 		driver.close();
 	}
 
 	private void goToLoginPage(WebDriver driver) {
-		// Load the login page to pass Geetest, ensuring we're allowed to see post
+		// Load the login page to pass GeeTest, ensuring we're allowed to see post
 		System.out.println("Loading the login page for Geetest");
 
 		int loadCount = 0;
@@ -157,170 +139,221 @@ public class PatreonThread extends Thread {
 			 * This is required as sometimes loading the page for the first time
 			 * will not show the bot check
 			 */
-			if (loadCount > 1) if (!driver.getPageSource().contains("New to Patreon?")) break;
+			if (loadCount > 1 && !driver.getPageSource().contains("New to Patreon?"))
+				break;
 		}
 
-		System.out.println("Broken out!");
 		if (!driver.getPageSource().contains("New to Patreon?")) {
-			System.out.println("Pass the test on the screen, then press enter in this console to continue...");
+			System.out.println("Attempting to solve GeeTest CAPTCHA...");
 
-			// geeTest(driver); TODO: captcha not currently working
-
-			try {
-				System.in.read();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			geeTest(driver);
 		}
 
 		driver.get(patreonUrl);
 	}
 
 	private void geeTest(WebDriver driver) {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+		Wait<WebDriver> wait = new FluentWait<>(driver)
+				.withTimeout(Duration.ofSeconds(5))
+				.pollingEvery(Duration.ofMillis(250));
 
-		try {
-			// Wait until the GeeTest iframe is loaded
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("iframe")));
+		// Wait until the GeeTest iframe is loaded
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("iframe")));
 
-			// Store the GeeTest iframe
-			WebElement iFrame = driver.findElement(By.tagName("iframe"));
+		// Store the GeeTest iframe
+		WebElement iFrame = driver.findElement(By.tagName("iframe"));
 
-			// Switch the web driver context to the iframe
-			driver.switchTo().frame(iFrame);
+		// Switch the web driver context to the iframe
+		driver.switchTo().frame(iFrame);
 
-			// Wait until the GeeTest clickable verification button is loaded
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("geetest_radar_btn")));
+		// Wait until the GeeTest clickable verification button is loaded
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("geetest_radar_btn")));
 
-			// Store the GeeTest verification button
-			WebElement geeTestVerify = driver.findElement(By.className("geetest_radar_btn"));
+		// Store the GeeTest verification button
+		WebElement geeTestVerify = driver.findElement(By.className("geetest_radar_btn"));
 
-			// Click the GeeTest verification button
-			geeTestVerify.click();
+		// Click the GeeTest verification button
+		geeTestVerify.click();
 
-			while (1 == 1) {
+		// While the puzzle is visible, attempt to solve it repeatedly
+		while (this.visibleElementFound(wait, By.className("geetest_canvas_bg"))) {
 
-				// Wait until both the original and the puzzle image are present
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.className("geetest_canvas_fullbg")));
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.className("geetest_canvas_bg")));
+			// Wait until both the original and the puzzle image are present
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.className("geetest_canvas_fullbg")));
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.className("geetest_canvas_bg")));
 
-				// Save both the original and the puzzle image elements
-				WebElement originalImageElement = driver.findElement(By.className("geetest_canvas_fullbg"));
-				WebElement puzzleImageElement = driver.findElement(By.className("geetest_canvas_bg"));
+			// Save both the original and the puzzle image elements
+			WebElement originalImageElement = driver.findElement(By.className("geetest_canvas_fullbg"));
+			WebElement puzzleImageElement = driver.findElement(By.className("geetest_canvas_bg"));
 
-				// Convert both images to base64 image strings
-				String originalImageString = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].toDataURL('image/png').substring(22);", originalImageElement);
-				String puzzleImageString = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].toDataURL('image/png').substring(22);", puzzleImageElement);
+			// Convert both images to base64 image strings
+			String originalImageString = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].toDataURL('image/png').substring(22);", originalImageElement);
+			String puzzleImageString = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].toDataURL('image/png').substring(22);", puzzleImageElement);
 
-				byte[] originalImageBytes = DatatypeConverter.parseBase64Binary(originalImageString);
-				byte[] puzzleImageBytes = DatatypeConverter.parseBase64Binary(puzzleImageString);
+			byte[] originalImageBytes = DatatypeConverter.parseBase64Binary(originalImageString);
+			byte[] puzzleImageBytes = DatatypeConverter.parseBase64Binary(puzzleImageString);
 
-				// Actual image
-				BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(originalImageBytes));
-				BufferedImage puzzleImage = ImageIO.read(new ByteArrayInputStream(puzzleImageBytes));
+			// Convert the base64 image to an actual image
+			BufferedImage originalImage = null, puzzleImage = null;
 
-				// Store WxH of each image
-				int originalWidth = originalImage.getWidth();
-				int originalHeight = originalImage.getHeight();
-				int puzzleWidth = puzzleImage.getWidth();
-				int puzzleHeight = puzzleImage.getHeight();
+			// Attempt to convert the base64 encoded image to an image in memory
+			try {
+				originalImage = ImageIO.read(new ByteArrayInputStream(originalImageBytes));
+				puzzleImage = ImageIO.read(new ByteArrayInputStream(puzzleImageBytes));
+			} catch (IOException ex) {
+				System.out.println("------------------------------------------\n" +
+						"An issue occurred while reading the GeeTest puzzle image!\n" +
+						"------------------------------------------\n");
+				ex.printStackTrace();
+				driver.quit();
+				System.exit(1);
+			}
 
-				// Dimensions must be the same
-				if (originalWidth != puzzleWidth || originalHeight != puzzleHeight) {
-					System.out.println("The width/height don't match for the images.");
-					System.out.printf("Original: %dx%d\nPuzzle: %dx%d", originalWidth, originalHeight, puzzleWidth, puzzleHeight);
-					System.exit(1);
-				}
+			// Ensure the images are valid
+			if (originalImage == null || puzzleImage == null) {
+				System.out.println("The original image or the puzzle image were null after being saved.");
+				driver.quit();
+				System.exit(1);
+			}
 
-				int[][] differenceMatrix = new int[originalWidth][originalHeight];
+			// Store WxH of each image
+			int originalWidth = originalImage.getWidth();
+			int originalHeight = originalImage.getHeight();
+			int puzzleWidth = puzzleImage.getWidth();
+			int puzzleHeight = puzzleImage.getHeight();
 
-				// Calculate the differences between the original image and the puzzle image
-				System.out.println("Difference matrix:");
-				for (int y = 0; y < originalHeight; y++) {
-					for (int x = 0; x < originalWidth; x++) {
-						// Get current RGB values
-						int rgbA = originalImage.getRGB(x, y);
-						int rgbB = puzzleImage.getRGB(x, y);
+			// Ensre image dimensions are the same
+			if (originalWidth != puzzleWidth || originalHeight != puzzleHeight) {
+				System.out.println("The width/height don't match for the images.");
+				System.out.printf("Original: %dx%d\nPuzzle: %dx%d", originalWidth, originalHeight, puzzleWidth, puzzleHeight);
+				System.exit(1);
+			}
 
-						// Something from geeksforgeeks...
-						int redA = (rgbA >> 16) & 0xff;
-						int greenA = (rgbA >> 8) & 0xff;
-						int blueA = (rgbA) & 0xff;
-						int redB = (rgbB >> 16) & 0xff;
-						int greenB = (rgbB >> 8) & 0xff;
-						int blueB = (rgbB) & 0xff;
+			int[][] differenceMatrix = new int[originalWidth][originalHeight];
 
-						// Store the difference values
-						differenceMatrix[x][y] += Math.abs(redA - redB);
-						differenceMatrix[x][y] += Math.abs(greenA - greenB);
-						differenceMatrix[x][y] += Math.abs(blueA - blueB);
+			// Calculate the differences between the original image and the puzzle image
+			for (int y = 0; y < originalHeight; y++) {
+				for (int x = 0; x < originalWidth; x++) {
+					// Get current RGB values
+					int rgbA = originalImage.getRGB(x, y);
+					int rgbB = puzzleImage.getRGB(x, y);
 
-						// If the number is less than 130 (a threshold I chose), set it to 0 to signify no change in current pixel.
-						if (differenceMatrix[x][y] < 130) differenceMatrix[x][y] = 0;
+					// Something from geeksforgeeks...
+					int redA = (rgbA >> 16) & 0xff;
+					int greenA = (rgbA >> 8) & 0xff;
+					int blueA = (rgbA) & 0xff;
+					int redB = (rgbB >> 16) & 0xff;
+					int greenB = (rgbB >> 8) & 0xff;
+					int blueB = (rgbB) & 0xff;
 
-						System.out.print(differenceMatrix[x][y] + ",");
-					}
+					// Store the difference values
+					differenceMatrix[x][y] += Math.abs(redA - redB);
+					differenceMatrix[x][y] += Math.abs(greenA - greenB);
+					differenceMatrix[x][y] += Math.abs(blueA - blueB);
 
-					System.out.println();
-				}
+					// If the number is less than 130 (a threshold I chose), set it to 0 to signify no change in current pixel.
+					if (differenceMatrix[x][y] < 130)
+						differenceMatrix[x][y] = 0;
 
-				int dragAmount = 0;
-
-				// Find the first change in the difference matrix
-				for (int x = 0; x < originalWidth && dragAmount == 0; x++) {
-					for (int y = 0; y < originalHeight; y++) {
-						if (differenceMatrix[x][y] != 0) {
-							System.out.println("First change is #: " + differenceMatrix[x][y] + " with x = " + x);
-							dragAmount = x - 6;
-							break;
-						}
-					}
-				}
-
-				// Write image files to current folder
-//			File outputOriginal = new File("original.png");
-//			File outputPuzzle = new File("puzzle.png");
-//
-//			ImageIO.write(originalImage, "png", outputOriginal);
-//			ImageIO.write(puzzleImage, "png", outputPuzzle);
-
-				System.out.println("Geetest found!  Attempting to slide by " + dragAmount);
-
-
-				WebElement dragButton = driver.findElement(By.className("geetest_slider_button"));
-				Actions move = new Actions(driver);//;.clickAndHold(dragButton);
-
-				// Slowly move the slider with varying cursor height adjustments
-//				for (int i = 0; i < dragAmount; i++) {
-//					move.moveByOffset(1, new Random().nextInt(2 - (-2)) + (-2));
-//				}
-//				move.release().perform();
-//
-//				System.out.println("Press any key...");
-//				System.in.read();
-
-				// Let the page load
-				Thread.sleep(2000);
-
-				// Two different ways of instantly moving the slider to the correct position
-//				move.clickAndHold(dragButton).moveByOffset(dragAmount, 0).release().build().perform();
-				move.dragAndDropBy(dragButton, dragAmount, 0).build().perform();
-
-				// Check for retry button
-				if (wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("geetest_reset_tip_content"))) != null) {
-					driver.findElement(By.className("geetest_reset_tip_content")).click();
-
-					// Let the page load
-					Thread.sleep(3000);
 				}
 			}
 
+			int dragAmount = 0;
 
-		} catch (Exception ex) {
-			System.out.println("An error has occurred:\n");
-			ex.printStackTrace();
-			driver.quit();
-			System.exit(1);
+			// Find the first change in the difference matrix
+			for (int x = 0; x < originalWidth && dragAmount == 0; x++)
+				for (int y = 0; y < originalHeight; y++)
+					if (differenceMatrix[x][y] != 0) {
+						dragAmount = x - 6;
+						break;
+					}
+
+			System.out.println("Geetest found!  Attempting to solve...");
+
+			// Let the page load
+			this.sleep(2000);
+
+			WebElement dragButton = driver.findElement(By.className("geetest_slider_button"));
+			Actions move = new Actions(driver);
+
+			System.out.println("Simulating MouseKey movement..");
+
+			// Move on top of the button with a seemingly random offset
+			move.moveToElement(dragButton, 20 + new Random().nextInt(10), 20 + new Random().nextInt(10)).perform();
+
+			// Wait between 1-2 seconds
+			this.sleep(randNum(1000, 2000));
+
+			// Left mouse button down
+			move.clickAndHold().perform();
+
+			// Wait between 1-2 seconds
+			this.sleep(randNum(1000, 2000));
+
+			// Slowly move the slider with varying cursor height adjustments
+			int totalDragAmount = 0, currentDragAmount = 1;
+
+			while (totalDragAmount < dragAmount + 2) {
+				move.moveByOffset(currentDragAmount, 0);
+				totalDragAmount += currentDragAmount;
+				currentDragAmount += new Random().nextInt(2);
+			}
+
+			move.perform();
+
+			this.sleep(randNum(1000, 2000));
+
+			while (dragAmount - 1 < totalDragAmount) {
+				move.moveByOffset(-1, 0);
+				totalDragAmount -= 1;
+			}
+
+			move.release().perform();
+
+			this.sleep(2000);
+
+			if (this.visibleElementFound(wait, By.className("geetest_reset_tip_content"))) {
+				driver.findElement(By.className("geetest_reset_tip_content")).click();
+			}
+
+			this.sleep(2000);
+		}
+
+	}
+
+	/**
+	 * Sleeps while handling {@link InterruptedException}
+	 *
+	 * @param milli Amount in milliseconds to sleep for
+	 */
+	private void sleep(int milli) {
+		try {
+			Thread.sleep(milli);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Returns a number between [a, b)
+	 *
+	 * @param min Minimum desired number
+	 * @param max Maximum desired number
+	 * @return A random number within the set [a, b)
+	 */
+	private int randNum(int min, int max) {
+		if (max < min)
+			return 0;
+
+		return new Random().nextInt(max - min) + min;
+	}
+
+	private boolean visibleElementFound(Wait<WebDriver> wait, By by) {
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 
