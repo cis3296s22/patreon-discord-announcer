@@ -24,25 +24,61 @@ public class BotCommands extends ListenerAdapter {
 
         final String[] commands = {"help", "test", "embed"};
 
+        for (int i = 0; i < commands.length; i++)
+            commands[i] = DiscordBot.prefix + commands[i];
+
         String[] args = event.getMessage().getContentRaw().split("\\s+"); // changing each word in a message to arguments separated by spaces
 
-        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "help")){
-            bot.send("commands: " + Arrays.toString(commands));
+        int prefixLength = DiscordBot.prefix.length();
+
+        if (args.length > prefixLength)
+            return;
+
+        switch (args[0].substring(prefixLength)) {
+            case "help":
+                bot.send("commands: " + Arrays.toString(commands));
+                break;
+            case "test":
+                bot.send("I AM HERE");
+                break;
+            case "embed":
+                bot.setTitle("RANDOM INFO");
+                bot.setDescription("useless info\nwords");
+                bot.addField("Alex", "is cool");
+                bot.setFooter(event.getMessage().getContentRaw(), event.getMember().getUser().getAvatarUrl());
+
+                bot.send();
+                bot.clearEmbed();
+                break;
+            case "getpublic":
+                bot.setTitle("Public Posts:");
+                bot.setDescription("Description");
+                bot.addField("Field title", "Field value");
+
+                bot.send();
+                bot.clearEmbed();
+                break;
+            case "getprivate":
+                break;
         }
 
-        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "test")){
-            bot.send("I AM HERE");
-        }
-
-        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "embed")){
-            bot.setTitle("RANDOM INFO");
-            bot.setDescription("useless info\nwords");
-            bot.addField("Alex", "is cool");
-            bot.setFooter(event.getMessage().getContentRaw(), event.getMember().getUser().getAvatarUrl());
-
-            bot.send();
-            bot.clearEmbed();
-        }
+//        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "help")){
+//            bot.send("commands: " + Arrays.toString(commands));
+//        }
+//
+//        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "test")){
+//            bot.send("I AM HERE");
+//        }
+//
+//        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "embed")){
+//            bot.setTitle("RANDOM INFO");
+//            bot.setDescription("useless info\nwords");
+//            bot.addField("Alex", "is cool");
+//            bot.setFooter(event.getMessage().getContentRaw(), event.getMember().getUser().getAvatarUrl());
+//
+//            bot.send();
+//            bot.clearEmbed();
+//        }
 
     }
 }
