@@ -268,15 +268,13 @@ public class PatreonThread extends Thread {
 						break;
 					}
 
-			System.out.println("Geetest found!  Attempting to solve...");
-
 			// Let the page load
 			this.sleep(2000);
 
 			WebElement dragButton = driver.findElement(By.className("geetest_slider_button"));
 			Actions move = new Actions(driver);
 
-			System.out.println("Simulating MouseKey movement..");
+			System.out.println("GeeTest found and simulating MouseKey movement..");
 
 			// Move on top of the button with a seemingly random offset
 			move.moveToElement(dragButton, 20 + new Random().nextInt(10), 20 + new Random().nextInt(10)).perform();
@@ -293,14 +291,17 @@ public class PatreonThread extends Thread {
 			// Slowly move the slider with varying cursor height adjustments
 			int totalDragAmount = 0, currentDragAmount = 1;
 
+			// Queue up actions with random additions to the X movement
 			while (totalDragAmount < dragAmount + 2) {
 				move.moveByOffset(currentDragAmount, 0);
 				totalDragAmount += currentDragAmount;
 				currentDragAmount += new Random().nextInt(2);
 			}
 
+			// Start moving the image to the right, intentionally overshooting
 			move.perform();
 
+			// Wait a random time between 1-2 seconds to assist simulating human behavior
 			this.sleep(randNum(1000, 2000));
 
 			while (dragAmount - 1 < totalDragAmount) {
@@ -308,14 +309,17 @@ public class PatreonThread extends Thread {
 				totalDragAmount -= 1;
 			}
 
+			// Start moving the image to the left as we intentionally overshot
 			move.release().perform();
 
+			// Wait for the page to load
 			this.sleep(2000);
 
-			if (this.visibleElementFound(wait, By.className("geetest_reset_tip_content"))) {
+			// Click the "reset" button if it exists
+			if (this.visibleElementFound(wait, By.className("geetest_reset_tip_content")))
 				driver.findElement(By.className("geetest_reset_tip_content")).click();
-			}
 
+			// Wait for the page to load the new reset button, regardless if it exists or not
 			this.sleep(2000);
 		}
 
