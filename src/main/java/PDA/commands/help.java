@@ -6,7 +6,7 @@ public class help implements BotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
-		bot.send("PDA commands:  /help  /test  /embed");
+		bot.send("PDA commands:  /help  /test  /embed  /getpublicposts");
 	}
 
 	@Override
