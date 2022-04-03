@@ -44,5 +44,18 @@ public class BotCommands extends ListenerAdapter {
             bot.clearEmbed();
         }
 
+        if (args[0].equalsIgnoreCase(DiscordBot.prefix + "setLink")){
+
+            if (args.length <= 1){
+                bot.send("No link provided");
+            }
+            else{
+                PDA.patreonUrl = args[1];
+                bot.send(args[1] + "has been set as the patreon link");
+            }
+        }
+
+
+
     }
 }
