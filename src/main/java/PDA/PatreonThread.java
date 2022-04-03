@@ -1,3 +1,6 @@
+package PDA;
+
+import PDA.apis.DiscordBot;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -66,7 +70,7 @@ public class PatreonThread extends Thread {
 
 		if (drivernum == 0) {
 			ChromeOptions options = new ChromeOptions();
-			options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1920,1080", "--log-level=3");
+			options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1024,768", "--log-level=3");
 			driver = WebDriverManager.chromedriver().capabilities(options).create();
 		} else if (drivernum == 1) {
 			FirefoxOptions options = new FirefoxOptions();
@@ -74,49 +78,66 @@ public class PatreonThread extends Thread {
 			driver = WebDriverManager.firefoxdriver().create();
 		} else {
 			EdgeOptions options = new EdgeOptions();
-			options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1920,1080", "--log-level=3");
+			options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1024,768", "--log-level=3");
 			driver = WebDriverManager.edgedriver().capabilities(options).create();
 		}
 
+		while (true) {
+			goToLoginPage(driver);
 
-		goToLoginPage(driver);
-
-		System.out.printf("Loading patreon page '%s'...", PDA.patreonUrl);
-		driver.get(PDA.patreonUrl);
-		waitForPageLoad(driver);
+			System.out.printf("Loading patreon page '%s'...", PDA.patreonUrl);
+			driver.get(PDA.patreonUrl);
+			waitForPageLoad(driver);
 //		driver.get("https://www.patreon.com/supermega");
 
-		System.out.println("Finding all posts on the front page...");
+			System.out.println("Finding all posts on the front page...");
 
-		// Get any public posts
-		this.sleep(2000);
-		List<WebElement> publicPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
+			// Get any public posts
+			this.sleep(4000);
 
-		this.sleep(2000);
+			List<WebElement> foundPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
+			List<WebElement> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
 
-		// Display every post found on the front page
-		// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
-		// DiscordWebhook client = new DiscordWebhook(webhookUrl);
-		bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
+			for (WebElement currentPost : foundPosts)
+				if (1 == 1) { // TODO: If current post is private
+					currentPrivatePosts.add(currentPost);
+				} else { // The post isn't private, it must be public
+					currentPublicPosts.add(currentPost);
+				}
 
-		for (WebElement currentPost : publicPosts) {
-			System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
+			// Display every post found on the front page
+			// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
+			bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
 
-			// bot start
-			bot.setTitle(currentPost.getText());
-			bot.setDescription(currentPost.getText());
-			bot.send();
-			// bot end
+			// For every found private post, check to see if we already announced it.
+			// If we didn't, add it to the announced posts and then announce it.
+			for (WebElement currentPost : currentPrivatePosts) {
+				if (!PDA.privatePosts.contains(currentPost)) {
+					PDA.privatePosts.add(currentPost);
+					announcePost(currentPost);
+				}
+			}
 
-			// webhook start
-//			client.setTitle(currentPost.getText());
-//			client.setDescription(currentPost.getText());
-//			client.send();
-			// webhook end
+			for (WebElement currentPost : currentPublicPosts) {
+				if (!PDA.publicPosts.contains(currentPost)) {
+					PDA.publicPosts.add(currentPost);
+					announcePost(currentPost);
+				}
+			}
+
+			// Sleep between 2-3 minutes
+			double sleepTime = randNum(120000, 180000);
+			System.out.printf("\nWaiting %.2f until the next Patreon page scan...\n\n", (sleepTime / 60000));
+			this.sleep((int) sleepTime);
 		}
+	}
 
-//		client.close();
-		driver.close();
+	private void announcePost(WebElement currentPost) {
+		System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
+
+		bot.setTitle(currentPost.getText());
+		bot.setDescription(currentPost.getText());
+		bot.send();
 	}
 
 	private void goToLoginPage(WebDriver driver) {
@@ -366,6 +387,6 @@ public class PatreonThread extends Thread {
 
 		new WebDriverWait(driver, Duration.ofSeconds(30)).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
 
-		System.out.println("Done..!");
+		System.out.println("Done!");
 	}
 }
