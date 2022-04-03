@@ -32,7 +32,7 @@ public class BotCommands extends ListenerAdapter {
 			return;
 
 		// Command container
-		BotCommand command = null;
+		BotCommand command;
 
 		// use Class.forName to generate a new class with the given arguments, cutting out the prefix and case sensitivity.
 		try {
@@ -40,13 +40,14 @@ public class BotCommands extends ListenerAdapter {
 			command = (BotCommand) clazz.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			// Ignore any exceptions as we don't care if someone puts an invalid command name
+			return;
 //			e.printStackTrace();
 		}
 
-		// If command isn't null then execute it with the given DiscordBot.
-        if (command != null) {
-			command.setArgs(args);
-	        command.execute(bot);
-        }
+		// command variable should never be null as we will never reach here if it is null
+//        if (command != null) {
+		command.setArgs(args);
+		command.execute(bot);
+//        }
 	}
 }
