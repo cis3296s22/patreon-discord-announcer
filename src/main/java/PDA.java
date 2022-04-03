@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class PDA {
-	// TODO: User settings that will be loaded from a configuration file later on
+	// TODO: make patreonUrl a list so we can have multiple patreon pages to check (maybe hashmap<Integer(guild id), List> so it depends on the discord server its in)
 	static String patreonUrl = "https://www.patreon.com/pda_example";
 	static String webhookUrl = ""; // https://discord.com/api/webhooks/958181437402644520/Nw6LLM7JGm176hDd6KgtUK3h3FXif-m7fRcnSAvyjrWP7p1lHuIhRJFTZ76RD1sHL0C4
 	static String discordToken = "";
@@ -38,9 +38,9 @@ public class PDA {
 		}
 
 
-		DiscordBot bot = new DiscordBot(discordToken);
+		DiscordBot bot = new DiscordBot(discordToken /*, patreonUrl*/);
 
-		PatreonThread testThread = new PatreonThread(patreonUrl, webhookUrl, bot, discordChannel);
+		PatreonThread testThread = new PatreonThread(/* patreonUrl ,*/ webhookUrl, bot, discordChannel);
 		testThread.start();
 		testThread.join();
 

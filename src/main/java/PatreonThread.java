@@ -26,13 +26,13 @@ import java.util.Random;
 
 public class PatreonThread extends Thread {
 
-	String patreonUrl;
+	// String patreonUrl;
 	String webhookUrl;
 	DiscordBot bot;
 	String discordChannel;
 
-	public PatreonThread(String patreonUrl, String webhookUrl, DiscordBot bot, String discordChannel) {
-		this.patreonUrl = patreonUrl;
+	public PatreonThread(/* String patreonUrl ,*/ String webhookUrl, DiscordBot bot, String discordChannel) {
+		// this.patreonUrl = patreonUrl;
 		this.webhookUrl = webhookUrl;
 		this.bot = bot;
 		this.discordChannel = discordChannel;
@@ -81,8 +81,8 @@ public class PatreonThread extends Thread {
 
 		goToLoginPage(driver);
 
-		System.out.printf("Loading patreon page '%s'...", patreonUrl);
-		driver.get(patreonUrl);
+		System.out.printf("Loading patreon page '%s'...", PDA.patreonUrl);
+		driver.get(PDA.patreonUrl);
 		waitForPageLoad(driver);
 //		driver.get("https://www.patreon.com/supermega");
 
@@ -149,7 +149,7 @@ public class PatreonThread extends Thread {
 			geeTest(driver);
 		}
 
-		driver.get(patreonUrl);
+		driver.get(PDA.patreonUrl);
 	}
 
 	private void geeTest(WebDriver driver) {

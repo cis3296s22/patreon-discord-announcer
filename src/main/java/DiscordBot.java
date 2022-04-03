@@ -12,12 +12,14 @@ public class DiscordBot {
     private JDA jda;
     private EmbedBuilder embed;
     private TextChannel channel;
+    // private String patreonUrl;
     public static String prefix = "/"; // we want other files to be able to use this prefix
 
-    DiscordBot(String token) throws LoginException {
+    DiscordBot(String token /*, String patreonUrl*/) throws LoginException {
         jda = JDABuilder.createDefault(token).build();
         jda.addEventListener(new BotCommands(this));
         embed = new EmbedBuilder();
+        // this.patreonUrl = patreonUrl;
     }
 
     public void setTitle(String title){
@@ -48,6 +50,10 @@ public class DiscordBot {
 
     public void setFooter(String text, String userUrl){
         embed.setFooter(text, userUrl);
+    }
+
+    public void setPatreonUrl(String patreonUrl){
+        PDA.patreonUrl = patreonUrl;
     }
 
     public void clearEmbed(){
