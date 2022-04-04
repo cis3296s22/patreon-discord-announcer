@@ -42,7 +42,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
-                            <mainClass>PDA</mainClass>
+                            <mainClass>PDA.PDA</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
