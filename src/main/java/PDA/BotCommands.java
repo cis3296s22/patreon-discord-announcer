@@ -46,6 +46,7 @@ public class BotCommands extends ListenerAdapter {
 
 		// command variable should never be null as we will never reach here if it is null
 //        if (command != null) {
+		command.setGuildID(event.getGuild());
 		command.setArgs(args);
 		command.execute(bot);
 //        }

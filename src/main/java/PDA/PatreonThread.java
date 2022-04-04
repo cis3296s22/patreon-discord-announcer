@@ -2,6 +2,7 @@ package PDA;
 
 import PDA.apis.DiscordBot;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -83,47 +84,53 @@ public class PatreonThread extends Thread {
 		}
 
 		while (true) {
-			goToLoginPage(driver);
 
-			System.out.printf("Loading patreon page '%s'...", PDA.patreonUrl);
-			driver.get(PDA.patreonUrl);
-			waitForPageLoad(driver);
+			for (Guild guild : PDA.guildSet){
+				System.out.println("GuildSet: " + PDA.guildSet);
+				System.out.println("Current Guild: " + guild);
+				goToLoginPage(driver, guild);
+
+				System.out.printf("Loading patreon page '%s'...", PDA.patreonUrls.get(guild));
+				driver.get(PDA.patreonUrls.get(guild));
+				waitForPageLoad(driver);
 //		driver.get("https://www.patreon.com/supermega");
 
-			System.out.println("Finding all posts on the front page...");
+				System.out.println("Finding all posts on the front page...");
 
-			// Get any public posts
-			this.sleep(4000);
+				// Get any public posts
+				this.sleep(4000);
 
-			List<WebElement> foundPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
-			List<WebElement> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
+				List<WebElement> foundPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
+				List<WebElement> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
 
-			for (WebElement currentPost : foundPosts)
-				if (1 == 1) { // TODO: If current post is private
-					currentPrivatePosts.add(currentPost);
-				} else { // The post isn't private, it must be public
-					currentPublicPosts.add(currentPost);
+				for (WebElement currentPost : foundPosts)
+					if (1 == 1) { // TODO: If current post is private
+						currentPrivatePosts.add(currentPost);
+					} else { // The post isn't private, it must be public
+						currentPublicPosts.add(currentPost);
+					}
+
+				// Display every post found on the front page
+				// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
+				// bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
+
+				// For every found private post, check to see if we already announced it.
+				// If we didn't, add it to the announced posts and then announce it.
+				for (WebElement currentPost : currentPrivatePosts) {
+					if (!PDA.privatePosts.contains(currentPost)) {
+						PDA.privatePosts.add(currentPost);
+						announcePost(currentPost, guild);
+					}
 				}
 
-			// Display every post found on the front page
-			// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
-			bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
-
-			// For every found private post, check to see if we already announced it.
-			// If we didn't, add it to the announced posts and then announce it.
-			for (WebElement currentPost : currentPrivatePosts) {
-				if (!PDA.privatePosts.contains(currentPost)) {
-					PDA.privatePosts.add(currentPost);
-					announcePost(currentPost);
+				for (WebElement currentPost : currentPublicPosts) {
+					if (!PDA.publicPosts.contains(currentPost)) {
+						PDA.publicPosts.add(currentPost);
+						announcePost(currentPost, guild);
+					}
 				}
 			}
 
-			for (WebElement currentPost : currentPublicPosts) {
-				if (!PDA.publicPosts.contains(currentPost)) {
-					PDA.publicPosts.add(currentPost);
-					announcePost(currentPost);
-				}
-			}
 
 			// Sleep between 2-3 minutes
 			double sleepTime = randNum(120000, 180000);
@@ -132,15 +139,15 @@ public class PatreonThread extends Thread {
 		}
 	}
 
-	private void announcePost(WebElement currentPost) {
+	private void announcePost(WebElement currentPost, Guild guild) {
 		System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
 
-		bot.setTitle(currentPost.getText());
-		bot.setDescription(currentPost.getText());
-		bot.send();
+		bot.setTitle(currentPost.getText(), guild);
+		bot.setDescription(currentPost.getText(), guild);
+		bot.send(guild);
 	}
 
-	private void goToLoginPage(WebDriver driver) {
+	private void goToLoginPage(WebDriver driver, Guild guild) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
 		System.out.println("Loading the login page for Geetest");
 
@@ -170,7 +177,7 @@ public class PatreonThread extends Thread {
 			geeTest(driver);
 		}
 
-		driver.get(PDA.patreonUrl);
+		driver.get(PDA.patreonUrls.get(guild));
 	}
 
 	private void geeTest(WebDriver driver) {

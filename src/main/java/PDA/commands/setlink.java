@@ -2,26 +2,35 @@ package PDA.commands;
 
 import PDA.PDA;
 import PDA.apis.DiscordBot;
+import net.dv8tion.jda.api.entities.Guild;
 
 public class setlink implements BotCommand {
 
-	String[] args = null;
+	private String[] args = null;
+	Guild guild;
 
 	@Override
 	public void execute(DiscordBot bot) {
-		if (args == null)
+		if (args == null) {
+			System.out.println("null args rip");
 			return;
+		}
 
 		if (args.length <= 1) {
-			bot.send("No link provided");
+			bot.send("No link provided", guild);
 		} else {
-			PDA.patreonUrl = args[1];
-			bot.send(args[1] + "has been set as the patreon link");
+			PDA.patreonUrls.put(guild, args[1]);
+			bot.send(args[1] + " has been set as the patreon link", guild);
 		}
 	}
 
 	@Override
 	public void setArgs(String[] args) {
 		this.args = args;
+	}
+
+	@Override
+	public void setGuildID(Guild guild){
+		this.guild = guild;
 	}
 }
