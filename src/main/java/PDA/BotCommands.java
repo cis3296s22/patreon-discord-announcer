@@ -45,6 +45,7 @@ public class BotCommands extends ListenerAdapter {
 
 		// If command isn't null then execute it with the given DiscordBot.
         if (command != null) {
+			command.setGuildID(event.getGuild());
 			command.setArgs(args);
 	        command.execute(bot);
         }
