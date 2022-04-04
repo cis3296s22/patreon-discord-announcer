@@ -47,15 +47,13 @@ public class PDA {
 
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("The configuration file 'config.json' was not found!");
+			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
-
-
-
 
 		DiscordBot bot = new DiscordBot(discordToken, discordChannel);
 

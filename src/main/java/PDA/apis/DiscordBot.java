@@ -25,7 +25,12 @@ public class DiscordBot {
 	public DiscordBot(String token, String channel) throws LoginException, InterruptedException {
 		embedMap = new HashMap<>();
 		channels = new HashMap<>();
-		jda = JDABuilder.createDefault(token).build();
+		try {
+			jda = JDABuilder.createDefault(token).build();
+		} catch (LoginException e) {
+			System.out.println("The given Discord Bot token '" + token + "' is invalid!");
+			System.exit(1);
+		}
 		jda.awaitReady();
 		jda.addEventListener(new BotCommands(this));
 
