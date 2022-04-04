@@ -4,6 +4,7 @@ import PDA.apis.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebElement;
 
 import javax.security.auth.login.LoginException;
@@ -49,9 +50,7 @@ public class PDA {
 		} catch (FileNotFoundException e) {
 			System.out.println("The configuration file 'config.json' was not found!");
 			System.exit(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (org.json.simple.parser.ParseException e) {
+		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
 
