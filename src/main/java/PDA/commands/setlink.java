@@ -12,7 +12,7 @@ public class setlink implements BotCommand {
 	@Override
 	public void execute(DiscordBot bot) {
 		if (args == null) {
-			System.out.println("null args rip");
+			System.out.println("no arguments provided");
 			return;
 		}
 
