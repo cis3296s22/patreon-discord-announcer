@@ -117,15 +117,15 @@ public class PatreonThread extends Thread {
 				// For every found private post, check to see if we already announced it.
 				// If we didn't, add it to the announced posts and then announce it.
 				for (WebElement currentPost : currentPrivatePosts) {
-					if (!PDA.privatePosts.contains(currentPost)) {
-						PDA.privatePosts.add(currentPost);
+					if (!PDA.privatePosts.contains(currentPost.getText())) {
+						PDA.privatePosts.add(currentPost.getText());
 						announcePost(currentPost, guild);
 					}
 				}
 
 				for (WebElement currentPost : currentPublicPosts) {
-					if (!PDA.publicPosts.contains(currentPost)) {
-						PDA.publicPosts.add(currentPost);
+					if (!PDA.publicPosts.contains(currentPost.getText())) {
+						PDA.publicPosts.add(currentPost.getText());
 						announcePost(currentPost, guild);
 					}
 				}

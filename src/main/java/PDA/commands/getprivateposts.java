@@ -10,10 +10,13 @@ public class getprivateposts implements BotCommand {
 
     @Override
     public void execute(DiscordBot bot) {
+        bot.clearEmbed(guild);
         bot.setTitle("Private Posts:", guild);
+        bot.send(guild);
 
-        for (WebElement currentPost : PDA.privatePosts) {
-            bot.setDescription(currentPost.getText(), guild);
+        bot.setTitle(null, guild);
+        for (String currentPost : PDA.privatePosts) {
+            bot.setDescription(currentPost, guild);
             bot.send(guild);
         }
         bot.clearEmbed(guild);

@@ -28,8 +28,8 @@ public class PDA {
 	// Global variables
 	public static String prefix = "/";
 	public static Set<Guild> guildSet = new HashSet<>();
-	public static List<WebElement> publicPosts = new LinkedList<>();
-	public static List<WebElement> privatePosts = new LinkedList<>();
+	public static List<String> publicPosts = new LinkedList<>();
+	public static List<String> privatePosts = new LinkedList<>();
 
 	public static void main(String[] arg) throws InterruptedException, LoginException {
 		JSONParser parser = new JSONParser();
