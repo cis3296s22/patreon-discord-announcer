@@ -53,7 +53,7 @@ This document proposes a software application that allows the user to add a bot 
 /test - Bot will reply with "I AM HERE" if server is running.  
 /embed - Bot will show an example of an embed in Discord channel.  
 /setchannel - Allows the user to set the channel when command is followed with channel ID (i.e. /setchannel <Channel ID>).  
-/setlink - Allows the user to select the creator page from patreon by copy and pasting the link after the command (i.e. /setlink https://exampleurl).  
+/setlink - Allows the user to select the creator page from patreon by copy and pasting the link after the command  (i.e. /setlink [https://exampleurl]).  
 
 # How to Contribute
 Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)
