@@ -24,9 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class PatreonThread extends Thread {
@@ -85,8 +83,10 @@ public class PatreonThread extends Thread {
 
 		while (true) {
 
-			for (Guild guild : PDA.guildSet){
-				System.out.println("GuildSet: " + PDA.guildSet);
+			Set<Guild> localSet = new HashSet<>(PDA.guildSet);
+
+			for (Guild guild : localSet){
+				System.out.println("GuildSet: " + localSet);
 				System.out.println("Current Guild: " + guild);
 				goToLoginPage(driver, guild);
 

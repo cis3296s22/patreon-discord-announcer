@@ -16,8 +16,10 @@ public class DiscordBotJoin extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event){
+        System.out.println("Server added to list for guild: " + event.getGuild().getName());
         bot.addGuild(event.getGuild());
+        PDA.patreonUrls.put(event.getGuild(), "https://www.patreon.com/pda_example");
         PDA.guildSet.add(event.getGuild());
-        bot.addChannel(event.getJDA().getTextChannels().get(0).getId(), event.getGuild());
+        bot.addChannel(event.getGuild().getTextChannels().get(0).getId(), event.getGuild());
     }
 }

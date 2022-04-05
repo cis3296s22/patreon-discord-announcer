@@ -1,6 +1,7 @@
 package PDA.apis;
 
 import PDA.BotCommands;
+import PDA.DiscordBotJoin;
 import PDA.PDA;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// TODO: implement HashMap to allow for storing of embed messages
+
 public class DiscordBot {
 	private JDA jda;
 	private HashMap<Guild, EmbedBuilder> embedMap;
@@ -33,6 +34,7 @@ public class DiscordBot {
 		}
 		jda.awaitReady();
 		jda.addEventListener(new BotCommands(this));
+		jda.addEventListener(new DiscordBotJoin(this));
 
 		// if someone added the bot to their server when the bot wasn't running then add it to the embedMap
 		for (Guild guild : jda.getGuilds()){
@@ -95,6 +97,9 @@ public class DiscordBot {
 	}
 
 	public void send(Guild id) { // sending embed
+//		System.out.println("channels: " + channels);
+//		System.out.println("embeds: " + embedMap);
+//		System.out.println("embed: " + embedMap.get(id));
 		channels.get(id).sendMessageEmbeds(embedMap.get(id).build()).queue();
 	}
 
@@ -105,5 +110,6 @@ public class DiscordBot {
 	public void addGuild(Guild guildID){
 		embedMap.put(guildID, embedMap.getOrDefault(guildID, new EmbedBuilder()));
 	}
+
 
 }
