@@ -195,7 +195,14 @@ public class PatreonThread extends Thread {
 		driver.switchTo().frame(iFrame);
 
 		// Wait until the GeeTest clickable verification button is loaded
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("geetest_radar_btn")));
+		this.visibleElementFound(wait, By.className("geetest_radar_btn"));
+
+		// Check to see if Patreon has blocked our IP entirely
+		if (this.visibleElementFound(wait, By.className("captcha__human__title")))
+			if (driver.findElement(By.className("captcha__human__title")).getText().contains("You have been blocked")) {
+				System.out.println("The current IP has been blocked by Patreon.  Stopping.");
+				System.exit(1);
+			}
 
 		// Store the GeeTest verification button
 		WebElement geeTestVerify = driver.findElement(By.className("geetest_radar_btn"));
