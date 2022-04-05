@@ -62,6 +62,7 @@ Follow this project board to know the latest status of the project: [https://git
 # Building From Source
 ### Requirements
 - Java JDK >= 8
+- Maven >= 3
 
 ### Manually (with Maven >= 3)
 - Clone this repository
