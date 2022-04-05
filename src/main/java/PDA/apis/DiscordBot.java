@@ -1,7 +1,7 @@
 package PDA.apis;
 
 import PDA.BotCommands;
-import PDA.DiscordBotJoin;
+// import PDA.DiscordBotJoin;
 import PDA.PDA;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -34,7 +34,7 @@ public class DiscordBot {
 		}
 		jda.awaitReady();
 		jda.addEventListener(new BotCommands(this));
-		jda.addEventListener(new DiscordBotJoin(this));
+		// jda.addEventListener(new DiscordBotJoin(this));
 
 		// if someone added the bot to their server when the bot wasn't running then add it to the embedMap
 		for (Guild guild : jda.getGuilds()){
