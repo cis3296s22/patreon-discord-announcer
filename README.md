@@ -10,7 +10,7 @@ This document proposes a software application that allows the user to add a bot 
 1) Choose or create the Discord server where you want to use PDA Bot.
 2) Click this link to invite our Bot https://discord.com/api/oauth2/authorize?client_id=937463083876614216&permissions=8&scope=bot
 3) Select the server from Step 1 to invite.
-4) Use Bot Commands listed below to get updates on your favorite content creators.
+4) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators.
 
 
 ### Create/use your own bot
