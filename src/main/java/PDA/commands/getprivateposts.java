@@ -5,7 +5,7 @@ import PDA.apis.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 import org.openqa.selenium.WebElement;
 
-public class getPrivatePosts implements BotCommand {
+public class getprivateposts implements BotCommand {
     Guild guild;
 
     @Override
