@@ -2,8 +2,10 @@ package PDA;
 
 import PDA.apis.DiscordBot;
 import PDA.commands.*;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 // TODO: have an admin set what channel they want the patreon messages to go
 // TODO: only allow admins (or admin selected users) to use PDA.commands
@@ -50,5 +52,14 @@ public class BotCommands extends ListenerAdapter {
 		command.setArgs(args);
 		command.execute(bot);
 //        }
+	}
+
+	@Override
+	public void onGuildJoin(@NotNull GuildJoinEvent event){
+		System.out.println("Server added to list for guild: " + event.getGuild().getName());
+		bot.addGuild(event.getGuild());
+		PDA.patreonUrls.put(event.getGuild(), "https://www.patreon.com/pda_example");
+		PDA.guildSet.add(event.getGuild());
+		bot.addChannel(event.getGuild().getTextChannels().get(0).getId(), event.getGuild());
 	}
 }

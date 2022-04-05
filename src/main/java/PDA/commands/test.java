@@ -5,7 +5,8 @@ import net.dv8tion.jda.api.entities.Guild;
 
 public class test implements BotCommand {
 
-	Guild guild;
+	private Guild guild;
+
 	@Override
 	public void execute(DiscordBot bot) {
 		bot.send("I AM HERE", guild);
@@ -13,7 +14,6 @@ public class test implements BotCommand {
 
 	@Override
 	public void setArgs(String[] args) {
-
 	}
 
 	@Override

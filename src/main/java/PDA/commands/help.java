@@ -5,11 +5,11 @@ import net.dv8tion.jda.api.entities.Guild;
 
 public class help implements BotCommand {
 
-	Guild guild;
+	private Guild guild;
 
 	@Override
 	public void execute(DiscordBot bot) {
-		bot.send("PDA commands:  /help  /test  /embed  /getpublicposts  /setlink ", guild);
+		bot.send("PDA commands:  /help  /test  /embed  /setlink  /setchannel", guild);
 	}
 
 	@Override

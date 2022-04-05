@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.Guild;
 
 public class getpublicposts implements BotCommand {
 
-	Guild guild;
+	private Guild guild;
 
 	@Override
 	public void execute(DiscordBot bot) {

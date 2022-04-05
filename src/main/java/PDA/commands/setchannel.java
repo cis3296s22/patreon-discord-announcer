@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Guild;
 public class setchannel implements BotCommand{
 
     private String[] args = null;
-    Guild guild;
+    private Guild guild;
 
     @Override
     public void execute(DiscordBot bot) {
