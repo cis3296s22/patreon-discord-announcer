@@ -103,12 +103,14 @@ public class PatreonThread extends Thread {
 				List<WebElement> foundPosts = driver.findElements(By.cssSelector("[data-tag='post-card']"));
 				List<WebElement> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
 
-				for (WebElement currentPost : foundPosts)
+				for (WebElement currentPost : foundPosts) {
+					System.out.println(currentPost.getText() + "\n\n");
 					if (1 == 1) { // TODO: If current post is private
 						currentPrivatePosts.add(currentPost);
 					} else { // The post isn't private, it must be public
 						currentPublicPosts.add(currentPost);
 					}
+				}
 
 				// Display every post found on the front page
 				// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
@@ -117,10 +119,11 @@ public class PatreonThread extends Thread {
 				// For every found private post, check to see if we already announced it.
 				// If we didn't, add it to the announced posts and then announce it.
 				for (WebElement currentPost : currentPrivatePosts) {
-					if (!PDA.privatePosts.contains(currentPost.getText())) {
-						PDA.privatePosts.add(currentPost.getText());
-						announcePost(currentPost, guild);
-					}
+//					if (!PDA.privatePosts.contains(currentPost.getText())) {
+//						PDA.privatePosts.add(currentPost.getText());
+//						announcePost(currentPost, guild);
+//					}
+					announcePost(currentPost, guild);
 				}
 
 				for (WebElement currentPost : currentPublicPosts) {
@@ -133,7 +136,7 @@ public class PatreonThread extends Thread {
 
 
 			// Sleep between 2-3 minutes
-			double sleepTime = randNum(120000, 180000);
+			double sleepTime = 1000;// randNum(120000, 180000);
 			System.out.printf("\nWaiting %.2f until the next Patreon page scan...\n\n", (sleepTime / 60000));
 			this.sleep((int) sleepTime);
 		}
