@@ -197,7 +197,7 @@ public class PatreonThread extends Thread {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
 
 		System.out.printf("Loading '%s' for guild '%s'\n", PDA.patreonUrls.get(guild), guild.getName());
-		driver.get(PDA.patreonUrls.get(guild));
+		driver.get(PDA.patreonUrls.get(guild).get(0));
 
 		// Time has passed and we haven't seen any post cards...
 		if (!this.visibleElementFound(postCardSelector)) {
@@ -224,7 +224,7 @@ public class PatreonThread extends Thread {
 				System.out.println("Attempting to solve GeeTest CAPTCHA...");
 
 				geeTest(driver);
-				driver.get(PDA.patreonUrls.get(guild));
+				driver.get(PDA.patreonUrls.get(guild).get(0));
 			}
 		}
 	}
