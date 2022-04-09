@@ -91,7 +91,7 @@ public class PatreonThread extends Thread {
 				goToLoginPage(driver, guild);
 
 				System.out.printf("Loading patreon page '%s'...", PDA.patreonUrls.get(guild));
-				driver.get(PDA.patreonUrls.get(guild));
+				driver.get(PDA.patreonUrls.get(guild).get(0)); // TODO: get(0) will only be the first patreonUrl in the ArrayList so when we make the O(n^2) loop to go through each patreonUrl this will change to get(i);
 				waitForPageLoad(driver);
 //		driver.get("https://www.patreon.com/supermega");
 
@@ -180,7 +180,7 @@ public class PatreonThread extends Thread {
 			geeTest(driver);
 		}
 
-		driver.get(PDA.patreonUrls.get(guild));
+		driver.get(PDA.patreonUrls.get(guild).get(0)); // TODO: driver will get only first patreonUrl, must change to get(i) eventually
 	}
 
 	private void geeTest(WebDriver driver) {
