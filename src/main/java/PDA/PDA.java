@@ -31,7 +31,7 @@ public class PDA {
 	// Global variables
 	public static String prefix = "/";
 	public static Set<Guild> guildSet = new HashSet<>();
-	public static List<PostCard> publicPosts = new LinkedList<>(), privatePosts = new LinkedList<>();
+	public static HashMap<Guild, LinkedList<PostCard>> publicPosts = new HashMap<>(), privatePosts = new HashMap<>();
 
 	public static void main(String[] arg) throws InterruptedException, LoginException {
 		disableLoggingOutput();

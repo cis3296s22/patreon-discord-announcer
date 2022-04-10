@@ -1,6 +1,7 @@
 package PDA.apis;
 
 // import PDA.DiscordBotJoin;
+import PDA.PostCard;
 import PDA.EventListener;
 import PDA.PDA;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,9 @@ public class DiscordBot {
 
 		//! setup all text channels per discord server
 		setupTextChannels();
+
+		//! setup the container for private and public posts so it's not null
+		setupPosts();
 
 		System.out.println("channels: " + channels);
 	}
@@ -115,6 +120,17 @@ public class DiscordBot {
 				chanList = guild.getTextChannels();
 			}
 			addChannel(chanList.get(0).getId(), guild);
+		}
+	}
+
+	private void setupPosts(){
+
+		for (Guild guild : PDA.guildSet){
+			LinkedList<PostCard> temp = new LinkedList<>();
+
+			// TODO: when we save the posts we will take it from there instead
+			PDA.publicPosts.put(guild, temp);
+			PDA.privatePosts.put(guild, temp);
 		}
 	}
 }

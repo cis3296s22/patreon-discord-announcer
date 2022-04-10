@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 // TODO: have an admin set what channel they want the patreon messages to go
 // TODO: only allow admins (or admin selected users) to use PDA.commands
@@ -66,5 +67,10 @@ public class EventListener extends ListenerAdapter {
 
 		// adding channel
 		bot.addChannel(event.getGuild().getTextChannels().get(0).getId(), event.getGuild());
+
+		// adding to private/public posts container
+		LinkedList<PostCard> temp = new LinkedList<>();
+		PDA.publicPosts.put(event.getGuild(), temp);
+		PDA.privatePosts.put(event.getGuild(), temp);
 	}
 }

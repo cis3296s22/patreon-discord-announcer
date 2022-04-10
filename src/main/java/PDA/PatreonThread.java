@@ -125,7 +125,7 @@ public class PatreonThread extends Thread {
 				goToLoginPage(driver, guild);
 
 //				System.out.printf("Loading patreon page '%s'...", PDA.patreonUrls.get(guild));
-//				driver.get(PDA.patreonUrls.get(guild));
+//				driver.get(PDA.patreonUrls.get(guild).get(0));
 //				waitForPageLoad(driver);
 
 				System.out.println("Finding all posts on the front page...");
@@ -140,17 +140,25 @@ public class PatreonThread extends Thread {
 					PostCard currentPostCard = new PostCard(currentPostElement);
 
 					if (currentPostCard.isPrivate()) {
-						if (!PDA.privatePosts.contains(currentPostCard)) {
+
+						if (!PDA.privatePosts.get(guild).contains(currentPostCard)) {
 							System.out.println("\n\n" + currentPostCard);
-							PDA.privatePosts.add(currentPostCard);
+
+							LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
+							temp.add(currentPostCard);
+							PDA.privatePosts.put(guild, temp);
 						}
 
 //						currentPrivatePosts.add(currentPostCard);
 					} else { // The post isn't private, it must be public
-						if (!PDA.publicPosts.contains(currentPostCard)) {
+						if (!PDA.publicPosts.get(guild).contains(currentPostCard)) {
 							System.out.println("\n\n" + currentPostCard);
-							PDA.publicPosts.add(currentPostCard);
+
+							LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
+							temp.add(currentPostCard);
+							PDA.publicPosts.put(guild, temp);
 						}
+
 
 //						currentPublicPosts.add(currentPostCard);
 					}
