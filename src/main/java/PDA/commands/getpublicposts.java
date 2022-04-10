@@ -1,6 +1,7 @@
 package PDA.commands;
 
 import PDA.PDA;
+import PDA.PostCard;
 import PDA.apis.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -15,8 +16,10 @@ public class getpublicposts implements BotCommand {
 		bot.send(guild);
 
 		bot.setTitle(null, guild);
-		for (String currentPost : PDA.privatePosts) {
-			bot.setDescription(currentPost, guild);
+		for (PostCard currentPostCard : PDA.privatePosts) {
+			bot.setTitle(currentPostCard.getTitle(), guild);
+			bot.setDescription(currentPostCard.getContent(), guild);
+			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
 			bot.send(guild);
 		}
 		bot.clearEmbed(guild);
