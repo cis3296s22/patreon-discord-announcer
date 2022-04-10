@@ -42,10 +42,12 @@ public class DiscordBot {
 		setupPosts();
 
 		System.out.println("channels: " + channels);
+
+
 	}
 
-	public void setTitle(String title, Guild id) {
-		embedMap.put(id, embedMap.get(id).setTitle(title, null));
+	public void setTitle(String title, String url, Guild id) {
+		embedMap.put(id, embedMap.get(id).setTitle(title, url));
 	}
 
 	public void addChannel(String channelId, Guild id) {
@@ -80,6 +82,7 @@ public class DiscordBot {
 
 	public void send(Guild id) { // sending embed
 		channels.get(id).sendMessageEmbeds(embedMap.get(id).build()).queue();
+		embedMap.get(id).clear();
 	}
 
 	public void send(String text, Guild id) { // sending text

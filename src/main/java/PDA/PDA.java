@@ -1,6 +1,7 @@
 package PDA;
 
 import PDA.apis.DiscordBot;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -57,6 +58,7 @@ public class PDA {
 		}
 
 		DiscordBot bot = new DiscordBot(discordToken, discordChannel);
+
 
 		// TODO: add guild(discord server id) to the config file
 		// bot.addChannel(guild, discordChannel);

@@ -18,6 +18,7 @@ import org.openqa.selenium.support.ui.Wait;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
+import java.util.List;
 
 
 public class PatreonThread extends Thread {
@@ -150,6 +152,7 @@ public class PatreonThread extends Thread {
 								LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
 								temp.add(currentPostCard);
 								PDA.privatePosts.put(guild, temp);
+								announcePost(currentPostCard, guild);
 							}
 
 //						currentPrivatePosts.add(currentPostCard);
@@ -160,6 +163,7 @@ public class PatreonThread extends Thread {
 								LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
 								temp.add(currentPostCard);
 								PDA.publicPosts.put(guild, temp);
+								announcePost(currentPostCard, guild);
 							}
 
 
@@ -200,12 +204,13 @@ public class PatreonThread extends Thread {
 		}
 	}
 
-	private void announcePost(WebElement currentPost, Guild guild) {
-		System.out.println("\n\n---------- Post ----------\n" + currentPost.getText());
+	private void announcePost(PostCard data, Guild guild) {
 
-//		bot.setTitle(currentPost.getText(), guild);
-//		bot.setDescription(currentPost.getText(), guild);
-//		bot.send(guild);
+		bot.setTitle((data.isPrivate() ? "Private: " : "Public: ") + data.getTitle(), data.getUrl(), guild);
+		bot.setDescription(data.getContent(), guild);
+		bot.setFooter(data.getPublishDate(), null, guild);
+		bot.setColor(data.isPrivate() ? Color.red : Color.green, guild);
+		bot.send(guild);
 	}
 
 	private void goToLoginPage(WebDriver driver, Guild guild, String patreonUrl) {

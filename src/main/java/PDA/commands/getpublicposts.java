@@ -12,12 +12,12 @@ public class getpublicposts implements BotCommand {
 	@Override
 	public void execute(DiscordBot bot) {
 		bot.clearEmbed(guild);
-		bot.setTitle("Public Posts:", guild);
+		bot.setTitle("Public Posts:", null, guild);
 		bot.send(guild);
 
-		bot.setTitle(null, guild);
+		bot.setTitle(null, null, guild);
 		for (PostCard currentPostCard : PDA.privatePosts.get(guild)) {
-			bot.setTitle(currentPostCard.getTitle(), guild);
+			bot.setTitle(currentPostCard.getTitle(), null, guild);
 			bot.setDescription(currentPostCard.getContent(), guild);
 			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
 			bot.send(guild);
