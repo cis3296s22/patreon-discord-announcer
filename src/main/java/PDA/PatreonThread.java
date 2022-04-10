@@ -122,54 +122,57 @@ public class PatreonThread extends Thread {
 			for (Guild guild : localSet) {
 				System.out.println("GuildSet: " + localSet);
 				System.out.println("Current Guild: " + guild);
-				goToLoginPage(driver, guild);
+
+				ArrayList<String> localUrls = PDA.patreonUrls.get(guild);
+				for (int i = 0; i < localUrls.size(); i++){ // using a foreach loop will cause a ConcurrentModificationException since we are iterating through the collection while adding a link to the patreonUrls
+					goToLoginPage(driver, guild, localUrls.get(i));
 
 //				System.out.printf("Loading patreon page '%s'...", PDA.patreonUrls.get(guild));
 //				driver.get(PDA.patreonUrls.get(guild).get(0));
 //				waitForPageLoad(driver);
 
-				System.out.println("Finding all posts on the front page...");
+					System.out.println("Finding all posts on the front page...");
 
-				// Get any public posts
-				this.sleep(4000);
+					// Get any public posts
+					this.sleep(4000);
 
-				List<WebElement> foundPostElements = driver.findElements(postCardSelector);
+					List<WebElement> foundPostElements = driver.findElements(postCardSelector);
 //				List<PostCard> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
 
-				for (WebElement currentPostElement : foundPostElements) {
-					PostCard currentPostCard = new PostCard(currentPostElement);
+					for (WebElement currentPostElement : foundPostElements) {
+						PostCard currentPostCard = new PostCard(currentPostElement);
 
-					if (currentPostCard.isPrivate()) {
+						if (currentPostCard.isPrivate()) {
 
-						if (!PDA.privatePosts.get(guild).contains(currentPostCard)) {
-							System.out.println("\n\n" + currentPostCard);
+							if (!PDA.privatePosts.get(guild).contains(currentPostCard)) {
+								System.out.println("\n\n" + currentPostCard);
 
-							LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
-							temp.add(currentPostCard);
-							PDA.privatePosts.put(guild, temp);
-						}
+								LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
+								temp.add(currentPostCard);
+								PDA.privatePosts.put(guild, temp);
+							}
 
 //						currentPrivatePosts.add(currentPostCard);
-					} else { // The post isn't private, it must be public
-						if (!PDA.publicPosts.get(guild).contains(currentPostCard)) {
-							System.out.println("\n\n" + currentPostCard);
+						} else { // The post isn't private, it must be public
+							if (!PDA.publicPosts.get(guild).contains(currentPostCard)) {
+								System.out.println("\n\n" + currentPostCard);
 
-							LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
-							temp.add(currentPostCard);
-							PDA.publicPosts.put(guild, temp);
-						}
+								LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
+								temp.add(currentPostCard);
+								PDA.publicPosts.put(guild, temp);
+							}
 
 
 //						currentPublicPosts.add(currentPostCard);
+						}
 					}
-				}
 
-				// Display every post found on the front page
-				// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
-				// bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
+					// Display every post found on the front page
+					// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
+					// bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
 
-				// For every found private post, check to see if we already announced it.
-				// If we didn't, add it to the announced posts and then announce it.
+					// For every found private post, check to see if we already announced it.
+					// If we didn't, add it to the announced posts and then announce it.
 //				for (WebElement currentPost : currentPrivatePosts) {
 ////					if (!PDA.privatePosts.contains(currentPost.getText())) {
 ////						PDA.privatePosts.add(currentPost.getText());
@@ -185,6 +188,8 @@ public class PatreonThread extends Thread {
 ////						announcePost(currentPost, guild);
 //					}
 //				}
+				}
+
 			}
 
 
@@ -203,11 +208,11 @@ public class PatreonThread extends Thread {
 //		bot.send(guild);
 	}
 
-	private void goToLoginPage(WebDriver driver, Guild guild) {
+	private void goToLoginPage(WebDriver driver, Guild guild, String patreonUrl) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
 
-		System.out.printf("Loading '%s' for guild '%s'\n", PDA.patreonUrls.get(guild), guild.getName());
-		driver.get(PDA.patreonUrls.get(guild).get(0));
+		System.out.printf("Loading '%s' for guild '%s'\n", patreonUrl, guild.getName());
+		driver.get(patreonUrl);
 
 		// Time has passed and we haven't seen any post cards...
 		if (!this.visibleElementFound(postCardSelector)) {
@@ -234,7 +239,7 @@ public class PatreonThread extends Thread {
 				System.out.println("Attempting to solve GeeTest CAPTCHA...");
 
 				geeTest(driver);
-				driver.get(PDA.patreonUrls.get(guild).get(0));
+				driver.get(patreonUrl);
 			}
 		}
 	}
