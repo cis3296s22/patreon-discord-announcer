@@ -133,17 +133,26 @@ public class PatreonThread extends Thread {
 				// Get any public posts
 				this.sleep(4000);
 
-				List<WebElement> foundPosts = driver.findElements(postCardSelector);
-				List<WebElement> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
+				List<WebElement> foundPostElements = driver.findElements(postCardSelector);
+//				List<PostCard> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
 
-				for (WebElement currentPost : foundPosts) {
-					if (1 == 1) { // TODO: If current post is private
-						PostCard postCard = new PostCard(currentPost);
+				for (WebElement currentPostElement : foundPostElements) {
+					PostCard currentPostCard = new PostCard(currentPostElement);
 
-						announcePostTest(postCard, guild);
-						currentPrivatePosts.add(currentPost);
+					if (currentPostCard.isPrivate()) {
+						if (!PDA.privatePosts.contains(currentPostCard)) {
+							System.out.println("\n\n" + currentPostCard);
+							PDA.privatePosts.add(currentPostCard);
+						}
+
+//						currentPrivatePosts.add(currentPostCard);
 					} else { // The post isn't private, it must be public
-						currentPublicPosts.add(currentPost);
+						if (!PDA.publicPosts.contains(currentPostCard)) {
+							System.out.println("\n\n" + currentPostCard);
+							PDA.publicPosts.add(currentPostCard);
+						}
+
+//						currentPublicPosts.add(currentPostCard);
 					}
 				}
 
@@ -153,21 +162,21 @@ public class PatreonThread extends Thread {
 
 				// For every found private post, check to see if we already announced it.
 				// If we didn't, add it to the announced posts and then announce it.
-				for (WebElement currentPost : currentPrivatePosts) {
-//					if (!PDA.privatePosts.contains(currentPost.getText())) {
-//						PDA.privatePosts.add(currentPost.getText());
-//						announcePost(currentPost, guild);
+//				for (WebElement currentPost : currentPrivatePosts) {
+////					if (!PDA.privatePosts.contains(currentPost.getText())) {
+////						PDA.privatePosts.add(currentPost.getText());
+////						announcePost(currentPost, guild);
+////					}
+//
+////					announcePost(currentPost, guild);
+//				}
+//
+//				for (WebElement currentPost : currentPublicPosts) {
+//					if (!PDA.publicPosts.contains(currentPost.getText())) {
+//						PDA.publicPosts.add(currentPost.getText());
+////						announcePost(currentPost, guild);
 //					}
-
-//					announcePost(currentPost, guild);
-				}
-
-				for (WebElement currentPost : currentPublicPosts) {
-					if (!PDA.publicPosts.contains(currentPost.getText())) {
-						PDA.publicPosts.add(currentPost.getText());
-//						announcePost(currentPost, guild);
-					}
-				}
+//				}
 			}
 
 
@@ -176,13 +185,6 @@ public class PatreonThread extends Thread {
 			System.out.printf("\nWaiting %.2f until the next Patreon page scan...\n\n", (sleepTime / 60000));
 			this.sleep((int) sleepTime);
 		}
-	}
-
-	private void announcePostTest(PostCard postCard, Guild guild) {
-		System.out.println("\n\nTitle: " + postCard.getTitle());
-		System.out.println("Publish Date: " + postCard.getPublishDate());
-		System.out.println("Content: " + postCard.getContent());
-		System.out.println("isPrivate: " + postCard.isPrivate());
 	}
 
 	private void announcePost(WebElement currentPost, Guild guild) {
