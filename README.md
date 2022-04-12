@@ -7,10 +7,10 @@ This document proposes a software application that allows the user to add a bot 
 ### 1. Invite our PDA Bot
 *Recommended - Our preconfigured bot makes using PDA quick and simple.
 
-1) Choose or create the Discord server where you want to use PDA Bot.
-2) Click this link to invite our Bot https://discord.com/api/oauth2/authorize?client_id=937463083876614216&permissions=8&scope=bot
-3) Select the server from Step 1 in the invitation prompt.
-4) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators.
+1) Choose or create the Discord server where you want to use PDA Bot
+2) Click [THIS LINK](https://discord.com/api/oauth2/authorize?client_id=937463083876614216&permissions=8&scope=bot) to invite our bot to your server
+3) Select the server from Step 1 in the invitation prompt
+4) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators
 
 
 ### 2. Create/use your own bot
@@ -29,7 +29,7 @@ If you are a more technical user, you can use our PDA tool to create and run you
 11) The console shall then display all posts on the page shown, close the Google Chrome instance, then terminate peacefully.
 
 ### Setup Discord Bot
-1) Go to [this](https://discord.com/developers/applications) link and click "New Application"
+1) Go to [THIS LINK](https://discord.com/developers/applications) and click "New Application"
 2) Give your application a name, then navigate to the "Bot" tab and click "Add Bot" to create your bot.
 3) Make sure the "Public Bot" option is ticked and the "Requires OAuth2 Grant" is unticked
 4) Save your bot's token by pressing the "Copy" button (if you don't see the "Copy" button, press "Reset Token" and it should pop up).
@@ -66,26 +66,26 @@ If you are a more technical user, you can use our PDA tool to create and run you
 Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/2](https://github.com/cis3296s22/patreon-discord-announcer/projects/2)
 
 # Building From Source
-### Requirements
+### System Software Requirements
 - Java JDK >= 8
 - Maven >= 3
 - Google Chrome
 
 ### Manually (with Maven >= 3)
-- Clone this repository
-- Enter the project folder
-- Use Maven to package the project by running `mvn package`
-- Either go into the **target** folder and run **patreon-discord-announcer-x.x-jar-with-dependencies.jar** (replace x.x with the version number) or move the file to your current directory with `mv target/patreon-discord-announcer-*-*.jar .`
+1) Clone this repository
+2) Enter the project folder
+3) Use Maven to package the project by running `mvn package`
 
 ### Manually (with IntelliJ IDEA >= 2021.3.x)
-- Open IntelliJ and clone this repository
-- After the project is cloned and opened, at the top of IntelliJ, go to **View** -> **Tool Windows** -> **Maven**
-- You can now build the package using Maven by going to **PDA** -> **Lifecycle** -> **package**
+1) Open IntelliJ and clone this repository
+2) After the project is cloned and opened, at the top of IntelliJ, go to **View** -> **Tool Windows** -> **Maven**
+3) You can now build the package using Maven by going to **PDA** -> **Lifecycle** -> **package**
 
 ### Automatically (with Maven)
 ```
 git clone https://github.com/cis3296s22/patreon-discord-announcer.git
 cd patreon-discord-announcer
 mvn package
-mv target/patreon-discord-announcer-*-*.jar .
 ```
+
+After building with Maven, you can find or run the package by going into the **target** folder.  It will be named **patreon-discord-announcer-x.x-jar-with-dependencies.jar** (replace x.x with the version number)
