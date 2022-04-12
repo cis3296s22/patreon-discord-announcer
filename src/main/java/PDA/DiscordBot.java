@@ -1,7 +1,8 @@
-package PDA.apis;
+package PDA;
 
-import PDA.BotCommands;
 // import PDA.DiscordBotJoin;
+import PDA.PostCard;
+import PDA.EventListener;
 import PDA.PDA;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -13,9 +14,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class DiscordBot {
@@ -26,44 +26,26 @@ public class DiscordBot {
 	public DiscordBot(String token, String channel) throws LoginException, InterruptedException {
 		embedMap = new HashMap<>();
 		channels = new HashMap<>();
-		try {
-			jda = JDABuilder.createDefault(token).build();
-		} catch (LoginException e) {
-			System.out.println("The given Discord Bot token '" + token + "' is invalid!");
-			System.exit(1);
-		}
-		jda.awaitReady();
-		jda.addEventListener(new BotCommands(this));
-		// jda.addEventListener(new DiscordBotJoin(this));
 
-		// if someone added the bot to their server when the bot wasn't running then add it to the embedMap
-		for (Guild guild : jda.getGuilds()){
-			if (!embedMap.containsKey(guild)){
-				addGuild(guild);
-				PDA.guildSet.add(guild);
-			}
-		}
+		//! setup JDA bot
+		setupJDA(token);
 
-		// setting up the text channel id per different discord server
-		for (Guild guild : PDA.guildSet){
-			List<TextChannel> chanList = guild.getTextChannelsByName("testing", true);
+		//! setup all the embeds for each guild the bot is in
+		setupEmbeds();
 
-			// if we can't find a "bot-commands" then output to the first channel we find
-			if (chanList.isEmpty()){
-				chanList = guild.getTextChannels();
-				// TextChannel initChannel = guild.getTextChannels().get(0);
+		//! setup all text channels per discord server
+		setupTextChannels();
 
-			}
-			addChannel(chanList.get(0).getId(), guild);
-		}
+		//! setup the container for private and public posts so it's not null
+		setupPosts();
 
 		System.out.println("channels: " + channels);
 
-		// this is setting the wrong channel for certain guilds but will be
+
 	}
 
-	public void setTitle(String title, Guild id) {
-		embedMap.put(id, embedMap.get(id).setTitle(title, null));
+	public void setTitle(String title, String url, Guild id) {
+		embedMap.put(id, embedMap.get(id).setTitle(title, url));
 	}
 
 	public void addChannel(String channelId, Guild id) {
@@ -97,10 +79,8 @@ public class DiscordBot {
 	}
 
 	public void send(Guild id) { // sending embed
-//		System.out.println("channels: " + channels);
-//		System.out.println("embeds: " + embedMap);
-//		System.out.println("embed: " + embedMap.get(id));
 		channels.get(id).sendMessageEmbeds(embedMap.get(id).build()).queue();
+		embedMap.get(id).clear();
 	}
 
 	public void send(String text, Guild id) { // sending text
@@ -111,5 +91,57 @@ public class DiscordBot {
 		embedMap.put(guildID, embedMap.getOrDefault(guildID, new EmbedBuilder()));
 	}
 
+	// function to help with testing
+	public Set<Guild> getAllGuilds(){
+		return embedMap.keySet();
+	}
 
+	// function to help with testing
+	public JDA getJDA(){
+		return this.jda;
+	}
+
+	private void setupJDA(String token) throws InterruptedException {
+		try {
+			jda = JDABuilder.createDefault(token).build();
+		} catch (LoginException e) {
+			System.out.println("The given Discord Bot token '" + token + "' is invalid!");
+			System.exit(1);
+		}
+		jda.awaitReady();
+		jda.addEventListener(new EventListener(this));
+	}
+
+	private void setupEmbeds(){
+		for (Guild guild : jda.getGuilds()){
+			if (!embedMap.containsKey(guild)){
+				addGuild(guild);
+				PDA.guildSet.add(guild);
+			}
+		}
+	}
+
+	private void setupTextChannels(){
+		// TODO: maybe create it's own text channel?
+		for (Guild guild : PDA.guildSet){
+			List<TextChannel> chanList = guild.getTextChannelsByName("testing", true);
+
+			// if we can't find a "bot-commands" then output to the first channel we find
+			if (chanList.isEmpty()){
+				chanList = guild.getTextChannels();
+			}
+			addChannel(chanList.get(0).getId(), guild);
+		}
+	}
+
+	private void setupPosts(){
+
+		for (Guild guild : PDA.guildSet){
+			LinkedList<PostCard> temp = new LinkedList<>();
+
+			// TODO: when we save the posts we will take it from there instead
+			PDA.publicPosts.put(guild, temp);
+			PDA.privatePosts.put(guild, temp);
+		}
+	}
 }

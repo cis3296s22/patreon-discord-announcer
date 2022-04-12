@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %boldCyan(%thread) %red(%X{jda.shard}) %boldGreen(%logger{0})
+                %highlight(%-6level) %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <logger name="net.dv8tion.jda.api.JDA" level="OFF"/>
+    <logger name="org.openqa.selenium.remote.ProtocolHandshake" level="OFF"/>
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

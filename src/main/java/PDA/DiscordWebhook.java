@@ -1,4 +1,4 @@
-package PDA.apis;
+package PDA;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;

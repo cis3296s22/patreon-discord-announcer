@@ -1,9 +1,12 @@
 package PDA.commands;
 
+import PDA.PDA;
 import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class setchannel implements BotCommand{
+import java.util.ArrayList;
+
+public class removelink implements BotCommand {
 
     private String[] args = null;
     private Guild guild;
@@ -18,8 +21,17 @@ public class setchannel implements BotCommand{
         if (args.length <= 1) {
             bot.send("No link provided", guild);
         } else {
-            bot.addChannel(args[1], guild);
-            bot.send(args[1] + " has been set as the bot output channel", guild);
+            ArrayList<String> links = PDA.patreonUrls.get(guild);
+
+            if (links.remove(args[1])){
+                bot.send(args[1] + " has been removed from the patreon link list", guild);
+            }
+            else{
+                bot.send(args[1] + " was never in the list of patreon links", guild);
+            }
+
+            PDA.patreonUrls.put(guild, links);
+            System.out.println("all links: " + links); // temporary testing
         }
     }
 
@@ -32,5 +44,4 @@ public class setchannel implements BotCommand{
     public void setGuildID(Guild guild){
         this.guild = guild;
     }
-
 }

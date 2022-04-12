@@ -1,7 +1,8 @@
 package PDA.commands;
 
 import PDA.PDA;
-import PDA.apis.DiscordBot;
+import PDA.PostCard;
+import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class getpublicposts implements BotCommand {
@@ -11,12 +12,14 @@ public class getpublicposts implements BotCommand {
 	@Override
 	public void execute(DiscordBot bot) {
 		bot.clearEmbed(guild);
-		bot.setTitle("Public Posts:", guild);
+		bot.setTitle("Public Posts:", null, guild);
 		bot.send(guild);
 
-		bot.setTitle(null, guild);
-		for (String currentPost : PDA.privatePosts) {
-			bot.setDescription(currentPost, guild);
+		bot.setTitle(null, null, guild);
+		for (PostCard currentPostCard : PDA.privatePosts.get(guild)) {
+			bot.setTitle(currentPostCard.getTitle(), null, guild);
+			bot.setDescription(currentPostCard.getContent(), guild);
+			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
 			bot.send(guild);
 		}
 		bot.clearEmbed(guild);
