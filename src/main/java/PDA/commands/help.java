@@ -9,7 +9,7 @@ public class help implements BotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
-		bot.send("PDA commands:  /help  /test  /embed  /setlink  /setchannel", guild);
+		bot.send("PDA commands:  /help  /setchannel  /addlink  /removelink", guild);
 	}
 
 	@Override
