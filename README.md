@@ -14,7 +14,7 @@ This document proposes a software application that allows the user to add a bot 
 
 
 ### 2. Create/use your own bot
-*If you are a more technical user, you can use our PDA tool to create and run your own bot locally.
+If you are a more technical user, you can use our PDA tool to create and run your own bot locally.
 
 1) Download the latest PDA binary from the Release section on the right on GitHub
 2) Make sure you meet all requirements under the [Building From Source](#building-from-source) section.
