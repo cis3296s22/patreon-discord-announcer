@@ -52,7 +52,7 @@ If you are a more technical user, you can use our PDA tool to create and run you
 
 # Bot Commands
 /help - Displays this list of commands in your Discord channel, can also be used to test if bot is currently online.  
-/setchannel - Allows the user to set the channel when command is followed with channel ID (i.e. /setchannel <Channel ID>).  
+/setchannel - Allows the user to set the channel when command is followed with channel ID (i.e. /setchannel 10108675309).  
 /addlink - Allows the user to select the creator page from patreon by copy and pasting the url after the command.
   (i.e. /setlink https:​//exampleurl)
 /removelink - Allows the user to remove a channel they no longer wish to recieve notifications from.
