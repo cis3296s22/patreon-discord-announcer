@@ -15,6 +15,7 @@ import java.util.LinkedList;
 public class EventListener extends ListenerAdapter {
 
 	private final DiscordBot bot;
+	public boolean commandRan = false;
 
 	public EventListener(DiscordBot bot) {
 		this.bot = bot;
@@ -71,5 +72,6 @@ public class EventListener extends ListenerAdapter {
 		LinkedList<PostCard> temp = new LinkedList<>();
 		PDA.publicPosts.put(event.getGuild(), temp);
 		PDA.privatePosts.put(event.getGuild(), temp);
+		commandRan = true;
 	}
 }
