@@ -36,6 +36,7 @@ public class PatreonThread extends Thread {
 	String discordChannel;
 	Wait<WebDriver> wait;
 	By postCardSelector;
+	public boolean ranFunction = false;
 
 	public PatreonThread(/* String patreonUrl ,*/ String webhookUrl, DiscordBot bot, String discordChannel) {
 		// this.patreonUrl = patreonUrl;
@@ -202,6 +203,7 @@ public class PatreonThread extends Thread {
 			this.sleep((int) sleepTime);
 		}
 	}
+
 
 	private void announcePost(PostCard data, Guild guild) {
 
@@ -432,6 +434,11 @@ public class PatreonThread extends Thread {
 		}
 	}
 
+	// JUnit testing purposes
+	public void testSleep(){
+		sleep(1000);
+	}
+
 	/**
 	 * Sleeps while handling {@link InterruptedException}
 	 *
@@ -443,6 +450,7 @@ public class PatreonThread extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		ranFunction = true;
 	}
 
 	/**

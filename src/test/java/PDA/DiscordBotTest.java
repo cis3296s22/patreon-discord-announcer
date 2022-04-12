@@ -74,16 +74,18 @@ public class DiscordBotTest{
         // call EventListener method onGuildJoin and see that it gets to the end of the method by setting commandRan = true
         listener.onGuildJoin(ev);
         assertTrue("running onGuildJoin should set the variable to true after the entire function runs", listener.commandRan);
-        listener.commandRan = false;
-
     }
 
     @Test
-    public void testPatreonThread(){
+    public void testPatreonThread() throws LoginException, InterruptedException {
 
+        // instantiate discord bot and patreonThread
+        DiscordBot db = new DiscordBot(token, channel);
+        PatreonThread p = new PatreonThread("", db, "");
 
-
-
+        // when running sleep, it will set a boolean to true to make sure that it ran without errors
+        p.testSleep();
+        assertTrue("running the testSleep() function should see if our sleep function works correctly and sets ranFunction to true", p.ranFunction);
     }
 
 
