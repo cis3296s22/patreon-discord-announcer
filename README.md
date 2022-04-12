@@ -26,8 +26,7 @@ If you are a more technical user, you can use our PDA tool to create and run you
 8) Inside of the config.json file, paste your discord channel ID into the "Channel" variable.
 9) Open a terminal/console and navigate to the directory where the PDA binary is stored.
 10) Run `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` in the terminal to run PDA.  **Ensure x.x is changed to the appropriate version number**
-11) Pay attention to the output of the console, it may ask you to assist it in passing a bot-check that is being displayed on the web browser.  After doing so, follow the instructions in the terminal.
-12) The console shall then display all posts on the page shown, close the Google Chrome instance, then terminate peacefully.
+11) The console shall then display all posts on the page shown, close the Google Chrome instance, then terminate peacefully.
 
 ### Setup Discord Bot
 1) Go to [this](https://discord.com/developers/applications) link and click "New Application"
@@ -52,12 +51,12 @@ If you are a more technical user, you can use our PDA tool to create and run you
 
 
 # Bot Commands
-/help - Displays this list of commands in your Discord channel.  
-/test - Bot will reply with "I AM HERE" if server is running.  
-/embed - Bot will show an example of an embed in Discord channel.  
+/help - Displays this list of commands in your Discord channel, can also be used to test if bot is currently online.
 /setchannel - Allows the user to set the channel when command is followed with channel ID (i.e. /setchannel <Channel ID>).  
-/setlink - Allows the user to select the creator page from patreon by copy and pasting the link after the command   
-  (i.e. /setlink https:​//exampleurl).
+/addlink - Allows the user to select the creator page from patreon by copy and pasting the url after the command.
+  (i.e. /setlink https:​//exampleurl)
+/removelink - Allows the user to remove a channel they no longer wish to recieve notifications from.
+  (i.e. /removelink https:​//exampleurl)
 
 # How to Contribute
 Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)
