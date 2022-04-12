@@ -13,7 +13,6 @@ public class PostCard {
 	private final String url;
 	private final String content;
 	private final boolean isPrivate;
-	public boolean commandPriv = false;
 
 	public PostCard(WebElement postCard) {
 		this.isPrivate = !getTagText(postCard, By.cssSelector("[data-tag='locked-rich-text-post']")).equals("N/A");

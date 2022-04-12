@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -24,7 +25,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.By;
+import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriverLogLevel;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.security.auth.login.LoginException;
 
@@ -93,10 +98,26 @@ public class DiscordBotTest{
 
         // instantiate discord bot
         DiscordBot db = new DiscordBot(token, channel);
-        PostCard post = new PostCard((WebElement) db);
 
-        post.getPost();
-        assertTrue("should test if private or not", post.commandPriv);
+        ChromeOptions options = new ChromeOptions();
+        options.setPageLoadStrategy(PageLoadStrategy.NORMAL); // NORMAL = driver waits for pages to load and ready state to be 'complete'.
+        options.addArguments(/* "--headless", */
+                "--ignore-certificate-errors",
+                "--no-sandbox",
+                "--disable-gpu",
+                "--disable-extensions",
+                "--disable-crash-reporter",
+                "--disable-logging",
+                "--disable-dev-shm-usage",
+                "--window-size=1600,900",
+                "--log-level=3");
+        options.setLogLevel(ChromeDriverLogLevel.OFF);
+        WebDriver driver = WebDriverManager.chromedriver().capabilities(options).create();
+
+        PostCard post = new PostCard(driver.findElement(By.tagName("body")));
+
+
+        assertTrue("should be public because we aren't technically giving it any post to find", !post.isPrivate());
     }
 
 
