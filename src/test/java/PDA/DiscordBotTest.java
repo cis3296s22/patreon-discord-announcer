@@ -23,6 +23,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import javax.security.auth.login.LoginException;
 
@@ -55,9 +57,8 @@ public class DiscordBotTest{
         Set<Guild> guilds = db.getAllGuilds();
 
         // shows that the guilds the bot is assigned to is the same as recorded in our DiscordBot class
-        assertEquals("size should be the same: ", db.getJDA().getGuilds().size(), guilds.size());
+        assertEquals("size should be the same: ", db.getJDA().getGuilds().size(),  guilds.size());
     }
-
 
     @Test
     public void testEventListener() throws LoginException, InterruptedException {
@@ -68,7 +69,6 @@ public class DiscordBotTest{
         // create fake event
         long responseNum = 10;
         GuildJoinEvent ev = new GuildJoinEvent(db.getJDA(), responseNum, db.getJDA().getGuilds().get(0));
-
         EventListener listener = new EventListener(db);
 
         // call EventListener method onGuildJoin and see that it gets to the end of the method by setting commandRan = true
@@ -88,7 +88,16 @@ public class DiscordBotTest{
         assertTrue("running the testSleep() function should see if our sleep function works correctly and sets ranFunction to true", p.ranFunction);
     }
 
+    @Test
+    public void testPostcard() throws LoginException, InterruptedException {
 
+        // instantiate discord bot
+        DiscordBot db = new DiscordBot(token, channel);
+        PostCard post = new PostCard((WebElement) db);
+
+        post.getPost();
+        assertTrue("should test if private or not", post.commandPriv);
+    }
 
 
 }

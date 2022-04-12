@@ -5,12 +5,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import java.util.LinkedList;
+
 public class PostCard {
 	private final String publishDate;
 	private final String title;
 	private final String url;
 	private final String content;
 	private final boolean isPrivate;
+	public boolean commandPriv = false;
 
 	public PostCard(WebElement postCard) {
 		this.isPrivate = !getTagText(postCard, By.cssSelector("[data-tag='locked-rich-text-post']")).equals("N/A");
@@ -91,6 +94,10 @@ public class PostCard {
 		} catch (NoSuchElementException e) {
 			return "N/A";
 		}
+	}
+
+	public LinkedList<PostCard> getPost(){
+		return this.getPost();
 	}
 
 	@Override
