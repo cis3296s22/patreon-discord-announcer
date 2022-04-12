@@ -63,7 +63,7 @@ If you are a more technical user, you can use our PDA tool to create and run you
   (i.e. /removelink https:​//exampleurl)
   
 # How to Contribute
-Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/1](https://github.com/cis3296s22/patreon-discord-announcer/projects/1)
+Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/2](https://github.com/cis3296s22/patreon-discord-announcer/projects/2)
 
 # Building From Source
 ### Requirements
