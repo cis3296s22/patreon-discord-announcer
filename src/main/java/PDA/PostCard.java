@@ -95,10 +95,6 @@ public class PostCard {
 		}
 	}
 
-	public LinkedList<PostCard> getPost(){
-		return this.getPost();
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		// If the object is being compared with itself then return true
