@@ -1,7 +1,7 @@
 package PDA.commands;
 
 import PDA.PDA;
-import PDA.apis.DiscordBot;
+import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;

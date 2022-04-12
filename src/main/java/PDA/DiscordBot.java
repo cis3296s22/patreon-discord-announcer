@@ -1,4 +1,4 @@
-package PDA.apis;
+package PDA;
 
 // import PDA.DiscordBotJoin;
 import PDA.PostCard;
@@ -14,10 +14,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class DiscordBot {
@@ -91,6 +89,16 @@ public class DiscordBot {
 
 	public void addGuild(Guild guildID){
 		embedMap.put(guildID, embedMap.getOrDefault(guildID, new EmbedBuilder()));
+	}
+
+	// function to help with testing
+	public Set<Guild> getAllGuilds(){
+		return embedMap.keySet();
+	}
+
+	// function to help with testing
+	public JDA getJDA(){
+		return this.jda;
 	}
 
 	private void setupJDA(String token) throws InterruptedException {

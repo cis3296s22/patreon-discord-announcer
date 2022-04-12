@@ -2,7 +2,7 @@ package PDA.commands;
 
 import PDA.PDA;
 import PDA.PostCard;
-import PDA.apis.DiscordBot;
+import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class getpublicposts implements BotCommand {

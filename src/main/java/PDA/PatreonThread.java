@@ -1,6 +1,5 @@
 package PDA;
 
-import PDA.apis.DiscordBot;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONArray;

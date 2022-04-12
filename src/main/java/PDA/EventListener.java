@@ -1,6 +1,5 @@
 package PDA;
 
-import PDA.apis.DiscordBot;
 import PDA.commands.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

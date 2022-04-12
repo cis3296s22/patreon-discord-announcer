@@ -1,19 +1,15 @@
 package PDA;
 
-import PDA.apis.DiscordBot;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.WebElement;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.HashMap;
