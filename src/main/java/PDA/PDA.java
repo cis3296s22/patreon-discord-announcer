@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
@@ -31,8 +32,6 @@ public class PDA {
 	public static HashMap<Guild, LinkedList<PostCard>> publicPosts = new HashMap<>(), privatePosts = new HashMap<>();
 
 	public static void main(String[] arg) throws InterruptedException, LoginException {
-		disableLoggingOutput();
-
 		JSONParser parser = new JSONParser();
 
 		try {
@@ -73,10 +72,5 @@ public class PDA {
 		testThread.join();
 
 		System.out.println("Finished!");
-	}
-
-	private static void disableLoggingOutput() {
-		Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
-		System.setProperty("webdriver.chrome.silentOutput", "true");
 	}
 }
