@@ -1,123 +1,70 @@
 package PDA;
 
+import ch.qos.logback.classic.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import net.dv8tion.jda.api.entities.Guild;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriverLogLevel;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 public class PatreonThread extends Thread {
-
-	// String patreonUrl;
 	String webhookUrl;
 	DiscordBot bot;
 	String discordChannel;
 	Wait<WebDriver> wait;
 	By postCardSelector;
 	public boolean ranFunction = false;
+	Logger log;
 
-	public PatreonThread(/* String patreonUrl ,*/ String webhookUrl, DiscordBot bot, String discordChannel) {
-		// this.patreonUrl = patreonUrl;
+	public PatreonThread(String webhookUrl, DiscordBot bot, String discordChannel) {
+		this.setName("PatreonThread");
 		this.webhookUrl = webhookUrl;
 		this.bot = bot;
 		this.discordChannel = discordChannel;
 		this.postCardSelector = By.cssSelector("[data-tag='post-card']");
+		this.log = (Logger) LoggerFactory.getLogger(this.getName());
 	}
 
 	@Override
 	public void run() {
-
-		JSONParser parser = new JSONParser();
-		int drivernum = 0; // add driver type here 0-Chrome, 1-Firefox, 2-Edge
-
-		try {
-			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
-			JSONArray checkconfig = (JSONArray) jsonObject.get("drivers");
-			JSONObject drivers = (JSONObject) checkconfig.get(drivernum);
-			String drivername = drivers.values().toString();
-			drivername = drivername.replaceAll("[\\[\\](){}]", "");
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("Loading the driver...");
-
 		// Create and initialize the browser
-		WebDriver driver = null;
-		try {
-			switch (drivernum) {
-				case 0: { // Chrome
-					ChromeOptions options = new ChromeOptions();
-					options.setPageLoadStrategy(PageLoadStrategy.NORMAL); // NORMAL = driver waits for pages to load and ready state to be 'complete'.
-					options.addArguments(/* "--headless", */
-							"--ignore-certificate-errors",
-							"--no-sandbox",
-							"--disable-gpu",
-							"--disable-extensions",
-							"--disable-crash-reporter",
-							"--disable-logging",
-							"--disable-dev-shm-usage",
-							"--window-size=1600,900",
-							"--log-level=3");
-					options.setLogLevel(ChromeDriverLogLevel.OFF);
-					driver = WebDriverManager.chromedriver().capabilities(options).create();
-					break;
-				}
-				case 1: { // Firefox
-					FirefoxOptions options = new FirefoxOptions();
-					options.addArguments(/*"--headless"*/);
-					driver = WebDriverManager.firefoxdriver().create();
-					break;
-				}
-				case 2: { // Edge
-					EdgeOptions options = new EdgeOptions();
-					options.addArguments(/* "--headless", */ "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--window-size=1600,900", "--log-level=3");
-					driver = WebDriverManager.edgedriver().capabilities(options).create();
-					break;
-				}
-				default: // Incorrect selection
-					break;
-			}
-		} catch (SessionNotCreatedException e) {
-			System.out.println("An error occurred while loading the browser.");
-			e.printStackTrace();
-		} finally {
-			if (driver == null)
-				System.exit(1);
+		log.info("Initializing Firefox driver...");
+		WebDriver driver = createBrowser();
+
+		// If the browser failed to initialize for whatever reason, stop PDA.
+		if (driver == null) {
+			log.error("The Firefox driver failed to initialize.  Stopping PDA.");
+			System.exit(1);
 		}
+
+		log.info("Initialized the Firefox driver!");
 
 		// Initialize our waiting interface
+		log.info("Initializing waiting interface...");
 		wait = new FluentWait<>(driver)
 				.withTimeout(Duration.ofSeconds(5))
 				.pollingEvery(Duration.ofMillis(250));
+		log.info("Initialized the waiting interface!");
 
+		log.info("Setup complete.  Starting to scan.");
 		while (true) {
 			Set<Guild> localSet = new HashSet<>(PDA.guildSet);
 
@@ -126,86 +73,70 @@ public class PatreonThread extends Thread {
 				System.out.println("Current Guild: " + guild);
 
 				ArrayList<String> localUrls = PDA.patreonUrls.get(guild);
-				for (int i = 0; i < localUrls.size(); i++){ // using a foreach loop will cause a ConcurrentModificationException since we are iterating through the collection while adding a link to the patreonUrls
+				for (int i = 0; i < localUrls.size(); i++) { // using a foreach loop will cause a ConcurrentModificationException since we are iterating through the collection while adding a link to the patreonUrls
 					goToLoginPage(driver, guild, localUrls.get(i));
-
-//				System.out.printf("Loading patreon page '%s'...", PDA.patreonUrls.get(guild));
-//				driver.get(PDA.patreonUrls.get(guild).get(0));
-//				waitForPageLoad(driver);
 
 					System.out.println("Finding all posts on the front page...");
 
-					// Get any public posts
-					this.sleep(4000);
+					// Wait for any postCard to be visible
+					if (this.visibleElementFound(postCardSelector))
+						this.sleep(4000);
 
 					List<WebElement> foundPostElements = driver.findElements(postCardSelector);
-//				List<PostCard> currentPublicPosts = new LinkedList<>(), currentPrivatePosts = new LinkedList<>();
 
 					for (WebElement currentPostElement : foundPostElements) {
 						PostCard currentPostCard = new PostCard(currentPostElement);
 
-						if (currentPostCard.isPrivate()) {
+						handlePost(guild, currentPostCard);
 
-							if (!PDA.privatePosts.get(guild).contains(currentPostCard)) {
-								System.out.println("\n\n" + currentPostCard);
-
-								LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
-								temp.add(currentPostCard);
-								PDA.privatePosts.put(guild, temp);
-								announcePost(currentPostCard, guild);
-							}
-
-//						currentPrivatePosts.add(currentPostCard);
-						} else { // The post isn't private, it must be public
-							if (!PDA.publicPosts.get(guild).contains(currentPostCard)) {
-								System.out.println("\n\n" + currentPostCard);
-
-								LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
-								temp.add(currentPostCard);
-								PDA.publicPosts.put(guild, temp);
-								announcePost(currentPostCard, guild);
-							}
-
-
-//						currentPublicPosts.add(currentPostCard);
-						}
+//						if (currentPostCard.isPrivate()) { // * Private post
+//							if (!PDA.privatePosts.get(guild).contains(currentPostCard)) {
+//								System.out.println("\n\n" + currentPostCard);
+//
+//								LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
+//								temp.add(currentPostCard);
+//								PDA.privatePosts.put(guild, temp);
+//								announcePost(currentPostCard, guild);
+//							}
+//						} else { // * Public post
+//							if (!PDA.publicPosts.get(guild).contains(currentPostCard)) {
+//								System.out.println("\n\n" + currentPostCard);
+//
+//								LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
+//								temp.add(currentPostCard);
+//								PDA.publicPosts.put(guild, temp);
+//								announcePost(currentPostCard, guild);
+//							}
+//						}
 					}
-
-					// Display every post found on the front page
-					// TODO: will need to get the parts of the post (like image and whatnot) so we can give it to the discord webhook client
-					// bot.setChannel(discordChannel); // will either get channel from user or from config file in the future
-
-					// For every found private post, check to see if we already announced it.
-					// If we didn't, add it to the announced posts and then announce it.
-//				for (WebElement currentPost : currentPrivatePosts) {
-////					if (!PDA.privatePosts.contains(currentPost.getText())) {
-////						PDA.privatePosts.add(currentPost.getText());
-////						announcePost(currentPost, guild);
-////					}
-//
-////					announcePost(currentPost, guild);
-//				}
-//
-//				for (WebElement currentPost : currentPublicPosts) {
-//					if (!PDA.publicPosts.contains(currentPost.getText())) {
-//						PDA.publicPosts.add(currentPost.getText());
-////						announcePost(currentPost, guild);
-//					}
-//				}
 				}
-
 			}
 
-
-			// Sleep between 2-3 minutes
-			double sleepTime = 1000;// randNum(120000, 180000);
-			System.out.printf("\nWaiting %.2f until the next Patreon page scan...\n\n", (sleepTime / 60000));
+			// Wait between 4-5 minutes until the next scan.  Prevents rate limiting & IP blocks
+			double sleepTime = 1000;// randNum(240000, 300000);
+			System.out.printf("\nWaiting %s until the next Patreon page scan...\n\n", formatTime((int) sleepTime / 1000));
 			this.sleep((int) sleepTime);
 		}
 	}
 
+	private void handlePost(Guild guild, PostCard postCard) {
+		HashMap<Guild, LinkedList<PostCard>> hashMap = postCard.isPrivate() ? PDA.privatePosts : PDA.publicPosts;
+
+		if (!hashMap.get(guild).contains(postCard)) {
+			System.out.println("\n\n" + postCard);
+
+			LinkedList<PostCard> temp = hashMap.get(guild);
+			temp.add(postCard);
+			hashMap.put(guild, temp);
+			announcePost(postCard, guild);
+		}
+	}
 
 	private void announcePost(PostCard data, Guild guild) {
+//		if (1 == 1) {
+//			System.out.println("\n\n" + data);
+//			return;
+//		}
 
 		bot.setTitle((data.isPrivate() ? "Private: " : "Public: ") + data.getTitle(), data.getUrl(), guild);
 		bot.setDescription(data.getContent(), guild);
@@ -216,10 +147,10 @@ public class PatreonThread extends Thread {
 
 	private void goToLoginPage(WebDriver driver, Guild guild, String patreonUrl) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
-
 		System.out.printf("Loading '%s' for guild '%s'\n", patreonUrl, guild.getName());
 		driver.get(patreonUrl);
 
+		System.out.println("Waiting for post cards to be found...");
 		// Time has passed and we haven't seen any post cards...
 		if (!this.visibleElementFound(postCardSelector)) {
 			System.out.println("No postcards found after waiting for 5 second...");
@@ -244,6 +175,7 @@ public class PatreonThread extends Thread {
 			if (!driver.getPageSource().contains("New to Patreon?")) {
 				System.out.println("Attempting to solve GeeTest CAPTCHA...");
 
+				driver.manage().deleteAllCookies();
 				geeTest(driver);
 				driver.get(patreonUrl);
 			}
@@ -271,14 +203,21 @@ public class PatreonThread extends Thread {
 				System.exit(1);
 			}
 
+		// For some reason the page isn't loading.  Simply return from the GeeTest function so the program can navigate elsewhere.
+		if (!this.visibleElementFound(By.className("geetest_radar_btn")))
+			return;
+
 		// Store the GeeTest verification button
 		WebElement geeTestVerify = driver.findElement(By.className("geetest_radar_btn"));
 
 		// Click the GeeTest verification button
 		geeTestVerify.click();
 
+		int loopAttempts = 0;
+
 		// While the puzzle is visible, attempt to solve it repeatedly
-		while (this.visibleElementFound(By.className("geetest_canvas_bg"))) {
+		while (loopAttempts < 4 && this.visibleElementFound(By.className("geetest_canvas_bg"))) {
+			loopAttempts++;
 			this.sleep(1000);
 
 			// Wait until both the original and the puzzle image are present
@@ -322,16 +261,6 @@ public class PatreonThread extends Thread {
 			// Store WxH of each image
 			int originalWidth = originalImage.getWidth();
 			int originalHeight = originalImage.getHeight();
-//			int puzzleWidth = puzzleImage.getWidth();
-//			int puzzleHeight = puzzleImage.getHeight();
-
-			// Ensure image dimensions are the same, otherwise we can't solve this puzzle
-//			if (originalWidth != puzzleWidth || originalHeight != puzzleHeight) {
-//				System.out.println("The width/height don't match for the images.");
-//				System.out.printf("Original: %dx%d\nPuzzle: %dx%d", originalWidth, originalHeight, puzzleWidth, puzzleHeight);
-//				System.exit(1);
-//			}
-
 			int[][] differenceMatrix = new int[originalWidth][originalHeight];
 
 			// Calculate the differences between the original image and the puzzle image
@@ -373,7 +302,7 @@ public class PatreonThread extends Thread {
 
 			// Let the page load
 			if (this.visibleElementFound(By.className("geetest_slider_button")))
-				this.sleep(randNum(1000, 2000));
+				this.sleep(randNum(500, 1000));
 
 			WebElement dragButton = driver.findElement(By.className("geetest_slider_button"));
 			Actions move = new Actions(driver);
@@ -384,7 +313,7 @@ public class PatreonThread extends Thread {
 			move.moveToElement(dragButton, 20 + new Random().nextInt(10), 20 + new Random().nextInt(10)).perform();
 
 			// Wait between 1-2 seconds
-			this.sleep(randNum(1000, 2000));
+//			this.sleep(randNum(500, 1000));
 
 			// Left mouse button down
 			move.clickAndHold().perform();
@@ -393,49 +322,127 @@ public class PatreonThread extends Thread {
 			this.sleep(randNum(500, 1000));
 
 			// Slowly move the slider with varying cursor height adjustments
-			int totalDragAmount = 0, currentDragAmount = 1;
+			int totalDragAmount = 0, currentDragAmount = 1, overShoot = 0;
+			boolean toggle = false;
 
-			// Queue up actions with random additions to the X movement
-			while (totalDragAmount < dragAmount + 2) {
-				move.moveByOffset(currentDragAmount, 0);
-				totalDragAmount += currentDragAmount;
-				currentDragAmount += new Random().nextInt(2);
+			if (1 == 1) {
+				move.moveByOffset(dragAmount + (dragAmount % 2 == 0 ? 2 : -2), 0).perform();
+				this.sleep(500);
 
-//				currentDragAmount = (Math.abs(totalDragAmount - dragAmount) < 10 ? 9 : (Math.min(currentDragAmount, 19)));
+				if (dragAmount > 90)
+					this.sleep(randNum(500, 900));
 
-//				if (Math.abs(totalDragAmount - dragAmount) < 10)
-//					currentDragAmount = 9;
-//				else if (currentDragAmount > 19)
-//					currentDragAmount = 19;
-			}
+				move.release().perform();
+			} /* else {
+//				if (1 == 0) {
+//					int[] movementArray = {1, 3, 5, 9, 15};
+//
+//					for (int moveAmount : movementArray) {
+//						move.moveByOffset(moveAmount, 0).perform();
+//						if (moveAmount < 9)
+//							this.sleep(this.randNum(100, 300));
+//						else
+//							this.sleep(this.randNum(200, 400));
+//					}
+//
+//					dragAmount -= 33;
+//
+//					while (dragAmount > 0) {
+//						if (dragAmount > 66) {
+//							move.moveByOffset(25, 0).perform();
+//							dragAmount -= 25;
+//						} else if (dragAmount > 44) {
+//							move.moveByOffset(22, 0).perform();
+//							dragAmount -= 22;
+//						} else if (dragAmount >= 11) {
+//							move.moveByOffset(11, 0).perform();
+//							dragAmount -= 11;
+//						} else {
+//							move.moveByOffset(dragAmount, 0).perform();
+//							dragAmount = 0;
+//						}
+//						this.sleep(this.randNum(300, 400));
+//					}
+//
+//					move.release().perform();
+//				} else {
+				// Queue up actions with random additions to the X movement
+				while (totalDragAmount < dragAmount + 2) {
+					if (currentDragAmount < 22)
+						currentDragAmount += new Random().nextInt(2);
 
-			// Start moving the image to the right, intentionally overshooting
-			move.perform();
+					if (currentDragAmount + totalDragAmount >= dragAmount) {
+						overShoot = currentDragAmount + totalDragAmount - dragAmount;
+						toggle = true;
+					}
 
-			// Wait a random time between 1-2 seconds to assist simulating human behavior
-			this.sleep(randNum(200, 1000));
+					move.moveByOffset(currentDragAmount, 0);
+					totalDragAmount += currentDragAmount;
 
-			while (dragAmount + this.randNum(-1, 2) < totalDragAmount) {
-				move.moveByOffset(-1, 0);
-				totalDragAmount -= 1;
-			}
+					if (toggle)
+						break;
+				}
 
-			// Start moving the image to the left as we intentionally overshot
-			move.release().perform();
+				// Start moving the image to the right, intentionally overshooting
+				move.perform();
 
-			// Wait for the page to load
-//			this.sleep(2000);
+				// Wait a random time between 1-2 seconds to assist simulating human behavior
+				this.sleep(randNum(500, 1000));
+
+				// Moving to the left to fix over-shooting
+				while (overShoot > 0) {
+					move.moveByOffset(-1, 0);
+					totalDragAmount -= 1;
+					overShoot -= 1;
+				}
+
+				// Start moving the image to the left as we intentionally overshot
+				move.release().perform();
+			} */
+//			}
 
 			// Click the "reset" button if it exists
 			if (this.visibleElementFound(By.className("geetest_reset_tip_content"))) {
-//				this.sleep(randNum(1500, 2000));
-				driver.findElement(By.className("geetest_reset_tip_content")).click();
+				this.sleep(randNum(500, 1000));
+
+				WebElement resetButton = driver.findElement(By.className("geetest_reset_tip_content"));
+				move.moveToElement(resetButton);
+				this.sleep(randNum(500, 1000));
+
+				resetButton.click();
 			}
+		}
+
+		if (loopAttempts >= 5) {
+			driver.get("https://www.example.com");
+			this.sleep(1500);
+			driver.manage().deleteAllCookies();
+		}
+	}
+
+	private WebDriver createBrowser() {
+		try {
+			FirefoxOptions options = new FirefoxOptions();
+//			options.setHeadless(true);
+			options.setLogLevel(FirefoxDriverLogLevel.FATAL);
+
+			// Marionette is required to redirect Firefox's logging
+			options.setCapability(FirefoxDriver.Capability.MARIONETTE, "true");
+
+			// Set redirect location.  If OS is Windows based then "NUL:", otherwise "/dev/null"
+			String logLocation = SystemUtils.OS_NAME.startsWith("Windows") ? "NUL:" : "/dev/null";
+
+			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logLocation);
+
+			// Create the driver
+			return WebDriverManager.firefoxdriver().capabilities(options).create();
+		} catch (Exception e) {
+			return null;
 		}
 	}
 
 	// JUnit testing purposes
-	public void testSleep(){
+	public void testSleep() {
 		sleep(1000);
 	}
 
@@ -467,6 +474,16 @@ public class PatreonThread extends Thread {
 		return new Random().nextInt(max - min) + min;
 	}
 
+	private String formatTime(int timeInSeconds) {
+		int seconds = timeInSeconds % 3600 % 60;
+		int minutes = (int) Math.floor(timeInSeconds % 3600 / 60);
+
+		if (minutes == 0)
+			return seconds + "s";
+
+		return minutes + "m:" + seconds + "s";
+	}
+
 	/**
 	 * Checks for the visibility of an element.  The element must be visible regardless of being loaded.
 	 *
@@ -481,12 +498,4 @@ public class PatreonThread extends Thread {
 			return false;
 		}
 	}
-
-//	private void waitForPageLoad(WebDriver driver) {
-//		System.out.println("Waiting for the page to finish loading...");
-//
-//		new WebDriverWait(driver, Duration.ofSeconds(30)).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-//
-//		System.out.println("Done!");
-//	}
 }
