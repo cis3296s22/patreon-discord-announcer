@@ -114,19 +114,19 @@
             <version>2.4.0-b180830.0359</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.36</version>-->
-<!--        </dependency>-->
+        <!-- Logging stuff -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.11</version>
+        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-simple</artifactId>-->
-<!--            <version>1.7.36</version>-->
-<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -155,23 +155,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-
-        <!-- Required to interface with Chrome -->
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-            <version>4.1.3</version>
-        </dependency>
-
-        <!-- Required to interface with Edge -->
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-edge-driver -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-edge-driver</artifactId>
-            <version>4.1.3</version>
+            <version>5.1.1</version>
         </dependency>
 
         <!-- Required to interface with Firefox -->
@@ -184,11 +168,11 @@
 
         <!-- Required for Discord Webhooks -->
         <!-- https://mvnrepository.com/artifact/club.minnced/discord-webhooks -->
-        <dependency>
-            <groupId>club.minnced</groupId>
-            <artifactId>discord-webhooks</artifactId>
-            <version>0.8.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>club.minnced</groupId>-->
+<!--            <artifactId>discord-webhooks</artifactId>-->
+<!--            <version>0.8.0</version>-->
+<!--        </dependency>-->
 
         <!-- Required for Discord Bot -->
         <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
