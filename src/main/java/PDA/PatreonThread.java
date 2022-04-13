@@ -436,9 +436,13 @@ public class PatreonThread extends Thread {
 
 			// Create the driver
 			return WebDriverManager.firefoxdriver().capabilities(options).create();
+		} catch (SessionNotCreatedException e) {
+			log.error("A Firefox session could not be created. If you do not have Firefox installed, please install it.");
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+
+		return null;
 	}
 
 	// JUnit testing purposes
