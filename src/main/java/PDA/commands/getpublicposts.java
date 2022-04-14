@@ -14,8 +14,8 @@ public class getpublicposts implements BotCommand {
 		bot.setTitle("Public Posts:", null, guild);
 		bot.send(guild);
 
-		for (PostCard currentPostCard : PDA.privatePosts.get(guild)) {
-			bot.send("post: " + currentPostCard.getTitle(), guild);
+		for (PostCard currentPostCard : PDA.publicPosts.get(guild)) {
+			bot.send("public: " + !currentPostCard.isPrivate(), guild);
 			bot.setTitle(currentPostCard.getTitle(), null, guild);
 			bot.setDescription(currentPostCard.getContent(), guild);
 			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
