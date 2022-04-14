@@ -89,3 +89,5 @@ mvn package
 ```
 
 After building with Maven, you can find or run the package by going into the **target** folder.  It will be named **patreon-discord-announcer-x.x-jar-with-dependencies.jar** (replace x.x with the version number)
+
+Adding here to test whether my commits show up correctly
