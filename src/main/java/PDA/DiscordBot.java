@@ -1,6 +1,7 @@
 package PDA;
 
 // import PDA.DiscordBotJoin;
+
 import PDA.PostCard;
 import PDA.EventListener;
 import PDA.PDA;
@@ -84,17 +85,17 @@ public class DiscordBot {
 		channels.get(id).sendMessage(text).queue();
 	}
 
-	public void addGuild(Guild id){
+	public void addGuild(Guild id) {
 		embedMap.put(id, embedMap.getOrDefault(id, new EmbedBuilder()));
 	}
 
 	// function to help with testing
-	public Set<Guild> getAllGuilds(){
+	public Set<Guild> getAllGuilds() {
 		return embedMap.keySet();
 	}
 
 	// function to help with testing
-	public JDA getJDA(){
+	public JDA getJDA() {
 		return this.jda;
 	}
 
@@ -109,40 +110,41 @@ public class DiscordBot {
 		jda.addEventListener(new EventListener(this));
 	}
 
-	private void setupEmbeds(){
-		for (Guild guild : jda.getGuilds()){
-			if (!embedMap.containsKey(guild)){
+	private void setupEmbeds() {
+		for (Guild guild : jda.getGuilds()) {
+			if (!embedMap.containsKey(guild)) {
 				addGuild(guild);
 				PDA.guildSet.add(guild);
 			}
 		}
 	}
 
-	private void setupTextChannels(){
+	private void setupTextChannels() {
 		// TODO: maybe create it's own text channel?
-		for (Guild guild : PDA.guildSet){
+		for (Guild guild : PDA.guildSet) {
 			List<TextChannel> chanList = guild.getTextChannelsByName("testing", true);
 
 			// if we can't find a "bot-commands" then output to the first channel we find
-			if (chanList.isEmpty()){
+			if (chanList.isEmpty()) {
 				chanList = guild.getTextChannels();
 			}
 			addChannel(chanList.get(0).getId(), guild);
 		}
 	}
 
-	private void setupPosts(){
+	private void setupPosts() {
 
-		for (Guild guild : PDA.guildSet){
+		for (Guild guild : PDA.guildSet) {
 			LinkedList<PostCard> temp = new LinkedList<>();
 
 			// TODO: when we save the posts we will take it from there instead
-			PDA.publicPosts.put(guild, temp);
-			PDA.privatePosts.put(guild, temp);
+			PDA.postCards.put(guild, temp);
+//			PDA.publicPosts.put(guild, temp);
+//			PDA.privatePosts.put(guild, temp);
 		}
 	}
 
-	private void setupPatreonUrls(){
+	private void setupPatreonUrls() {
 //		for (Guild id : PDA.guildSet){ // initialization of all patreon links to example patreon
 //			PDA.patreonUrls.put(id, new ArrayList<>());
 //		}

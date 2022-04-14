@@ -18,7 +18,7 @@ public class help implements BotCommand {
 	}
 
 	@Override
-	public void setGuildID(Guild guild){
+	public void setGuildID(Guild guild) {
 		this.guild = guild;
 	}
 }
