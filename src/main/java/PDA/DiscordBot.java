@@ -23,7 +23,7 @@ public class DiscordBot {
 	private HashMap<Guild, EmbedBuilder> embedMap;
 	private HashMap<Guild, TextChannel> channels;
 
-	public DiscordBot(String token, String channel) throws LoginException, InterruptedException {
+	public DiscordBot(String token) throws LoginException, InterruptedException {
 		embedMap = new HashMap<>();
 		channels = new HashMap<>();
 

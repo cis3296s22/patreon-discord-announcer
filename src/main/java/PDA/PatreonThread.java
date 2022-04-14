@@ -28,17 +28,15 @@ import java.util.*;
 public class PatreonThread extends Thread {
 	String webhookUrl;
 	DiscordBot bot;
-	String discordChannel;
 	Wait<WebDriver> wait;
 	By postCardSelector;
 	public boolean ranFunction = false;
 	Logger log;
 
-	public PatreonThread(String webhookUrl, DiscordBot bot, String discordChannel) {
+	public PatreonThread(String webhookUrl, DiscordBot bot) {
 		this.setName("PatreonThread");
 		this.webhookUrl = webhookUrl;
 		this.bot = bot;
-		this.discordChannel = discordChannel;
 		this.postCardSelector = By.cssSelector("[data-tag='post-card']");
 		this.log = (Logger) LoggerFactory.getLogger(this.getName());
 	}
@@ -137,6 +135,7 @@ public class PatreonThread extends Thread {
 //			System.out.println("\n\n" + data);
 //			return;
 //		}
+
 
 		bot.setTitle((data.isPrivate() ? "Private: " : "Public: ") + data.getTitle(), data.getUrl(), guild);
 		bot.setDescription(data.getContent(), guild);

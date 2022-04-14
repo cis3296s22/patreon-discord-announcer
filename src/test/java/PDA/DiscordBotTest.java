@@ -56,7 +56,7 @@ public class DiscordBotTest{
     public void testDiscordBot() throws InterruptedException, LoginException {
 
         // instantiate a new discord bot with the token (channel doesn't matter)
-        DiscordBot db = new DiscordBot(token, channel);
+        DiscordBot db = new DiscordBot(token);
 
         // get all the guilds(discord servers) assigned to db that we recorded
         Set<Guild> guilds = db.getAllGuilds();
@@ -69,7 +69,7 @@ public class DiscordBotTest{
     public void testEventListener() throws LoginException, InterruptedException {
         // we need to assume that DiscordBot already has guilds in it already
 
-        DiscordBot db = new DiscordBot(token, channel);
+        DiscordBot db = new DiscordBot(token);
 
         // create fake event
         long responseNum = 10;
@@ -85,8 +85,8 @@ public class DiscordBotTest{
     public void testPatreonThread() throws LoginException, InterruptedException {
 
         // instantiate discord bot and patreonThread
-        DiscordBot db = new DiscordBot(token, channel);
-        PatreonThread p = new PatreonThread("", db, "");
+        DiscordBot db = new DiscordBot(token);
+        PatreonThread p = new PatreonThread("", db);
 
         // when running sleep, it will set a boolean to true to make sure that it ran without errors
         p.testSleep();
@@ -97,7 +97,7 @@ public class DiscordBotTest{
     public void testPostcard() throws LoginException, InterruptedException {
 
         // instantiate discord bot
-        DiscordBot db = new DiscordBot(token, channel);
+        DiscordBot db = new DiscordBot(token);
 
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.NORMAL); // NORMAL = driver waits for pages to load and ready state to be 'complete'.

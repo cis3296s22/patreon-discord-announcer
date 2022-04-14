@@ -24,7 +24,6 @@ public class PDA {
 	public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>();
 	static String webhookUrl = ""; // https://discord.com/api/webhooks/958181437402644520/Nw6LLM7JGm176hDd6KgtUK3h3FXif-m7fRcnSAvyjrWP7p1lHuIhRJFTZ76RD1sHL0C4
 	static String discordToken = "";
-	static String discordChannel = "";
 
 	// Global variables
 	public static String prefix = "/";
@@ -41,10 +40,10 @@ public class PDA {
 			discordToken = token.toString().replaceAll("[\\[\\](){}]", "");
 //			discordToken = discordToken.replaceAll("[\\[\\](){}]", "");
 			System.out.println(discordToken);
-			Object channel = jsonObject.get("Channel");
-			discordChannel = channel.toString().replaceAll("[\\[\\](){}]", "");
-//			discordChannel = discordChannel.replaceAll("[\\[\\](){}]", "");
-			System.out.println(discordChannel);
+//			Object channel = jsonObject.get("Channel");
+//			discordChannel = channel.toString().replaceAll("[\\[\\](){}]", "");
+////			discordChannel = discordChannel.replaceAll("[\\[\\](){}]", "");
+//			System.out.println(discordChannel);
 		} catch (FileNotFoundException e) {
 			System.out.println("The configuration file 'config.json' was not found!");
 			System.exit(1);
@@ -52,10 +51,9 @@ public class PDA {
 			e.printStackTrace();
 		}
 
-		DiscordBot bot = new DiscordBot(discordToken, discordChannel);
+		DiscordBot bot = new DiscordBot(discordToken);
 
 
-		// TODO: add guild(discord server id) to the config file
 		// bot.addChannel(guild, discordChannel);
 
 		for (Guild id : guildSet){ // initialization of all patreon links to example patreon
@@ -67,7 +65,7 @@ public class PDA {
 
 		System.out.println("PatreonURLs: " + patreonUrls);
 
-		PatreonThread testThread = new PatreonThread(webhookUrl, bot, discordChannel);
+		PatreonThread testThread = new PatreonThread(webhookUrl, bot);
 		testThread.start();
 		testThread.join();
 
