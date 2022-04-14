@@ -4,18 +4,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.*;
 
 public class PDA {
@@ -25,7 +18,7 @@ public class PDA {
 	public static HashMap<String, ArrayList<Guild>> patreonUrls = new HashMap<>();
 	public static String prefix = "/";
 	public static Set<Guild> guildSet = new HashSet<>();
-	public static HashMap<Guild, LinkedList<PostCard>> publicPosts = new HashMap<>(), privatePosts = new HashMap<>();
+	public static HashMap<Guild, LinkedList<PostCard>> postCards = new HashMap<>();
 
 	static String discordToken = "";
 

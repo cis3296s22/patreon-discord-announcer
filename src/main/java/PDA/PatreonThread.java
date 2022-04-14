@@ -93,12 +93,13 @@ public class PatreonThread extends Thread {
 	}
 
 	private void handlePost(Guild guild, PostCard postCard) {
-		HashMap<Guild, LinkedList<PostCard>> hashMap = (postCard.isPrivate() ? PDA.privatePosts : PDA.publicPosts);
+//		HashMap<Guild, LinkedList<PostCard>> hashMap = (postCard.isPrivate() ? PDA.privatePosts : PDA.publicPosts);
 
-		if (!hashMap.get(guild).contains(postCard)) {
-			LinkedList<PostCard> temp = hashMap.get(guild);
+//		this.log.warn("HashMap being used: " + (hashMap == PDA.privatePosts ? "PDA.privatePosts" : "PDA.publicPosts"));
+		if (!PDA.postCards.get(guild).contains(postCard)) {
+			LinkedList<PostCard> temp = PDA.postCards.get(guild);
 			temp.add(postCard);
-			hashMap.put(guild, temp);
+			PDA.postCards.put(guild, temp);
 			this.announcePost(postCard, guild);
 		}
 
