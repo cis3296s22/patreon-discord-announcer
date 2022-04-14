@@ -43,8 +43,6 @@ public class DiscordBot {
 		setupPatreonUrls();
 
 		System.out.println("channels: " + channels);
-
-
 	}
 
 	public void setTitle(String title, String url, Guild id) {
