@@ -86,7 +86,7 @@ public class DiscordBotTest{
 
         // instantiate discord bot and patreonThread
         DiscordBot db = new DiscordBot(token);
-        PatreonThread p = new PatreonThread("", db);
+        PatreonThread p = new PatreonThread(db);
 
         // when running sleep, it will set a boolean to true to make sure that it ran without errors
         p.testSleep();

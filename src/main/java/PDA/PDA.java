@@ -19,16 +19,14 @@ import java.util.logging.Logger;
 import java.util.*;
 
 public class PDA {
-	// TODO: make patreonUrl a list so we can have multiple patreon pages to check (maybe hashmap<Integer(guild id), List> so it depends on the discord server its in)
-	// public static String patreonUrl = "https://www.patreon.com/pda_example";
-	public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>();
-	static String webhookUrl = ""; // https://discord.com/api/webhooks/958181437402644520/Nw6LLM7JGm176hDd6KgtUK3h3FXif-m7fRcnSAvyjrWP7p1lHuIhRJFTZ76RD1sHL0C4
-	static String discordToken = "";
 
 	// Global variables
+	public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>(); // https://www.patreon.com/pda_example or https://www.patreon.com/alexzwicky
 	public static String prefix = "/";
 	public static Set<Guild> guildSet = new HashSet<>();
 	public static HashMap<Guild, LinkedList<PostCard>> publicPosts = new HashMap<>(), privatePosts = new HashMap<>();
+
+	static String discordToken = "";
 
 	public static void main(String[] arg) throws InterruptedException, LoginException {
 		JSONParser parser = new JSONParser();
@@ -58,7 +56,7 @@ public class PDA {
 
 		System.out.println("PatreonURLs: " + patreonUrls);
 
-		PatreonThread testThread = new PatreonThread(webhookUrl, bot);
+		PatreonThread testThread = new PatreonThread(bot);
 		testThread.start();
 		testThread.join();
 

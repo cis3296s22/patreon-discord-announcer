@@ -26,16 +26,14 @@ import java.util.*;
 
 
 public class PatreonThread extends Thread {
-	String webhookUrl;
 	DiscordBot bot;
 	Wait<WebDriver> wait;
 	By postCardSelector;
 	public boolean ranFunction = false;
 	Logger log;
 
-	public PatreonThread(String webhookUrl, DiscordBot bot) {
+	public PatreonThread(DiscordBot bot) {
 		this.setName("PatreonThread");
-		this.webhookUrl = webhookUrl;
 		this.bot = bot;
 		this.postCardSelector = By.cssSelector("[data-tag='post-card']");
 		this.log = (Logger) LoggerFactory.getLogger(this.getName());
