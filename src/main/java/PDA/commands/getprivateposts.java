@@ -14,7 +14,6 @@ public class getprivateposts implements BotCommand {
         bot.setTitle("Private Posts:", null, guild);
         bot.send(guild);
 
-        bot.setTitle(null, null, guild);
         for (PostCard currentPostCard : PDA.privatePosts.get(guild)) {
             bot.setTitle(currentPostCard.getTitle(), null, guild);
             bot.setDescription(currentPostCard.getContent(), guild);
