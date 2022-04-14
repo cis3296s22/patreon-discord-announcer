@@ -11,7 +11,6 @@ public class getprivateposts implements BotCommand {
 
     @Override
     public void execute(DiscordBot bot) {
-        bot.clearEmbed(guild);
         bot.setTitle("Private Posts:", null, guild);
         bot.send(guild);
 
@@ -22,7 +21,6 @@ public class getprivateposts implements BotCommand {
             bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
             bot.send(guild);
         }
-        bot.clearEmbed(guild);
     }
 
     @Override

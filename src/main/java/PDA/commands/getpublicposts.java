@@ -11,7 +11,6 @@ public class getpublicposts implements BotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
-		bot.clearEmbed(guild);
 		bot.setTitle("Public Posts:", null, guild);
 		bot.send(guild);
 
@@ -22,7 +21,6 @@ public class getpublicposts implements BotCommand {
 			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
 			bot.send(guild);
 		}
-		bot.clearEmbed(guild);
 	}
 
 	@Override

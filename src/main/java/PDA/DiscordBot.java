@@ -75,10 +75,6 @@ public class DiscordBot {
 		embedMap.put(id, embedMap.get(id).setFooter(text, userUrl));
 	}
 
-	public void clearEmbed(Guild id) {
-		embedMap.put(id, embedMap.get(id).clear());
-	}
-
 	public void send(Guild id) { // sending embed
 		channels.get(id).sendMessageEmbeds(embedMap.get(id).build()).queue();
 		embedMap.get(id).clear();
@@ -88,8 +84,8 @@ public class DiscordBot {
 		channels.get(id).sendMessage(text).queue();
 	}
 
-	public void addGuild(Guild guildID){
-		embedMap.put(guildID, embedMap.getOrDefault(guildID, new EmbedBuilder()));
+	public void addGuild(Guild id){
+		embedMap.put(id, embedMap.getOrDefault(id, new EmbedBuilder()));
 	}
 
 	// function to help with testing
