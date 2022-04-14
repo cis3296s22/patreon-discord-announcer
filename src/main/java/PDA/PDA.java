@@ -35,15 +35,8 @@ public class PDA {
 
 		try {
 			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
-			System.out.println(jsonObject);
 			Object token = jsonObject.get("TOKEN");
 			discordToken = token.toString().replaceAll("[\\[\\](){}]", "");
-//			discordToken = discordToken.replaceAll("[\\[\\](){}]", "");
-			System.out.println(discordToken);
-//			Object channel = jsonObject.get("Channel");
-//			discordChannel = channel.toString().replaceAll("[\\[\\](){}]", "");
-////			discordChannel = discordChannel.replaceAll("[\\[\\](){}]", "");
-//			System.out.println(discordChannel);
 		} catch (FileNotFoundException e) {
 			System.out.println("The configuration file 'config.json' was not found!");
 			System.exit(1);

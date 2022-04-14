@@ -44,25 +44,25 @@ public class PatreonThread extends Thread {
 	@Override
 	public void run() {
 		// Create and initialize the browser
-		log.info("Initializing Firefox driver...");
+		this.log.info("Initializing Firefox driver...");
 		WebDriver driver = createBrowser();
 
 		// If the browser failed to initialize for whatever reason, stop PDA.
 		if (driver == null) {
-			log.error("The Firefox driver failed to initialize.  Stopping PDA.");
+			this.log.error("The Firefox driver failed to initialize.  Stopping PDA.");
 			System.exit(1);
 		}
 
-		log.info("Initialized the Firefox driver!");
+		this.log.info("Initialized the Firefox driver!");
 
 		// Initialize our waiting interface
-		log.info("Initializing waiting interface...");
+		this.log.info("Initializing waiting interface...");
 		wait = new FluentWait<>(driver)
 				.withTimeout(Duration.ofSeconds(5))
 				.pollingEvery(Duration.ofMillis(250));
-		log.info("Initialized the waiting interface!");
+		this.log.info("Initialized the waiting interface!");
 
-		log.info("Setup complete.  Starting to scan.");
+		this.log.info("Setup complete.  Starting to scan.");
 		while (true) {
 			Set<Guild> localSet = new HashSet<>(PDA.guildSet);
 
@@ -74,45 +74,23 @@ public class PatreonThread extends Thread {
 				for (int i = 0; i < localUrls.size(); i++) { // using a foreach loop will cause a ConcurrentModificationException since we are iterating through the collection while adding a link to the patreonUrls
 					goToLoginPage(driver, guild, localUrls.get(i));
 
-					System.out.println("Finding all posts on the front page...");
-
 					// Wait for any postCard to be visible
 					if (this.visibleElementFound(postCardSelector))
 						this.sleep(4000);
 
+					this.log.info("Scanning all post cards.");
 					List<WebElement> foundPostElements = driver.findElements(postCardSelector);
 
 					for (WebElement currentPostElement : foundPostElements) {
 						PostCard currentPostCard = new PostCard(currentPostElement);
-
-						handlePost(guild, currentPostCard);
-
-//						if (currentPostCard.isPrivate()) { // * Private post
-//							if (!PDA.privatePosts.get(guild).contains(currentPostCard)) {
-//								System.out.println("\n\n" + currentPostCard);
-//
-//								LinkedList<PostCard> temp = PDA.privatePosts.get(guild);
-//								temp.add(currentPostCard);
-//								PDA.privatePosts.put(guild, temp);
-//								announcePost(currentPostCard, guild);
-//							}
-//						} else { // * Public post
-//							if (!PDA.publicPosts.get(guild).contains(currentPostCard)) {
-//								System.out.println("\n\n" + currentPostCard);
-//
-//								LinkedList<PostCard> temp = PDA.publicPosts.get(guild);
-//								temp.add(currentPostCard);
-//								PDA.publicPosts.put(guild, temp);
-//								announcePost(currentPostCard, guild);
-//							}
-//						}
+						this.handlePost(guild, currentPostCard);
 					}
 				}
 			}
 
 			// Wait between 4-5 minutes until the next scan.  Prevents rate limiting & IP blocks
 			double sleepTime = 1000;// randNum(240000, 300000);
-			System.out.printf("\nWaiting %s until the next Patreon page scan...\n\n", formatTime((int) sleepTime / 1000));
+			this.log.info("Waiting '{}' until the next Patreon page scan...", formatTime((int) sleepTime / 1000));
 			this.sleep((int) sleepTime);
 		}
 	}
@@ -121,44 +99,40 @@ public class PatreonThread extends Thread {
 		HashMap<Guild, LinkedList<PostCard>> hashMap = postCard.isPrivate() ? PDA.privatePosts : PDA.publicPosts;
 
 		if (!hashMap.get(guild).contains(postCard)) {
-			System.out.println("\n\n" + postCard);
-
 			LinkedList<PostCard> temp = hashMap.get(guild);
 			temp.add(postCard);
 			hashMap.put(guild, temp);
-			announcePost(postCard, guild);
+			this.announcePost(postCard, guild);
 		}
 	}
 
-	private void announcePost(PostCard data, Guild guild) {
+	private void announcePost(PostCard postCard, Guild guild) {
 //		if (1 == 1) {
-//			System.out.println("\n\n" + data);
+//			System.out.println("\n\n" + postCard);
 //			return;
 //		}
 
-
-		bot.setTitle((data.isPrivate() ? "Private: " : "Public: ") + data.getTitle(), data.getUrl(), guild);
-		bot.setDescription(data.getContent(), guild);
-		bot.setFooter(data.getPublishDate(), null, guild);
-		bot.setColor(data.isPrivate() ? Color.red : Color.green, guild);
+		bot.setTitle((postCard.isPrivate() ? "Private: " : "Public: ") + postCard.getTitle(), postCard.getUrl(), guild);
+		bot.setDescription(postCard.getContent(), guild);
+		bot.setFooter(postCard.getPublishDate(), null, guild);
+		bot.setColor(postCard.isPrivate() ? Color.red : Color.green, guild);
 		bot.send(guild);
 	}
 
 	private void goToLoginPage(WebDriver driver, Guild guild, String patreonUrl) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
-		System.out.printf("Loading '%s' for guild '%s'\n", patreonUrl, guild.getName());
+		this.log.info("Loading '{}' for guild '{}'", patreonUrl, guild.getName());
 		driver.get(patreonUrl);
 
-		System.out.println("Waiting for post cards to be found...");
+		this.log.info("Waiting for post cards to be found...");
 		// Time has passed and we haven't seen any post cards...
 		if (!this.visibleElementFound(postCardSelector)) {
-			System.out.println("No postcards found after waiting for 5 second...");
+			this.log.info("No postcards found after waiting for 5 second.  Checking for GeeTest.");
 
 			int loadCount = 0;
 
 			// Keep reload the login page to get the GeeTest.  Sometimes it doesn't appear on the first load.
 			while (loadCount++ < 5) {
-				System.out.println("Loading login page...");
 				driver.get("https://www.patreon.com/login");
 
 				/*
@@ -172,7 +146,7 @@ public class PatreonThread extends Thread {
 			}
 
 			if (!driver.getPageSource().contains("New to Patreon?")) {
-				System.out.println("Attempting to solve GeeTest CAPTCHA...");
+				this.log.info("Attempting to solve GeeTest CAPTCHA...");
 
 				driver.manage().deleteAllCookies();
 				geeTest(driver);
@@ -198,7 +172,7 @@ public class PatreonThread extends Thread {
 		// Check to see if Patreon has blocked our IP entirely
 		if (this.visibleElementFound(By.className("captcha__human__title")))
 			if (driver.findElement(By.className("captcha__human__title")).getText().contains("You have been blocked")) {
-				System.out.println("The current IP has been blocked by Patreon.  Stopping.");
+				this.log.warn("The current IP has been blocked by Patreon.  Stopping.");
 				System.exit(1);
 			}
 
@@ -242,9 +216,7 @@ public class PatreonThread extends Thread {
 				originalImage = ImageIO.read(new ByteArrayInputStream(originalImageBytes));
 				puzzleImage = ImageIO.read(new ByteArrayInputStream(puzzleImageBytes));
 			} catch (IOException ex) {
-				System.out.println("------------------------------------------\n" +
-						"An issue occurred while reading the GeeTest puzzle image!\n" +
-						"------------------------------------------\n");
+				this.log.error("An issue occurred while reading the GeeTest puzzle image!\n");
 				ex.printStackTrace();
 				driver.quit();
 				System.exit(1);
@@ -252,7 +224,7 @@ public class PatreonThread extends Thread {
 
 			// Ensure the images were converted properly
 			if (originalImage == null || puzzleImage == null) {
-				System.out.println("The original image or the puzzle image were null after being saved.");
+				this.log.error("The original image or the puzzle image were null after being saved.");
 				driver.quit();
 				System.exit(1);
 			}
@@ -306,7 +278,7 @@ public class PatreonThread extends Thread {
 			WebElement dragButton = driver.findElement(By.className("geetest_slider_button"));
 			Actions move = new Actions(driver);
 
-			System.out.println("GeeTest found and simulating MouseKey movement..");
+			this.log.info("Solving...");
 
 			// Move on top of the button with a seemingly random offset
 			move.moveToElement(dragButton, 20 + new Random().nextInt(10), 20 + new Random().nextInt(10)).perform();
@@ -320,10 +292,6 @@ public class PatreonThread extends Thread {
 			// Wait between 1-2 seconds
 			this.sleep(randNum(500, 1000));
 
-			// Slowly move the slider with varying cursor height adjustments
-			int totalDragAmount = 0, currentDragAmount = 1, overShoot = 0;
-			boolean toggle = false;
-
 			if (1 == 1) {
 				move.moveByOffset(dragAmount + (dragAmount % 2 == 0 ? 2 : -2), 0).perform();
 				this.sleep(500);
@@ -332,73 +300,7 @@ public class PatreonThread extends Thread {
 					this.sleep(randNum(500, 900));
 
 				move.release().perform();
-			} /* else {
-//				if (1 == 0) {
-//					int[] movementArray = {1, 3, 5, 9, 15};
-//
-//					for (int moveAmount : movementArray) {
-//						move.moveByOffset(moveAmount, 0).perform();
-//						if (moveAmount < 9)
-//							this.sleep(this.randNum(100, 300));
-//						else
-//							this.sleep(this.randNum(200, 400));
-//					}
-//
-//					dragAmount -= 33;
-//
-//					while (dragAmount > 0) {
-//						if (dragAmount > 66) {
-//							move.moveByOffset(25, 0).perform();
-//							dragAmount -= 25;
-//						} else if (dragAmount > 44) {
-//							move.moveByOffset(22, 0).perform();
-//							dragAmount -= 22;
-//						} else if (dragAmount >= 11) {
-//							move.moveByOffset(11, 0).perform();
-//							dragAmount -= 11;
-//						} else {
-//							move.moveByOffset(dragAmount, 0).perform();
-//							dragAmount = 0;
-//						}
-//						this.sleep(this.randNum(300, 400));
-//					}
-//
-//					move.release().perform();
-//				} else {
-				// Queue up actions with random additions to the X movement
-				while (totalDragAmount < dragAmount + 2) {
-					if (currentDragAmount < 22)
-						currentDragAmount += new Random().nextInt(2);
-
-					if (currentDragAmount + totalDragAmount >= dragAmount) {
-						overShoot = currentDragAmount + totalDragAmount - dragAmount;
-						toggle = true;
-					}
-
-					move.moveByOffset(currentDragAmount, 0);
-					totalDragAmount += currentDragAmount;
-
-					if (toggle)
-						break;
-				}
-
-				// Start moving the image to the right, intentionally overshooting
-				move.perform();
-
-				// Wait a random time between 1-2 seconds to assist simulating human behavior
-				this.sleep(randNum(500, 1000));
-
-				// Moving to the left to fix over-shooting
-				while (overShoot > 0) {
-					move.moveByOffset(-1, 0);
-					totalDragAmount -= 1;
-					overShoot -= 1;
-				}
-
-				// Start moving the image to the left as we intentionally overshot
-				move.release().perform();
-			} */
-//			}
+			}
 
 			// Click the "reset" button if it exists
 			if (this.visibleElementFound(By.className("geetest_reset_tip_content"))) {
@@ -435,9 +337,13 @@ public class PatreonThread extends Thread {
 
 			// Create the driver
 			return WebDriverManager.firefoxdriver().capabilities(options).create();
+		} catch (SessionNotCreatedException e) {
+			this.log.error("A Firefox session could not be created. If you do not have Firefox installed, please install it.");
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+
+		return null;
 	}
 
 	// JUnit testing purposes
