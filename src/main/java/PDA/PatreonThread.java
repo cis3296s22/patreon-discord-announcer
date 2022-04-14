@@ -69,7 +69,9 @@ public class PatreonThread extends Thread {
 				System.out.println("Current Guild: " + guild);
 
 				ArrayList<String> localUrls = PDA.patreonUrls.get(guild);
+
 				for (int i = 0; i < localUrls.size(); i++) { // using a foreach loop will cause a ConcurrentModificationException since we are iterating through the collection while adding a link to the patreonUrls
+
 					goToLoginPage(driver, guild, localUrls.get(i));
 
 					// Wait for any postCard to be visible

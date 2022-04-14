@@ -29,8 +29,30 @@ public class PDA {
 	static String discordToken = "";
 
 	public static void main(String[] arg) throws InterruptedException, LoginException {
-		JSONParser parser = new JSONParser();
 
+		parseConfig();
+
+		DiscordBot bot = new DiscordBot(discordToken);
+
+
+//		for (Guild id : guildSet){ // initialization of all patreon links to example patreon
+//
+//			ArrayList<String> links = new ArrayList<>();
+//			links.add("https://www.patreon.com/pda_example");
+//			patreonUrls.put(id, links);
+//		}
+//
+//		System.out.println("PatreonURLs: " + patreonUrls);
+
+		PatreonThread testThread = new PatreonThread(bot);
+		testThread.start();
+		testThread.join();
+
+		System.out.println("Finished!");
+	}
+
+	private static void parseConfig(){
+		JSONParser parser = new JSONParser();
 		try {
 			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
 			Object token = jsonObject.get("TOKEN");
@@ -41,25 +63,5 @@ public class PDA {
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
-
-		DiscordBot bot = new DiscordBot(discordToken);
-
-
-		// bot.addChannel(guild, discordChannel);
-
-		for (Guild id : guildSet){ // initialization of all patreon links to example patreon
-
-			ArrayList<String> links = new ArrayList<>();
-			links.add("https://www.patreon.com/pda_example");
-			patreonUrls.put(id, links);
-		}
-
-		System.out.println("PatreonURLs: " + patreonUrls);
-
-		PatreonThread testThread = new PatreonThread(bot);
-		testThread.start();
-		testThread.join();
-
-		System.out.println("Finished!");
 	}
 }

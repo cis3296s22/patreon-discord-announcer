@@ -39,6 +39,9 @@ public class DiscordBot {
 		//! setup the container for private and public posts so it's not null
 		setupPosts();
 
+		//! setup the container for all patreonUrls
+		setupPatreonUrls();
+
 		System.out.println("channels: " + channels);
 
 
@@ -142,6 +145,12 @@ public class DiscordBot {
 			// TODO: when we save the posts we will take it from there instead
 			PDA.publicPosts.put(guild, temp);
 			PDA.privatePosts.put(guild, temp);
+		}
+	}
+
+	private void setupPatreonUrls(){
+		for (Guild id : PDA.guildSet){ // initialization of all patreon links to example patreon
+			PDA.patreonUrls.put(id, new ArrayList<>());
 		}
 	}
 }
