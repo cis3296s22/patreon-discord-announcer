@@ -143,8 +143,8 @@ public class DiscordBot {
 	}
 
 	private void setupPatreonUrls(){
-		for (Guild id : PDA.guildSet){ // initialization of all patreon links to example patreon
-			PDA.patreonUrls.put(id, new ArrayList<>());
-		}
+//		for (Guild id : PDA.guildSet){ // initialization of all patreon links to example patreon
+//			PDA.patreonUrls.put(id, new ArrayList<>());
+//		}
 	}
 }

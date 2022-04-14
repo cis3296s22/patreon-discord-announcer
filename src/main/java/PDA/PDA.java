@@ -21,7 +21,8 @@ import java.util.*;
 public class PDA {
 
 	// Global variables
-	public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>(); // https://www.patreon.com/pda_example or https://www.patreon.com/alexzwicky
+	// public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>(); // https://www.patreon.com/pda_example or https://www.patreon.com/alexzwicky
+	public static HashMap<String, ArrayList<Guild>> patreonUrls = new HashMap<>();
 	public static String prefix = "/";
 	public static Set<Guild> guildSet = new HashSet<>();
 	public static HashMap<Guild, LinkedList<PostCard>> publicPosts = new HashMap<>(), privatePosts = new HashMap<>();

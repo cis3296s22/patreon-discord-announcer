@@ -61,9 +61,9 @@ public class EventListener extends ListenerAdapter {
 		PDA.guildSet.add(event.getGuild());
 
 		// adding patreonUrl
-		ArrayList<String> links = new ArrayList<>();
-		links.add("https://www.patreon.com/pda_example");
-		PDA.patreonUrls.put(event.getGuild(), links);
+//		ArrayList<String> links = new ArrayList<>();
+//		// links.add("https://www.patreon.com/pda_example");
+//		PDA.patreonUrls.put("", event.getGuild());
 
 		// adding channel
 		bot.addChannel(event.getGuild().getTextChannels().get(0).getId(), event.getGuild());

@@ -20,18 +20,27 @@ public class addlink implements BotCommand {
 
         if (args.length <= 1) {
             bot.send("No link provided", guild);
-        } else {
-            ArrayList<String> links = PDA.patreonUrls.get(guild);
+        }
+        else {
+            ArrayList<Guild> guilds;
 
-            if (!links.contains(args[1]) && true){ // TODO: check if valid patreon link
-                links.add(args[1]);
-                PDA.patreonUrls.put(guild, links);
-                bot.send(args[1] + " has been added as a patreon link", guild);
+            if (PDA.patreonUrls.containsKey(args[1])){
+                guilds = PDA.patreonUrls.get(args[1]);
+
+                if (guilds.contains(guild)){
+                    bot.send(args[1] + " is already in the list of links", guild);
+                }
+                else{
+                    guilds.add(guild);
+                    PDA.patreonUrls.put(args[1], guilds);
+                }
             }
             else{
-                bot.send("given patreon link has already been added", guild);
+                guilds = new ArrayList<>();
+                guilds.add(guild);
+                PDA.patreonUrls.put(args[1], guilds);
+                bot.send(args[1] + " has been added to the list of links", guild);
             }
-            System.out.println("all links: " + links); // temporary testing
         }
     }
 

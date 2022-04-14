@@ -21,17 +21,20 @@ public class removelink implements BotCommand {
         if (args.length <= 1) {
             bot.send("No link provided", guild);
         } else {
-            ArrayList<String> links = PDA.patreonUrls.get(guild);
 
-            if (links.remove(args[1])){
+            ArrayList<Guild> guilds = PDA.patreonUrls.get(args[1]);
+
+            if (!PDA.patreonUrls.containsKey(args[1]) || !guilds.remove(guild)){
+                bot.send(args[1] + " was never in the list of links", guild);
+            }
+
+            if (PDA.patreonUrls.containsKey(args[1]) && guilds.remove(guild)){
+                PDA.patreonUrls.put(args[1], guilds);
                 bot.send(args[1] + " has been removed from the patreon link list", guild);
-            }
-            else{
-                bot.send(args[1] + " was never in the list of patreon links", guild);
+
+                if (guilds.size() == 0) PDA.patreonUrls.remove(args[1]);
             }
 
-            PDA.patreonUrls.put(guild, links);
-            System.out.println("all links: " + links); // temporary testing
         }
     }
 

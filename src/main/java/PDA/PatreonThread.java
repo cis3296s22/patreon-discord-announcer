@@ -59,29 +59,26 @@ public class PatreonThread extends Thread {
 				.withTimeout(Duration.ofSeconds(5))
 				.pollingEvery(Duration.ofMillis(250));
 		this.log.info("Initialized the waiting interface!");
-
 		this.log.info("Setup complete.  Starting to scan.");
+
 		while (true) {
-			Set<Guild> localSet = new HashSet<>(PDA.guildSet);
+			Set<String> localPatreonUrls = new HashSet<>(PDA.patreonUrls.keySet());
 
-			for (Guild guild : localSet) {
-				System.out.println("GuildSet: " + localSet);
-				System.out.println("Current Guild: " + guild);
+			for (String patreonUrl : localPatreonUrls) {
+				this.log.info("Loading '{}' for guilds '{}'", patreonUrl, PDA.patreonUrls.get(patreonUrl));
+				goToLoginPage(driver, patreonUrl);
 
-				ArrayList<String> localUrls = PDA.patreonUrls.get(guild);
+				ArrayList<Guild> localGuilds = PDA.patreonUrls.get(patreonUrl);
 
-				for (int i = 0; i < localUrls.size(); i++) { // using a foreach loop will cause a ConcurrentModificationException since we are iterating through the collection while adding a link to the patreonUrls
+				if (this.visibleElementFound(postCardSelector))
+					this.sleep(4000);
 
-					goToLoginPage(driver, guild, localUrls.get(i));
+				this.log.info("Scanning all post cards.");
+				List<WebElement> foundPostElements = driver.findElements(postCardSelector);
 
-					// Wait for any postCard to be visible
-					if (this.visibleElementFound(postCardSelector))
-						this.sleep(4000);
+				for (Guild guild : localGuilds) {
 
-					this.log.info("Scanning all post cards.");
-					List<WebElement> foundPostElements = driver.findElements(postCardSelector);
-
-					for (int j = foundPostElements.size() - 1; j >= 0; j--){ // starting at size() - 1 will print out the posts in chronological order from oldest to newest
+					for (int j = foundPostElements.size() - 1; j >= 0; j--) { // starting at size() - 1 will print out the posts in chronological order from oldest to newest
 						PostCard currentPostCard = new PostCard(foundPostElements.get(j));
 						this.handlePost(guild, currentPostCard);
 					}
@@ -119,9 +116,8 @@ public class PatreonThread extends Thread {
 		bot.send(guild);
 	}
 
-	private void goToLoginPage(WebDriver driver, Guild guild, String patreonUrl) {
+	private void goToLoginPage(WebDriver driver, String patreonUrl) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
-		this.log.info("Loading '{}' for guild '{}'", patreonUrl, guild.getName());
 		driver.get(patreonUrl);
 
 		this.log.info("Waiting for post cards to be found...");

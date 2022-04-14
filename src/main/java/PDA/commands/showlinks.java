@@ -15,10 +15,12 @@ public class showlinks implements BotCommand {
 
         StringBuilder linkContainer = new StringBuilder("");
 
-        for (String link : PDA.patreonUrls.get(guild)){
-            linkContainer.append(link).append("\n");
+        for (String patreonUrl : PDA.patreonUrls.keySet()){
+            if (PDA.patreonUrls.get(patreonUrl).contains(guild)){
+                linkContainer.append(patreonUrl).append("\n");
+            }
         }
-        if (PDA.patreonUrls.get(guild).size() == 0) linkContainer.append("no links added");
+        if (linkContainer.length() == 0) linkContainer.append("no links added");
 
         bot.setTitle("Links", "", guild);
         bot.setDescription(linkContainer.toString(), guild);
