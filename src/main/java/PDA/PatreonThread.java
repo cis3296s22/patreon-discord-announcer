@@ -81,8 +81,8 @@ public class PatreonThread extends Thread {
 					this.log.info("Scanning all post cards.");
 					List<WebElement> foundPostElements = driver.findElements(postCardSelector);
 
-					for (WebElement currentPostElement : foundPostElements) {
-						PostCard currentPostCard = new PostCard(currentPostElement);
+					for (int j = foundPostElements.size() - 1; j >= 0; j--){ // starting at size() - 1 will print out the posts in chronological order from oldest to newest
+						PostCard currentPostCard = new PostCard(foundPostElements.get(j));
 						this.handlePost(guild, currentPostCard);
 					}
 				}
