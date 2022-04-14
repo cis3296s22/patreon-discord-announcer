@@ -2,7 +2,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %boldCyan(%thread) %red(%X{jda.shard}) %boldGreen(%logger{0}) - %highlight(%-6level) %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %red(%X{jda.shard}) %boldGreen(%16.16logger{0}) - %highlight(%4.5level) %msg%n</pattern>
         </encoder>
     </appender>
 
