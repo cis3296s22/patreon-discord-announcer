@@ -70,17 +70,23 @@ public class PatreonThread extends Thread {
 
 				ArrayList<Guild> localGuilds = PDA.patreonUrls.get(patreonUrl);
 
+				// if there are no guilds associated with a link then we will get rid of the link in the HashMap
+				if (localGuilds.size() == 0){
+					PDA.patreonUrls.remove(patreonUrl);
+					this.log.info("Removed " + patreonUrl + " from the list of saved patreonUrls");
+					continue; // skip iteration of for each loop
+				}
+
 				if (this.visibleElementFound(postCardSelector))
 					this.sleep(4000);
 
 				this.log.info("Scanning all post cards.");
 				List<WebElement> foundPostElements = driver.findElements(postCardSelector);
 
-				for (Guild guild : localGuilds) {
-
+				for (int i = 0; i < localGuilds.size(); i++){
 					for (int j = foundPostElements.size() - 1; j >= 0; j--) { // starting at size() - 1 will print out the posts in chronological order from oldest to newest
 						PostCard currentPostCard = new PostCard(foundPostElements.get(j));
-						this.handlePost(guild, currentPostCard);
+						this.handlePost(localGuilds.get(i), currentPostCard);
 					}
 				}
 			}

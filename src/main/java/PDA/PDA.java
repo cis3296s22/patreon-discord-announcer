@@ -28,16 +28,6 @@ public class PDA {
 
 		DiscordBot bot = new DiscordBot(discordToken);
 
-
-//		for (Guild id : guildSet){ // initialization of all patreon links to example patreon
-//
-//			ArrayList<String> links = new ArrayList<>();
-//			links.add("https://www.patreon.com/pda_example");
-//			patreonUrls.put(id, links);
-//		}
-//
-//		System.out.println("PatreonURLs: " + patreonUrls);
-
 		PatreonThread testThread = new PatreonThread(bot);
 		testThread.start();
 		testThread.join();

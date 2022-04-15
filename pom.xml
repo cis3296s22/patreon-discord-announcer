@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>groupId</groupId>
     <artifactId>patreon-discord-announcer</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <name>PDA</name>
     <packaging>jar</packaging>
 
@@ -45,6 +45,9 @@
                             <mainClass>PDA.PDA</mainClass>
                         </manifest>
                     </archive>
+                    <excludes>
+                        <exclude>PDA.DiscordBotTest</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
