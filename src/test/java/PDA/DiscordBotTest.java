@@ -33,6 +33,14 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.security.auth.login.LoginException;
 
+/**
+ * Testing the implementation of PDA.
+ *
+ * Responsibilities:
+ *
+ * 1) Test if the classes in our PDA package correctly implements its functions
+ *
+ */
 
 public class DiscordBotTest{
 
