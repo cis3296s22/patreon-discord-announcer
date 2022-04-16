@@ -9,29 +9,43 @@ import java.util.LinkedList;
 
 /**
  * Container for all information found on a patreon post.
- *
+ * <p>
  * Responsibilities:
- *
+ * <p>
  * 1) Holds an individual post's information found on patreon
  * 2) Checks to see if the individual post is private or not
  * 3) Allows someone to compare posts to see if they are equal or not
- *
  */
 
 public class PostCard {
-	/** publishDate will hold the date that the post was published*/
+	/**
+	 * publishDate will hold the date that the post was published
+	 */
 	private final String publishDate;
-	/** title will hold the title of the post*/
+
+	/**
+	 * title will hold the title of the post
+	 */
 	private final String title;
-	/** url will hold the url of the post*/
+
+	/**
+	 * url will hold the url of the post
+	 */
 	private final String url;
-	/** content will hold the content of the post in String form*/
+
+	/**
+	 * content will hold the content of the post in String form
+	 */
 	private final String content;
-	/** isPrivate will hold a boolean value that will tell us if the specific post is public or private*/
+
+	/**
+	 * isPrivate will hold a boolean value that will tell us if the specific post is public or private
+	 */
 	private final boolean isPrivate;
 
 	/**
 	 * Constructor initializes instance variables, checking if the post is private and setting the boolean respectively, gets and cleans up the url of the specific post.
+	 *
 	 * @param postCard is the WebElement of the post found while web scraping with selenium.
 	 */
 	public PostCard(WebElement postCard) {

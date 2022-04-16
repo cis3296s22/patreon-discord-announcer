@@ -44,7 +44,6 @@ public class PDA {
 	 * @throws LoginException in case the login for the discord bot token doesn't work
 	 */
 	public static void main(String[] args) throws InterruptedException, LoginException {
-
 		parseConfig();
 
 		DiscordBot bot = new DiscordBot(discordToken);

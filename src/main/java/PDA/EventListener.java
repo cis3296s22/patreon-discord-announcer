@@ -65,24 +65,17 @@ public class EventListener extends ListenerAdapter {
 	//! When a discord bot is added to a server while the program is running
 	@Override
 	public void onGuildJoin(@NotNull GuildJoinEvent event) {
-		// adding to guild list/set
+		// Adding to guild list/set
 		System.out.println("Server added to list for guild: " + event.getGuild().getName());
 		bot.addGuild(event.getGuild());
 		PDA.guildSet.add(event.getGuild());
 
-		// adding patreonUrl
-//		ArrayList<String> links = new ArrayList<>();
-//		// links.add("https://www.patreon.com/pda_example");
-//		PDA.patreonUrls.put("", event.getGuild());
-
-		// adding channel
+		// Adding channel
 		bot.addChannel(event.getGuild().getTextChannels().get(0).getId(), event.getGuild());
 
-		// adding to private/public posts container
+		// Adding to private/public posts container
 		LinkedList<PostCard> temp = new LinkedList<>();
 		PDA.postCards.put(event.getGuild(), temp);
-//		PDA.publicPosts.put(event.getGuild(), temp);
-//		PDA.privatePosts.put(event.getGuild(), temp);
 		commandRan = true;
 	}
 
