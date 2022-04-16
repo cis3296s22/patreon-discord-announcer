@@ -19,12 +19,21 @@ import java.util.LinkedList;
  */
 
 public class PostCard {
+	/** publishDate will hold the date that the post was published*/
 	private final String publishDate;
+	/** publishDate will hold the title of the post*/
 	private final String title;
+	/** publishDate will hold the url of the post*/
 	private final String url;
+	/** publishDate will hold the content of the post in String form*/
 	private final String content;
+	/** publishDate will hold a boolean value that will tell us if the specific post is public or private*/
 	private final boolean isPrivate;
 
+	/**
+	 * Constructor initializes instance variables, checking if the post is private and setting the boolean respectively, gets and cleans up the url of the specific post.
+	 * @param postCard is the WebElement of the post found while web scraping with selenium.
+	 */
 	public PostCard(WebElement postCard) {
 		this.isPrivate = !getTagText(postCard, By.cssSelector("[data-tag='locked-rich-text-post']")).equals("N/A");
 		this.publishDate = getTagText(postCard, By.cssSelector("[data-tag='post-published-at']"));
@@ -98,6 +107,13 @@ public class PostCard {
 		return this.isPrivate;
 	}
 
+	/**
+	 * Gets the test of the given tag of a WebElement
+	 *
+	 * @param selector is the tag selector that is specified to find specific text
+	 * @param postCard is the WebElement we are going to be parsing to find specified text
+	 * @return String holding the text found, or "N/A" if no text was found
+	 */
 	private String getTagText(WebElement postCard, By selector) {
 		try {
 			return postCard.findElement(selector).getText();
@@ -106,6 +122,12 @@ public class PostCard {
 		}
 	}
 
+	/**
+	 * Checks if two different PostCard objects are equal
+	 *
+	 * @param o is an Object and will be used to check if they are the same object
+	 * @return true if the two objects are equal, false otherwise
+	 */
 	@Override
 	public boolean equals(Object o) {
 		// If the object is being compared with itself then return true
@@ -120,6 +142,11 @@ public class PostCard {
 		return this.url.equals(((PostCard) o).getUrl());
 	}
 
+	/**
+	 * Returns a string containing all the information in {@link PostCard}
+	 *
+	 * @return String of all the information contained in {@link PostCard}
+	 */
 	@Override
 	public String toString() {
 		return "Title: " + this.getTitle()
