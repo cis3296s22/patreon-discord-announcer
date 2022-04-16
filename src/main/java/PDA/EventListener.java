@@ -2,6 +2,7 @@ package PDA;
 
 import PDA.commands.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -9,8 +10,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-// TODO: have an admin set what channel they want the patreon messages to go
-// TODO: only allow admins (or admin selected users) to use PDA.commands
+/**
+ * Asynchronous listener that waits for events to happen in a discord server.
+ *
+ * Responsibilities:
+ *
+ * 1) Wait for MessageReceivedEvents that occur for every message sent in a discord server
+ * 2) Parse the message sent and see if a command recognized by the program was sent and act accordingly
+ * 3) Wait for GuildJoinEvents that occur everytime a bot is added to the server during runtime
+ * 4) Set up the objects needed for the PDA when a bot is added during runtime
+ *
+ */
 
 public class EventListener extends ListenerAdapter {
 
@@ -75,4 +85,5 @@ public class EventListener extends ListenerAdapter {
 //		PDA.privatePosts.put(event.getGuild(), temp);
 		commandRan = true;
 	}
+
 }

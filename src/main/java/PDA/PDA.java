@@ -11,10 +11,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Patreon Discord Announcer startup implementation.
+ *
+ * Responsibilities:
+ *
+ * 1) Parse config file for discord bot token
+ * 2) Declare and instantiate DiscordBot object
+ * 3) Declare and instantiate PatreonThread object
+ *
+ */
+
 public class PDA {
 
 	// Global variables
-	// public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>(); // https://www.patreon.com/pda_example or https://www.patreon.com/alexzwicky
 	public static HashMap<String, ArrayList<Guild>> patreonUrls = new HashMap<>();
 	public static String prefix = "/";
 	public static Set<Guild> guildSet = new HashSet<>();

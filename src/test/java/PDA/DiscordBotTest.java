@@ -38,7 +38,6 @@ public class DiscordBotTest{
 
     // DiscordBot db;
     String token;
-    String channel = "0";
 
 
     @Before

@@ -5,6 +5,15 @@ import PDA.PostCard;
 import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * getprivateposts discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Will print out all private posts associated with the discord server
+ *
+ */
+
 public class getprivateposts implements BotCommand {
 
 	private Guild guild;

@@ -6,6 +6,17 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
 
+/**
+ * removelink discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Check if a link was provided
+ * 2) Check if the link is not in the list of links
+ * 3) Remove the guild from the list of guilds associated with the particular link
+ *
+ */
+
 public class removelink implements BotCommand {
 
 	private String[] args = null;

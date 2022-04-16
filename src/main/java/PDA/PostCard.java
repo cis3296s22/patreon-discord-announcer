@@ -7,6 +7,17 @@ import org.openqa.selenium.WebElement;
 
 import java.util.LinkedList;
 
+/**
+ * Container for all information found on a patreon post.
+ *
+ * Responsibilities:
+ *
+ * 1) Holds an individual post's information found on patreon
+ * 2) Checks to see if the individual post is private or not
+ * 3) Allows someone to compare posts to see if they are equal or not
+ *
+ */
+
 public class PostCard {
 	private final String publishDate;
 	private final String title;

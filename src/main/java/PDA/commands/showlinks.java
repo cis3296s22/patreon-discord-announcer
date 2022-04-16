@@ -6,6 +6,16 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
 
+/**
+ * showlinks discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Check if the user has any patreon links currently being tracked for their discord server
+ * 2) Send an embed holding the list of patreon links that the discord server is currently tracking
+ *
+ */
+
 public class showlinks implements BotCommand {
 
 	private Guild guild;

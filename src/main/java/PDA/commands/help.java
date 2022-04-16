@@ -3,6 +3,15 @@ package PDA.commands;
 import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * help discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Will print out a list of each discord bot command available through the PDA
+ *
+ */
+
 public class help implements BotCommand {
 
 	private Guild guild;

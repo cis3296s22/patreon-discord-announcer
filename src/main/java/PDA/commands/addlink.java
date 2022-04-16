@@ -6,6 +6,17 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
 
+/**
+ * addlink discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Check if a link was provided
+ * 2) Check if the link is already in the list of links
+ * 3) Add the guild to the list of guilds associated with the particular link
+ *
+ */
+
 public class addlink implements BotCommand {
 
 	private String[] args = null;

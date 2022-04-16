@@ -24,6 +24,17 @@ import java.time.Duration;
 import java.util.List;
 import java.util.*;
 
+/**
+ * Selenium web scraping implementation.
+ *
+ * Responsibilities:
+ *
+ * 1) Web scraping patreon website for posts
+ * 2) Automatic Geetest captcha passing
+ * 3) Storing posts into PostCard objects for later use
+ * 4) Sending data to the DiscordBot object to be sent to a discord server
+ *
+ */
 
 public class PatreonThread extends Thread {
 	DiscordBot bot;
@@ -108,7 +119,6 @@ public class PatreonThread extends Thread {
 			PDA.postCards.put(guild, temp);
 			this.announcePost(postCard, guild);
 		}
-
 	}
 
 	private void announcePost(PostCard postCard, Guild guild) {

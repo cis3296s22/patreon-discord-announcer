@@ -18,6 +18,16 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Implementation of the JDA discord bot API.
+ *
+ * Responsibilities:
+ *
+ * 1) Initialize the discord bot with a given token
+ * 2) Initialize containers for embeds, text channels, and posts per discord server
+ * 3) Provide a layer of abstraction between the rest of the program and the JDA discord bot API to allow for sending messages and embeds to a server
+ *
+ */
 
 public class DiscordBot {
 	private JDA jda;
@@ -117,11 +127,10 @@ public class DiscordBot {
 	}
 
 	private void setupTextChannels() {
-		// TODO: maybe create it's own text channel?
 		for (Guild guild : PDA.guildSet) {
 			List<TextChannel> chanList = guild.getTextChannelsByName("testing", true);
 
-			// if we can't find a "bot-commands" then output to the first channel we find
+			// if we can't find a "testing" then output to the first channel we find
 			if (chanList.isEmpty()) {
 				chanList = guild.getTextChannels();
 			}
@@ -136,8 +145,7 @@ public class DiscordBot {
 
 			// TODO: when we save the posts we will take it from there instead
 			PDA.postCards.put(guild, temp);
-//			PDA.publicPosts.put(guild, temp);
-//			PDA.privatePosts.put(guild, temp);
+
 		}
 	}
 }

@@ -3,6 +3,17 @@ package PDA.commands;
 import PDA.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * setchannel discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Check if a text channel ID was provided
+ * 2) Check if the link is already in the list of links
+ * 3) Set the text channel where the discord bot outputs depending on what text channel ID was provided
+ *
+ */
+
 public class setchannel implements BotCommand {
 
 	private String[] args = null;
