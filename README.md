@@ -12,7 +12,6 @@ the user in the desired Discord channel of any new Patreon posts from designated
 1. **Method: Invite our PDA Bot** - *Recommended, quick and simple*
     1) [Add PDA to your Discord server](https://discord.com/api/oauth2/authorize?client_id=937463083876614216&permissions=8&scope=bot)
     2) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators
-------------------------
 2. **Method: Use your own bot** - *Not recommended, highly technical*
     1) Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)
     2) Extract the downloaded zip in any directory
@@ -43,7 +42,7 @@ the user in the desired Discord channel of any new Patreon posts from designated
 - **System Build Requirements**
     - Java JDK 8 or later
     - Maven 3.8.1 or later
-    - Firefox
+    - Firefox 98 or later
 - **Manually (IntelliJ IDEA)**
     1) Open IntelliJ and clone this repository through the program
     2) After the project is cloned and opened, at the top of IntelliJ, go to **View** -> **Tool Windows** -> **Maven**
@@ -63,25 +62,3 @@ After building with Maven, you can find or run the package by going into the **t
 
 # Contribute
 Follow this project board to know the latest status of the project: [https://github.com/cis3296s22/patreon-discord-announcer/projects/2](https://github.com/cis3296s22/patreon-discord-announcer/projects/2)
-
-------------------------------------------------------------
-
-### Enable Developer Mode
-1) Open the discord application.
-2) On the bottom left corner of the application, click the cog wheel settings icon.
-3) Go to the "Advanced" section and tick on "Developer Mode".
-
-### Setup Discord Bot
-1) Navigate to the [Discord developer Portal](https://discord.com/developers/applications) and click "New Application"
-2) Create a name then navigate to the **Bot** tab then click **Add Bot**
-3) Press **Reset Token** and then **Copy** your bot's token
-
-### Add Discord Bot To A Server
-1) Make sure you're logged on to the [Discord website](https://discord.com/).
-2) Navigate to the [Discord Developer Portal](https://discord.com/developers/applications).
-3) Click on your bot's page.
-4) Go to the "OAuth2" tab.
-5) Tick the "bot" checkbox under "scopes".
-6) Tick the permissions required for your bot to function under "Bot Permissions" (Please be aware of the consequences of required your bot to have the "Administrator" permission).
-7) Bot owners must have 2FA enabled for certain actions and permissions when added in servers that have Server-Wide 2FA enabled
-8) Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to(will only allow the bot to be invited to servers where you have the "Manage Server" permissions). Then click "Authorize".
