@@ -26,14 +26,13 @@ import java.util.*;
 
 /**
  * Selenium web scraping implementation.
- *
+ * <p>
  * Responsibilities:
- *
+ * <p>
  * 1) Web scraping patreon website for posts
  * 2) Automatic Geetest captcha passing
  * 3) Storing posts into PostCard objects for later use
  * 4) Sending data to the DiscordBot object to be sent to a discord server
- *
  */
 
 public class PatreonThread extends Thread {
@@ -77,12 +76,22 @@ public class PatreonThread extends Thread {
 
 			for (String patreonUrl : localPatreonUrls) {
 				this.log.info("Loading '{}' for guilds '{}'", patreonUrl, PDA.patreonUrls.get(patreonUrl));
-				goToLoginPage(driver, patreonUrl);
-
 				ArrayList<Guild> localGuilds = PDA.patreonUrls.get(patreonUrl);
 
+				try {
+					goToPatreonPage(driver, patreonUrl);
+				} catch (InvalidArgumentException e) {
+					this.log.warn("URL '{}' was removed from the servers '{}'", patreonUrl, localGuilds);
+					PDA.patreonUrls.remove(patreonUrl);
+
+					for (Guild guild : localGuilds)
+						bot.send("The link '" + patreonUrl + "' was removed as it was not a valid link.", guild);
+					continue;
+				}
+
+
 				// if there are no guilds associated with a link then we will get rid of the link in the HashMap
-				if (localGuilds.size() == 0){
+				if (localGuilds.size() == 0) {
 					PDA.patreonUrls.remove(patreonUrl);
 					this.log.info("Removed " + patreonUrl + " from the list of saved patreonUrls");
 					continue; // skip iteration of for each loop
@@ -94,7 +103,7 @@ public class PatreonThread extends Thread {
 				this.log.info("Scanning all post cards.");
 				List<WebElement> foundPostElements = driver.findElements(postCardSelector);
 
-				for (int i = 0; i < localGuilds.size(); i++){
+				for (int i = 0; i < localGuilds.size(); i++) {
 					for (int j = foundPostElements.size() - 1; j >= 0; j--) { // starting at size() - 1 will print out the posts in chronological order from oldest to newest
 						PostCard currentPostCard = new PostCard(foundPostElements.get(j));
 						this.handlePost(localGuilds.get(i), currentPostCard);
@@ -110,9 +119,6 @@ public class PatreonThread extends Thread {
 	}
 
 	private void handlePost(Guild guild, PostCard postCard) {
-//		HashMap<Guild, LinkedList<PostCard>> hashMap = (postCard.isPrivate() ? PDA.privatePosts : PDA.publicPosts);
-
-//		this.log.warn("HashMap being used: " + (hashMap == PDA.privatePosts ? "PDA.privatePosts" : "PDA.publicPosts"));
 		if (!PDA.postCards.get(guild).contains(postCard)) {
 			LinkedList<PostCard> temp = PDA.postCards.get(guild);
 			temp.add(postCard);
@@ -122,11 +128,6 @@ public class PatreonThread extends Thread {
 	}
 
 	private void announcePost(PostCard postCard, Guild guild) {
-//		if (1 == 1) {
-//			System.out.println("\n\n" + postCard);
-//			return;
-//		}
-
 		bot.setTitle((postCard.isPrivate() ? "Private: " : "Public: ") + postCard.getTitle(), postCard.getUrl(), guild);
 		bot.setDescription(postCard.getContent(), guild);
 		bot.setFooter(postCard.getPublishDate(), null, guild);
@@ -134,7 +135,7 @@ public class PatreonThread extends Thread {
 		bot.send(guild);
 	}
 
-	private void goToLoginPage(WebDriver driver, String patreonUrl) {
+	private void goToPatreonPage(WebDriver driver, String patreonUrl) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
 		driver.get(patreonUrl);
 
