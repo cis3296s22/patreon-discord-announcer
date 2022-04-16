@@ -66,7 +66,8 @@ public class EventListener extends ListenerAdapter {
 	@Override
 	public void onGuildJoin(@NotNull GuildJoinEvent event) {
 		// Adding to guild list/set
-		System.out.println("Server added to list for guild: " + event.getGuild().getName());
+
+		bot.log.info("Added server '{}' to guild list.", event.getGuild().getName());
 		bot.addGuild(event.getGuild());
 		PDA.guildSet.add(event.getGuild());
 
