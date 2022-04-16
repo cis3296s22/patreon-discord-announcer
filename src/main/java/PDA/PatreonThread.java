@@ -36,10 +36,15 @@ import java.util.*;
  */
 
 public class PatreonThread extends Thread {
-	DiscordBot bot;
+	/** bot holds the reference to the single {@link DiscordBot} object used in the project */
+	final DiscordBot bot;
+	/** wait will let us wait until and object exists while loading a patreon page */
 	Wait<WebDriver> wait;
+	/** postCardSelector will hold what tags we want to use when searching a {@link WebElement} */
 	By postCardSelector;
+	/** ranFunction will hold a boolean value that is used during testing to see if a function was correctly ran*/
 	public boolean ranFunction = false;
+	/** log is used to simplify the output to the console by logging certain actions*/
 	Logger log;
 
 	public PatreonThread(DiscordBot bot) {
@@ -128,11 +133,15 @@ public class PatreonThread extends Thread {
 	}
 
 	private void announcePost(PostCard postCard, Guild guild) {
-		bot.setTitle((postCard.isPrivate() ? "Private: " : "Public: ") + postCard.getTitle(), postCard.getUrl(), guild);
-		bot.setDescription(postCard.getContent(), guild);
-		bot.setFooter(postCard.getPublishDate(), null, guild);
-		bot.setColor(postCard.isPrivate() ? Color.red : Color.green, guild);
-		bot.send(guild);
+
+		synchronized (bot){
+			bot.setTitle((postCard.isPrivate() ? "Private: " : "Public: ") + postCard.getTitle(), postCard.getUrl(), guild);
+			bot.setDescription(postCard.getContent(), guild);
+			bot.setFooter(postCard.getPublishDate(), null, guild);
+			bot.setColor(postCard.isPrivate() ? Color.red : Color.green, guild);
+			bot.send(guild);
+		}
+
 	}
 
 	private void goToPatreonPage(WebDriver driver, String patreonUrl) {

@@ -91,7 +91,7 @@ public class DiscordBot {
 		this.embedMap.get(id).clear();
 	}
 
-	public void send(String text, Guild id) { // sending text
+	public synchronized void send(String text, Guild id) { // sending text
 		this.channels.get(id).sendMessage(text).queue();
 	}
 

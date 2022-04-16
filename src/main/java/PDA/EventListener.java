@@ -57,9 +57,11 @@ public class EventListener extends ListenerAdapter {
 		}
 
 		// command variable should never be null as we will never reach here if it is null
-		command.setGuildID(event.getGuild());
-		command.setArgs(args);
-		command.execute(bot);
+		synchronized (bot){
+			command.setGuildID(event.getGuild());
+			command.setArgs(args);
+			command.execute(bot);
+		}
 	}
 
 	//! When a discord bot is added to a server while the program is running
