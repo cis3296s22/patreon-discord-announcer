@@ -8,27 +8,18 @@ import java.util.ArrayList;
 
 /**
  * addlink discord bot command.
- *
+ * <p>
  * Responsibilities:
- *
+ * <p>
  * 1) Check if a link was provided
  * 2) Check if the link is already in the list of links
  * 3) Add the guild to the list of guilds associated with the particular link
- *
  */
 
-public class addlink implements BotCommand {
-
-	private String[] args = null;
-	private Guild guild;
+public class addlink extends GenericBotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
-		if (args == null) {
-			System.out.println("no arguments provided");
-			return;
-		}
-
 		if (args.length <= 1) {
 			bot.send("No link provided", guild);
 		} else {
@@ -50,15 +41,5 @@ public class addlink implements BotCommand {
 				bot.send(args[1] + " has been added to the list of links", guild);
 			}
 		}
-	}
-
-	@Override
-	public void setArgs(String[] args) {
-		this.args = args;
-	}
-
-	@Override
-	public void setGuildID(Guild guild) {
-		this.guild = guild;
 	}
 }

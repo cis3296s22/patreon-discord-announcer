@@ -1,7 +1,6 @@
 package PDA.commands;
 
 import PDA.DiscordBot;
-import net.dv8tion.jda.api.entities.Guild;
 
 /**
  * help discord bot command.
@@ -12,22 +11,12 @@ import net.dv8tion.jda.api.entities.Guild;
  *
  */
 
-public class help implements BotCommand {
-
-	private Guild guild;
+public class help extends GenericBotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
-		bot.send("PDA commands:  /help  /setchannel  /addlink  /removelink  /showlinks", guild);
-	}
-
-	@Override
-	public void setArgs(String[] args) {
-
-	}
-
-	@Override
-	public void setGuildID(Guild guild) {
-		this.guild = guild;
+		bot.setTitle("PDA Commands", null, guild);
+		bot.setDescription("/help\n/setchannel\n/addlink\n/removelink\n/showlinks\n/getpublicposts\n/getprivateposts", guild);
+		bot.send(guild);
 	}
 }

@@ -1,28 +1,21 @@
 package PDA.commands;
 
-import PDA.PDA;
 import PDA.DiscordBot;
-import net.dv8tion.jda.api.entities.Guild;
-
-import java.util.ArrayList;
+import PDA.PDA;
 
 /**
  * showlinks discord bot command.
- *
+ * <p>
  * Responsibilities:
- *
+ * <p>
  * 1) Check if the user has any patreon links currently being tracked for their discord server
  * 2) Send an embed holding the list of patreon links that the discord server is currently tracking
- *
  */
 
-public class showlinks implements BotCommand {
-
-	private Guild guild;
+public class showlinks extends GenericBotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
-
 		StringBuilder linkContainer = new StringBuilder("");
 
 		for (String patreonUrl : PDA.patreonUrls.keySet()) {
@@ -36,14 +29,5 @@ public class showlinks implements BotCommand {
 		bot.setTitle("Links", "", guild);
 		bot.setDescription(linkContainer.toString(), guild);
 		bot.send(guild);
-	}
-
-	@Override
-	public void setArgs(String[] args) {
-	}
-
-	@Override
-	public void setGuildID(Guild guild) {
-		this.guild = guild;
 	}
 }

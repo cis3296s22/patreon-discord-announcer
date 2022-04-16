@@ -1,9 +1,8 @@
 package PDA.commands;
 
+import PDA.DiscordBot;
 import PDA.PDA;
 import PDA.PostCard;
-import PDA.DiscordBot;
-import net.dv8tion.jda.api.entities.Guild;
 
 /**
  * getprivateposts discord bot command.
@@ -14,9 +13,7 @@ import net.dv8tion.jda.api.entities.Guild;
  *
  */
 
-public class getprivateposts implements BotCommand {
-
-	private Guild guild;
+public class getprivateposts extends GenericBotCommand {
 
 	@Override
 	public void execute(DiscordBot bot) {
@@ -32,15 +29,5 @@ public class getprivateposts implements BotCommand {
 			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
 			bot.send(guild);
 		}
-	}
-
-	@Override
-	public void setArgs(String[] args) {
-
-	}
-
-	@Override
-	public void setGuildID(Guild guild) {
-		this.guild = guild;
 	}
 }
