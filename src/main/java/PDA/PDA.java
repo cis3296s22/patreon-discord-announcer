@@ -25,14 +25,25 @@ import java.util.*;
 public class PDA {
 
 	// Global variables
+	/** patreonUrls holds each of the patreon links mapped to each server that is using that patreon link*/
 	public static HashMap<String, ArrayList<Guild>> patreonUrls = new HashMap<>();
+	/** prefix is used to denote a command in a discord message*/
 	public static String prefix = "/";
+	/** guildSet holds a HashSet of every discord server that is connected to the program*/
 	public static Set<Guild> guildSet = new HashSet<>();
+	/** postCards holds each of the discord servers mapped to all the posts that each unique discord server has announced*/
 	public static HashMap<Guild, LinkedList<PostCard>> postCards = new HashMap<>();
-
+	/** discordToken holds the value of the discordToken provided to the program*/
 	static String discordToken = "";
 
-	public static void main(String[] arg) throws InterruptedException, LoginException {
+	/**
+	 * Main method that will declare and initialize the {@link DiscordBot} and {@link PatreonThread} objects
+	 *
+	 * @param args holds command line arguments
+	 * @throws InterruptedException in case a thread is interrupted
+	 * @throws LoginException in case the login for the discord bot token doesn't work
+	 */
+	public static void main(String[] args) throws InterruptedException, LoginException {
 
 		parseConfig();
 
@@ -45,6 +56,9 @@ public class PDA {
 		System.out.println("Finished!");
 	}
 
+	/**
+	 * parseConfig method that will read through the config.json file and get the discord token needed for initialization
+	 */
 	private static void parseConfig(){
 		JSONParser parser = new JSONParser();
 		try {
