@@ -24,14 +24,29 @@ import java.util.LinkedList;
 
 public class EventListener extends ListenerAdapter {
 
+	/**
+	 * bot holds the reference to the single {@link DiscordBot} object used in the project
+	 */
 	private final DiscordBot bot;
+	/**
+	 * commandRan will hold a boolean value that is used during testing to see if a function was correctly ran
+	 */
 	public boolean commandRan = false;
 
+	/**
+	 * Constructor initializes instance variables.
+	 *
+	 * @param bot is the reference to the {@link DiscordBot} object
+	 */
 	public EventListener(DiscordBot bot) {
 		this.bot = bot;
 	}
 
-	//! When a message is sent to the discord
+	/**
+	 * Runs everytime a message is sent in a discord server, will initialize a {@link BotCommand} object if the message contains a command
+	 *
+	 * @param event is the container for the message that was sent and all if it's information
+	 */
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 
@@ -64,7 +79,11 @@ public class EventListener extends ListenerAdapter {
 		}
 	}
 
-	//! When a discord bot is added to a server while the program is running
+	/**
+	 * Runs everytime the discord bot is added to a server during program runtime, will add the server information to allow for the program to run correctly
+	 *
+	 * @param event is the container for the message that was sent and all if it's information
+	 */
 	@Override
 	public void onGuildJoin(@NotNull GuildJoinEvent event) {
 		// Adding to guild list/set
