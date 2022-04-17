@@ -1,11 +1,8 @@
 package PDA;
 
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-
-import java.util.LinkedList;
 
 /**
  * Container for all information found on a patreon post.
@@ -74,6 +71,23 @@ public class PostCard {
 		}
 
 		this.url = urlContainer;
+	}
+
+	/**
+	 * Constructor for json-loaded posts
+	 *
+	 * @param publishDate date the post was published
+	 * @param title title of the post
+	 * @param url url of the post
+	 * @param content content of the post
+	 * @param isPrivate whether the post was private or not
+	 */
+	public PostCard(String publishDate, String title, String url, String content, boolean isPrivate) {
+		this.publishDate = publishDate;
+		this.title = title;
+		this.url = url;
+		this.content = content;
+		this.isPrivate = isPrivate;
 	}
 
 	/**
