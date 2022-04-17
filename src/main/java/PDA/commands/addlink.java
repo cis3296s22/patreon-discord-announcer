@@ -37,6 +37,7 @@ public class addlink extends GenericBotCommand {
 					bot.send(args[1] + " is already in the list of links", guild);
 				} else {
 					guilds.add(guild);
+					bot.send(args[1] + " has been added to the list of links", guild);
 					PDA.patreonUrls.put(args[1], guilds);
 				}
 			} else {
