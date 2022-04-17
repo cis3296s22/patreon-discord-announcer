@@ -46,7 +46,9 @@ public class PDA {
 	 * discordToken holds the value of the discordToken provided to the program
 	 */
 	static String discordToken = "";
-
+	/**
+	 * log holds the reference to a {@link Logger} object to output clean messages to the console
+	 */
 	static Logger log;
 
 	/**
