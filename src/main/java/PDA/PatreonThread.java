@@ -129,7 +129,7 @@ public class PatreonThread extends Thread {
 				for (int i = 0; i < localGuilds.size(); i++) {
 					for (int j = foundPostElements.size() - 1; j >= 0; j--) { // starting at size() - 1 will print out the posts in chronological order from oldest to newest
 						PostCard currentPostCard = new PostCard(foundPostElements.get(j));
-						this.handlePost(localGuilds.get(i), currentPostCard);
+						this.handlePost(patreonUrl, localGuilds.get(i), currentPostCard);
 					}
 				}
 			}
@@ -147,11 +147,12 @@ public class PatreonThread extends Thread {
 	 * @param guild is the reference to the guild that the patreonUrl is being parsed for
 	 * @param postCard is the container for the post found on the patreon page
 	 */
-	private void handlePost(Guild guild, PostCard postCard) {
+	private void handlePost(String patreonUrl, Guild guild, PostCard postCard) {
 		if (!PDA.postCards.get(guild).contains(postCard)) {
 			LinkedList<PostCard> temp = PDA.postCards.get(guild);
 			temp.add(postCard);
 			PDA.postCards.put(guild, temp);
+			PDA.saveAnnouncedPostCard(patreonUrl, guild, postCard);
 			this.announcePost(postCard, guild);
 		}
 	}

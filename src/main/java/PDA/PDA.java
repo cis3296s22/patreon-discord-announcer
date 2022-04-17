@@ -2,14 +2,12 @@ package PDA;
 
 import ch.qos.logback.classic.Logger;
 import net.dv8tion.jda.api.entities.Guild;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,7 +22,6 @@ import java.util.*;
  */
 
 public class PDA {
-
 	// Global variables
 	/**
 	 * patreonUrls holds each of the patreon links mapped to each server that is using that patreon link
@@ -59,11 +56,23 @@ public class PDA {
 	 * @throws LoginException       in case the login for the discord bot token doesn't work
 	 */
 	public static void main(String[] args) throws InterruptedException, LoginException {
-		parseConfig();
-
 		log = (Logger) LoggerFactory.getLogger("PDA");
+
+		log.info("Reading config.json...");
+		discordToken = parseConfig();
+
+		if (discordToken.isEmpty()) {
+			log.error("config.json does not contain a 'TOKEN' key.");
+			System.exit(1);
+		}
+
 		DiscordBot bot = new DiscordBot(discordToken);
 
+		log.info("Reading posts.json...");
+		JSONHelper.parseSavedData(bot, "posts.json");
+		log.info("Loaded {} URLs and their guild posts.", postCards.size());
+
+		log.info("Starting Selenium thread...");
 		PatreonThread testThread = new PatreonThread(bot);
 
 		testThread.start();
@@ -77,17 +86,72 @@ public class PDA {
 	/**
 	 * parseConfig method that will read through the config.json file and get the discord token needed for initialization
 	 */
-	private static void parseConfig() {
-		JSONParser parser = new JSONParser();
-		try {
-			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
-			Object token = jsonObject.get("TOKEN");
-			discordToken = token.toString().replaceAll("[\\[\\](){}]", "");
-		} catch (FileNotFoundException e) {
-			log.error("The configuration file 'config.json' was not found!");
+	private static String parseConfig() {
+		JSONObject configJson = JSONHelper.parseJSONFile("config.json");
+
+		if (configJson == null) {
+			log.error("An error occurred while reading config.json");
 			System.exit(1);
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
+		}
+
+		try {
+			return (String) configJson.get("TOKEN");
+		} catch (JSONException e) {
+			return "";
+		}
+	}
+
+	public static void saveAnnouncedPostCard(String patreonUrl, Guild guild, PostCard postCard) {
+		JSONObject savedJson = JSONHelper.parseJSONFile("posts.json");
+
+		if (savedJson == null) {
+			log.error("An error occurred while reading posts.json");
+			System.exit(1);
+		}
+
+		if (savedJson.has(patreonUrl)) { // * This Patreon URL already exists
+			JSONObject guildIds = savedJson.getJSONObject(patreonUrl);
+
+			saveInExistingPatreonURL(patreonUrl, guildIds, guild, postCard);
+		} else { // * New Patreon URL
+			JSONObject newGuildId = new JSONObject();
+			JSONObject newPost = new JSONObject();
+
+			// Put the post card details into the new post JSON Object
+			newPost.put(postCard.getUrl(), JSONHelper.createPostJSONObject(postCard));
+
+			// Put the new post JSON Object into the new guild ID JSON Object
+			newGuildId.put(guild.getId(), newPost);
+
+			// Put the new guild ID JSON Object into the master JSON file
+			savedJson.put(patreonUrl, newGuildId);
+		}
+
+		// * Finally, save the new JSON file into posts.json
+		try {
+			FileWriter file = new FileWriter("posts.json");
+			file.write(savedJson.toString());
+			file.flush();
+			file.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static void saveInExistingPatreonURL(String patreonUrl, JSONObject guildIds, Guild guild, PostCard postCard) {
+		if (guildIds.has(guild.getId())) { // * This guild already contains posts from this Patreon URL
+			JSONObject postUrls = guildIds.getJSONObject(guild.getId());
+
+			if (postUrls.has(postCard.getUrl())) { // ! This guild already stored this post URL
+				log.warn("The post tried storing a post that already exists.  Guild: '{}' -- URL: '{}'", guild.getId(), patreonUrl);
+			} else { // * This is a new post URL
+				postUrls.put(postCard.getUrl(), JSONHelper.createPostJSONObject(postCard));
+			}
+		} else { // * New guild ID for this Patreon URL
+			JSONObject patreonUrlObject = new JSONObject();
+
+			patreonUrlObject.put(postCard.getUrl(), JSONHelper.createPostJSONObject(postCard));
+			guildIds.put(guild.getId(), patreonUrlObject);
 		}
 	}
 
@@ -95,15 +159,15 @@ public class PDA {
 	 * Allows the ability to add a {@link PostCard} object to the postCards HashMap that holds all sent posts to dis
 	 *
 	 * @param postCard holds a reference to a {@link PostCard} object to be added to the postCards HashMap
-	 * @param id holds a reference to a {@link Guild} object that will be used to know which guild to attach the {@link PostCard} object to
+	 * @param guild    holds a reference to a {@link Guild} object that will be used to know which guild to attach the {@link PostCard} object to
 	 */
-	public static void addPostCard(PostCard postCard, Guild id){
-		LinkedList<PostCard> cards = postCards.get(id);
+	public static void addPostCard(PostCard postCard, Guild guild) {
+		LinkedList<PostCard> cards = postCards.get(guild);
 
-		if (!cards.contains(postCard)){
+		if (!cards.contains(postCard))
 			cards.add(postCard);
-		}
 
-		postCards.put(id, cards);
+		postCards.put(guild, cards);
+		log.info("Saved post URL '{}' to guild '{}'", postCard.getUrl(), guild.getId());
 	}
 }
