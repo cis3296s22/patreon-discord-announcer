@@ -36,17 +36,32 @@ import java.util.*;
  */
 
 public class PatreonThread extends Thread {
-	/** bot holds the reference to the single {@link DiscordBot} object used in the project */
+	/**
+	 * bot holds the reference to the single {@link DiscordBot} object used in the project
+	 */
 	final DiscordBot bot;
-	/** wait will let us wait until and object exists while loading a patreon page */
+	/**
+	 * wait will let us wait until and object exists while loading a patreon page
+	 */
 	Wait<WebDriver> wait;
-	/** postCardSelector will hold what tags we want to use when searching a {@link WebElement} */
+	/**
+	 * postCardSelector will hold what tags we want to use when searching a {@link WebElement}
+	 */
 	By postCardSelector;
-	/** ranFunction will hold a boolean value that is used during testing to see if a function was correctly ran*/
+	/**
+	 * ranFunction will hold a boolean value that is used during testing to see if a function was correctly ran
+	 */
 	public boolean ranFunction = false;
-	/** log is used to simplify the output to the console by logging certain actions*/
+	/**
+	 * log is used to simplify the output to the console by logging certain actions
+	 */
 	Logger log;
 
+	/**
+	 * Constructor initializes instance variables.
+	 *
+	 * @param bot is the reference to the {@link DiscordBot} object
+	 */
 	public PatreonThread(DiscordBot bot) {
 		this.setName("PatreonThread");
 		this.bot = bot;
@@ -54,6 +69,9 @@ public class PatreonThread extends Thread {
 		this.log = (Logger) LoggerFactory.getLogger(this.getName());
 	}
 
+	/**
+	 * Starts the thread, initializes web driver, starts loop to parse all patreon links given and output to discord
+	 */
 	@Override
 	public void run() {
 		// Create and initialize the browser
@@ -123,6 +141,12 @@ public class PatreonThread extends Thread {
 		}
 	}
 
+	/**
+	 * Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
+	 *
+	 * @param guild is the reference to the guild that the patreonUrl is being parsed for
+	 * @param postCard is the container for the post found on the patreon page
+	 */
 	private void handlePost(Guild guild, PostCard postCard) {
 		if (!PDA.postCards.get(guild).contains(postCard)) {
 			LinkedList<PostCard> temp = PDA.postCards.get(guild);
@@ -132,6 +156,12 @@ public class PatreonThread extends Thread {
 		}
 	}
 
+	/**
+	 * Sends the data contained in postCard to the {@link DiscordBot} object and tells it to send the data to discord
+	 *
+	 * @param postCard is the container for the post found on the patreon page
+	 * @param guild is the reference to the guild that the patreonUrl is being parsed for
+	 */
 	private void announcePost(PostCard postCard, Guild guild) {
 
 		synchronized (bot){
@@ -144,6 +174,12 @@ public class PatreonThread extends Thread {
 
 	}
 
+	/**
+	 * Attempts to load the patreon page, handles events where it asks you to login or has a captcha to solve
+	 *
+	 * @param driver is the reference to the WebDriver that allows us to open up an instance of FireFox
+	 * @param patreonUrl is the patreon link that we are currently trying to parse
+	 */
 	private void goToPatreonPage(WebDriver driver, String patreonUrl) {
 		// Load the login page to pass GeeTest, ensuring we're allowed to see post
 		driver.get(patreonUrl);
@@ -179,6 +215,11 @@ public class PatreonThread extends Thread {
 		}
 	}
 
+	/**
+	 * Solves the patreon captcha puzzle to allow us to load the patreon page
+	 *
+	 * @param driver is the reference to the WebDriver that allows us to open up an instance of FireFox
+	 */
 	private void geeTest(WebDriver driver) {
 
 		// Wait until the GeeTest iframe is loaded
@@ -345,6 +386,11 @@ public class PatreonThread extends Thread {
 		}
 	}
 
+	/**
+	 * Instantiates the driver that we use for loading up patreon pages through FireFox
+	 *
+	 * @return driver for FireFox
+	 */
 	private WebDriver createBrowser() {
 		try {
 			FirefoxOptions options = new FirefoxOptions();
@@ -370,7 +416,9 @@ public class PatreonThread extends Thread {
 		return null;
 	}
 
-	// JUnit testing purposes
+	/**
+	 *	Public method that calls the sleep(:int) method for testing purposes
+	 */
 	public void testSleep() {
 		sleep(1000);
 	}
@@ -403,6 +451,12 @@ public class PatreonThread extends Thread {
 		return new Random().nextInt(max - min) + min;
 	}
 
+	/**
+	 * Will format the time printed to the console, so it is more readable
+	 *
+	 * @param timeInSeconds is an integer holding an amount of time that is only formatted to seconds
+	 * @return a String that formats the timeInSeconds variable to show how many minutes and seconds fit inside timeInSeconds
+	 */
 	private String formatTime(int timeInSeconds) {
 		int seconds = timeInSeconds % 3600 % 60;
 		int minutes = (int) Math.floor(timeInSeconds % 3600 / 60);
