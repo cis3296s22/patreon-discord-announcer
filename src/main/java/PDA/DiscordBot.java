@@ -29,11 +29,31 @@ import java.util.Set;
  */
 
 public class DiscordBot {
+	/**
+	 * jda holds the reference to the Java Discord API
+	 */
 	private JDA jda;
+	/**
+	 * embedMap holds the mapping from each discord server to its own {@link EmbedBuilder} object
+	 */
 	private final HashMap<Guild, EmbedBuilder> embedMap;
+	/**
+	 * channels holds the mapping from each discord server to its own {@link TextChannel} object, so it knows where to output messages
+	 */
 	private final HashMap<Guild, TextChannel> channels;
+	/**
+	 * log holds the reference to a {@link Logger} object to output clean messages to the console
+	 */
 	public final Logger log;
 
+	/**
+	 * Constructor initializes instance variables, sets up the JDA bot, initializes each {@link EmbedBuilder} in embedMap, and initializes each {@link TextChannel} in channels
+	 *
+	 * @param token is the discord bot token that allows us to initialize a discord bot
+	 *
+	 * @throws InterruptedException in case a thread is interrupted
+	 * @throws LoginException 		in case the login for the discord bot token doesn't work
+	 */
 	public DiscordBot(String token) throws LoginException, InterruptedException {
 		this.log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
 		this.log.info("Initializing Discord Bot...");
@@ -56,6 +76,13 @@ public class DiscordBot {
 		this.log.info("Servers containing PDA: " + channels);
 	}
 
+	/**
+	 *
+	 *
+	 * @param title
+	 * @param url
+	 * @param id
+	 */
 	public void setTitle(String title, String url, Guild id) {
 		this.embedMap.put(id, this.embedMap.get(id).setTitle(title, url));
 	}

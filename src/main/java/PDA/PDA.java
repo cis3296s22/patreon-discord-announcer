@@ -88,4 +88,20 @@ public class PDA {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Allows the ability to add a {@link PostCard} object to the postCards HashMap that holds all sent posts to dis
+	 *
+	 * @param postCard holds a reference to a {@link PostCard} object to be added to the postCards HashMap
+	 * @param id holds a reference to a {@link Guild} object that will be used to know which guild to attach the {@link PostCard} object to
+	 */
+	public static void addPostCard(PostCard postCard, Guild id){
+		LinkedList<PostCard> cards = postCards.get(id);
+
+		if (!cards.contains(postCard)){
+			cards.add(postCard);
+		}
+
+		postCards.put(id, cards);
+	}
 }
