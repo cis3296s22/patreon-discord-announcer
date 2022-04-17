@@ -28,6 +28,12 @@ public class addlink extends GenericBotCommand {
 		if (args.length <= 1) {
 			bot.send("No link provided", guild);
 		} else {
+
+			if (!PDA.urlValid(args[1])){
+				bot.send(args[1] + " is not a valid link", guild);
+				return;
+			}
+
 			ArrayList<Guild> guilds;
 
 			if (PDA.patreonUrls.containsKey(args[1])) {

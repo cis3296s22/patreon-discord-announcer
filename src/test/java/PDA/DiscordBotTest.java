@@ -15,9 +15,8 @@ import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -44,19 +43,18 @@ import javax.security.auth.login.LoginException;
 
 public class DiscordBotTest{
 
-    // DiscordBot db;
+
     String token;
 
-
     @Before
-    public void setup() throws LoginException, InterruptedException, IOException, ParseException {
+    public void setup() throws LoginException, InterruptedException, IOException {
 
         // when testing the bot, we need correct login information(token) in order to make sure everything works as we need a bot with servers in it to test it
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
-        System.out.println(jsonObject);
-        Object token = jsonObject.get("TOKEN");
-        this.token = token.toString().replaceAll("[\\[\\](){}]", "");
+        JSONObject configJson = JSONHelper.parseJSONFile("config.json");
+
+        assert configJson != null;
+        token = (String) configJson.get("TOKEN");
+
     }
 
     @Test

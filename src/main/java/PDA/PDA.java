@@ -103,6 +103,13 @@ public class PDA {
 		}
 	}
 
+	/**
+	 * Will save the announced post to the posts.json file
+	 *
+	 * @param patreonUrl is the patreonUrl that the post was created from
+	 * @param guild is the reference to the guild that we want to save the posts for
+	 * @param postCard is the object holding all the information from the post on patreon
+	 */
 	public static void saveAnnouncedPostCard(String patreonUrl, Guild guild, PostCard postCard) {
 		JSONObject savedJson = JSONHelper.parseJSONFile("posts.json");
 
@@ -140,6 +147,14 @@ public class PDA {
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @param patreonUrl
+	 * @param guildIds
+	 * @param guild
+	 * @param postCard
+	 */
 	private static void saveInExistingPatreonURL(String patreonUrl, JSONObject guildIds, Guild guild, PostCard postCard) {
 		if (guildIds.has(guild.getId())) { // * This guild already contains posts from this Patreon URL
 			JSONObject postUrls = guildIds.getJSONObject(guild.getId());

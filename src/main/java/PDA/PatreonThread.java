@@ -144,6 +144,7 @@ public class PatreonThread extends Thread {
 	/**
 	 * Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
 	 *
+	 * @param patreonUrl is the patreon link that we have parsed
 	 * @param guild is the reference to the guild that the patreonUrl is being parsed for
 	 * @param postCard is the container for the post found on the patreon page
 	 */
@@ -152,6 +153,7 @@ public class PatreonThread extends Thread {
 			LinkedList<PostCard> temp = PDA.postCards.get(guild);
 			temp.add(postCard);
 			PDA.postCards.put(guild, temp);
+
 			PDA.saveAnnouncedPostCard(patreonUrl, guild, postCard);
 			this.announcePost(postCard, guild);
 		}
