@@ -146,11 +146,11 @@
         </dependency>
 
         <!-- Required to read the config file -->
-        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
         </dependency>
 
         <!-- Required to find drivers without download -->
@@ -169,14 +169,6 @@
             <version>4.1.3</version>
         </dependency>
 
-        <!-- Required for Discord Webhooks -->
-        <!-- https://mvnrepository.com/artifact/club.minnced/discord-webhooks -->
-<!--        <dependency>-->
-<!--            <groupId>club.minnced</groupId>-->
-<!--            <artifactId>discord-webhooks</artifactId>-->
-<!--            <version>0.8.0</version>-->
-<!--        </dependency>-->
-
         <!-- Required for Discord Bot -->
         <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
         <dependency>
@@ -184,7 +176,6 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-alpha.5</version>
         </dependency>
-
     </dependencies>
 
     <developers>
