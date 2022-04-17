@@ -77,16 +77,22 @@ public class DiscordBot {
 	}
 
 	/**
+	 * Sets the title for the unique discord server's {@link EmbedBuilder} in embedMap
 	 *
-	 *
-	 * @param title
-	 * @param url
-	 * @param id
+	 * @param title holds the String value of the title we want to set
+	 * @param url holds the url for the hyperlink we attach to the title
+	 * @param id is the reference to the guild that we want to set the title for
 	 */
 	public void setTitle(String title, String url, Guild id) {
 		this.embedMap.put(id, this.embedMap.get(id).setTitle(title, url));
 	}
 
+	/**
+	 * Adds the channel output for the discord bot on a specific discord server
+	 *
+	 * @param channelId holds the String value of the TextChannel we want to add for the unique discord server's {@link TextChannel} in channels
+	 * @param id is the reference to the guild that we want to add the channel for
+	 */
 	public void addChannel(String channelId, Guild id) {
 
 		// JDA has another overloaded getTextChannelById() method that uses a long instead of a String
@@ -97,45 +103,101 @@ public class DiscordBot {
 		}
 	}
 
+	/**
+	 * Sets the description for the unique discord server's {@link EmbedBuilder} in embedMap
+	 *
+	 * @param description holds the String value of the description we want to set
+	 * @param id is the reference to the guild that we want to set the description for
+	 */
 	public void setDescription(String description, Guild id) {
 		this.embedMap.put(id, this.embedMap.get(id).setDescription(description));
 	}
 
+	/**
+	 * Adds a field for the unique discord server's {@link EmbedBuilder} in embedMap
+	 *
+	 * @param title holds the String value of the title for the field we want to add
+	 * @param value holds the String value of the description for the field we want to add
+	 * @param id is the reference to the guild that we want to add the field for
+	 */
 	public void addField(String title, String value, Guild id) {
 		this.embedMap.put(id, this.embedMap.get(id).addField(title, value, true));
 	}
 
+	/**
+	 * Sets the color for the unique discord server's {@link EmbedBuilder} in embedMap
+	 *
+	 * @param color holds the color we want to set the embed color to
+	 * @param id is the reference to the guild that we want to add the color for
+	 */
 	public void setColor(Color color, Guild id) {
 		this.embedMap.put(id, this.embedMap.get(id).setColor(color));
 	}
 
+	/**
+	 * Sets the footer for the unique discord server's {@link EmbedBuilder} in embedMap
+	 *
+	 * @param text holds the String value of the description for the footer we want to add
+	 * @param userUrl holds the String value of the hyperlink we want to add onto the text(description) of the footer
+	 * @param id is the reference to the guild that we want to set the footer for
+	 */
 	public void setFooter(String text, String userUrl, Guild id) {
 		this.embedMap.put(id, this.embedMap.get(id).setFooter(text, userUrl));
 	}
 
+	/**
+	 * Will send the {@link EmbedBuilder}'s embed to the discord server specified in id
+	 *
+	 * @param id is the reference to the guild that we want to send the {@link EmbedBuilder} to
+	 */
 	public void send(Guild id) { // sending embed
 		this.channels.get(id).sendMessageEmbeds(this.embedMap.get(id).build()).queue();
 		this.embedMap.get(id).clear();
 	}
 
+	/**
+	 * Will send the text specified in the arguments to the discord server specified in the arguments
+	 *
+	 * @param text holds the String value of the message we want to send to a discord server
+	 * @param id is the reference to the guild that we want to send the message to
+	 */
 	public synchronized void send(String text, Guild id) { // sending text
 		this.channels.get(id).sendMessage(text).queue();
 	}
 
+	/**
+	 * Will add a discord server and an empty {@link EmbedBuilder} object to the embedMap
+	 *
+	 * @param id is the reference to the guild that we want to add to the embedMap
+	 */
 	public void addGuild(Guild id) {
 		this.embedMap.put(id, this.embedMap.getOrDefault(id, new EmbedBuilder()));
 	}
 
-	// function to help with testing
+	/**
+	 * Returns the set of all discord servers we store, for testing purposes
+	 *
+	 * @return the set of all discord servers we store
+	 */
 	public Set<Guild> getAllGuilds() {
 		return this.embedMap.keySet();
 	}
 
-	// function to help with testing
+	/**
+	 * Returns the {@link JDA} object being used to instantiate the {@link DiscordBot} object, for testing purposes
+	 *
+	 * @return the jda object stored in {@link DiscordBot}
+	 */
 	public JDA getJDA() {
 		return this.jda;
 	}
 
+	/**
+	 * Initializes the jda object to allow us to talk with discord
+	 *
+	 * @param token holds the String token value that we need in order to initialize a discord bot through JDA
+	 * @throws InterruptedException in case a thread is interrupted
+	 */
 	private void setupJDA(String token) throws InterruptedException {
 		try {
 			this.jda = JDABuilder.createDefault(token).build();
@@ -148,6 +210,9 @@ public class DiscordBot {
 		this.jda.addEventListener(new EventListener(this));
 	}
 
+	/**
+	 * Initializes an empty {@link EmbedBuilder} object for each discord server
+	 */
 	private void setupEmbeds() {
 		for (Guild guild : this.jda.getGuilds()) {
 			if (!this.embedMap.containsKey(guild)) {
@@ -157,6 +222,9 @@ public class DiscordBot {
 		}
 	}
 
+	/**
+	 * Initializes a TextChannel for each discord server by finding the first TextChannel in the discord server and adding it to the channels HashMap
+	 */
 	private void setupTextChannels() {
 		for (Guild guild : PDA.guildSet) {
 			List<TextChannel> chanList = new LinkedList<>(); //guild.getTextChannelsByName("testing", true);
@@ -171,6 +239,9 @@ public class DiscordBot {
 		}
 	}
 
+	/**
+	 * Initializes an empty {@link LinkedList} container for {@link PostCard} objects and adds it to the postCards HashMap in PDA.java
+	 */
 	private void setupPosts() {
 		for (Guild guild : PDA.guildSet) {
 			LinkedList<PostCard> temp = new LinkedList<>();
