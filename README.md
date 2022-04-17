@@ -10,7 +10,7 @@ the user in the desired Discord channel of any new Patreon posts from designated
 
 ## How to Run
 1. **Method: Invite our PDA Bot** - *Recommended, quick and simple*
-    1) [Add PDA to your Discord server](https://discord.com/api/oauth2/authorize?client_id=937463083876614216&permissions=8&scope=bot)
+    1) [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)
     2) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators
 2. **Method: Use your own bot** - *Not recommended, highly technical*
     1) Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)
