@@ -10,6 +10,8 @@ import javax.security.auth.login.LoginException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Patreon Discord Announcer startup implementation.
@@ -169,5 +171,35 @@ public class PDA {
 
 		postCards.put(guild, cards);
 		log.info("Saved post URL '{}' to guild '{}'", postCard.getUrl(), guild.getId());
+	}
+
+	public static boolean urlValid(String url){
+
+		//Regex for a valid URL
+		//The URL must start with either http or https and
+		//    then followed by :// and
+		//    then it must contain www. and
+		//    then followed by subdomain of length (2, 256) and
+		//    last part contains top level domain like .com, .org etc
+		String reg = "((http|https)://)(www.)?"
+				+ "[a-zA-Z0-9@:%._\\+~#?&//=]"
+				+ "{2,256}\\.[a-z]"
+				+ "{2,6}\\b([-a-zA-Z0-9@:%"
+				+ "._\\+~#?&//=]*)";
+
+		//compiles the regex
+		Pattern p = Pattern.compile(reg);
+
+		//If string is empty return false
+		if(url == null){
+			return false;
+		}
+
+		//find a match on the string
+		Matcher m = p.matcher(url);
+
+		//return the string if matched the regex
+		return m.matches();
+
 	}
 }
