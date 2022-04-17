@@ -18,6 +18,11 @@ import java.util.ArrayList;
 
 public class addlink extends GenericBotCommand {
 
+	/**
+	 * Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
 	@Override
 	public void execute(DiscordBot bot) {
 		if (args.length <= 1) {

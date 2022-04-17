@@ -15,6 +15,11 @@ import PDA.PostCard;
 
 public class getprivateposts extends GenericBotCommand {
 
+	/**
+	 * Prints out all private posts unique to the discord that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
 	@Override
 	public void execute(DiscordBot bot) {
 		bot.setTitle("Private Posts:", null, guild);

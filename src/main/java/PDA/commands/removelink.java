@@ -18,6 +18,11 @@ import java.util.ArrayList;
 
 public class removelink extends GenericBotCommand {
 
+	/**
+	 * Removes the discord server from the list of discord servers assigned to the patreon link given by the user
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
 	@Override
 	public void execute(DiscordBot bot) {
 		if (args.length <= 1) {

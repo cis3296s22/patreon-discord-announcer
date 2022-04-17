@@ -14,6 +14,11 @@ import PDA.DiscordBot;
 
 public class setchannel extends GenericBotCommand {
 
+	/**
+	 * Sets the text channel for the unique discord that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
 	@Override
 	public void execute(DiscordBot bot) {
 		if (args.length <= 1) {

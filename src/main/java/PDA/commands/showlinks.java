@@ -14,6 +14,11 @@ import PDA.PDA;
 
 public class showlinks extends GenericBotCommand {
 
+	/**
+	 * Prints out the list of all links added to the discord server that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
 	@Override
 	public void execute(DiscordBot bot) {
 		StringBuilder linkContainer = new StringBuilder("");

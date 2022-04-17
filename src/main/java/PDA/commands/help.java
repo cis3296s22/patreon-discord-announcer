@@ -13,6 +13,11 @@ import PDA.DiscordBot;
 
 public class help extends GenericBotCommand {
 
+	/**
+	 * Prints out the list of commands available to be used by a user
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
 	@Override
 	public void execute(DiscordBot bot) {
 		bot.setTitle("PDA Commands", null, guild);
