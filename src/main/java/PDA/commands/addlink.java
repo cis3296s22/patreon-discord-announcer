@@ -23,7 +23,7 @@ public class addlink implements BotCommand {
         } else {
             ArrayList<String> links = PDA.patreonUrls.get(guild);
 
-            if (!links.contains(args[1]) && true){ // TODO: check if valid patreon link
+            if (!links.contains(args[1]) && PDA.urlValid(args[1])){ // TODO: check if valid patreon link
                 links.add(args[1]);
                 PDA.patreonUrls.put(guild, links);
                 bot.send(args[1] + " has been added as a patreon link", guild);

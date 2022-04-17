@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PDA {
 	// TODO: make patreonUrl a list so we can have multiple patreon pages to check (maybe hashmap<Integer(guild id), List> so it depends on the discord server its in)
@@ -78,5 +80,35 @@ public class PDA {
 	private static void disableLoggingOutput() {
 		Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 		System.setProperty("webdriver.chrome.silentOutput", "true");
+	}
+
+	public static boolean urlValid(String url){
+
+		//Regex for a valid URL
+		//The URL must start with either http or https and
+		//    then followed by :// and
+		//    then it must contain www. and
+		//    then followed by subdomain of length (2, 256) and
+		//    last part contains top level domain like .com, .org etc
+		String reg = "((http|https)://)(www.)?"
+				+ "[a-zA-Z0-9@:%._\\+~#?&//=]"
+				+ "{2,256}\\.[a-z]"
+				+ "{2,6}\\b([-a-zA-Z0-9@:%"
+				+ "._\\+~#?&//=]*)";
+
+		//compiles the regex
+		Pattern p = Pattern.compile(reg);
+
+		//If string is empty return false
+		if(url == null){
+			return false;
+		}
+
+		//find a match on the string
+		Matcher m = p.matcher(url);
+
+		//return the string if matched the regex
+		return m.matches();
+
 	}
 }
