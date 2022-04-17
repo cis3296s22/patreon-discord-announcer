@@ -57,14 +57,11 @@ public class JSONHelper {
 				for (String curPostUrl : guildPosts.keySet()) {
 					JSONObject postDetails = (JSONObject) guildPosts.get(curPostUrl);
 
-					String publishDate, title, content;
-					boolean isPrivate;
-
 					try {
-						publishDate = postDetails.get("publishDate").toString();
-						title = postDetails.get("title").toString();
-						content = postDetails.get("content").toString();
-						isPrivate = Boolean.getBoolean(postDetails.get("isPrivate").toString());
+						String publishDate = postDetails.get("publishDate").toString();
+						String title = postDetails.get("title").toString();
+						String content = postDetails.get("content").toString();
+						boolean isPrivate = Boolean.parseBoolean(postDetails.get("isPrivate").toString());
 
 						PostCard postCard = new PostCard(publishDate, title, curPostUrl, content, isPrivate);
 						Guild guild = bot.getJDA().getGuildById(curGuildId);
