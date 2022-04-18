@@ -1,7 +1,6 @@
 # Patreon Discord Announcer (PDA)
-PDA is an application that utilizes Discord as a notification platform to inform users
+PDA is an application that utilizes Discord as a notification platform to inform users of new and current posts from their favorite Patreon creators. Instead of navigating to multiple Patreon pages and checking each for new or current posts, PDA allows you to view all of your Patreon content in one channel. Our Bot commands make this even more simple allowing you to add/remove content creators at any time, change where you want your posts to be displayed, or opt out entirely if you lose interest. 
 
-the user in the desired Discord channel of any new Patreon posts from designated Patreon boards. The Patreon Discord Announcer software application or PDA, after being properly configured and built, will run in a terminal/console window and immediately load locally stored data of all of the previously announced patreon posts. Doing so is required to avoid announcing posts that have already been announced. The software will output in the terminal how many announcements were previously stored and loaded then load a headless browser to continuously scan the user configured Patreon board. The moment the software finds a new post on the designated board it will output to the designated Discord server through a Discord bot if the user has not configured their own bot.
 
 ![This is a screenshot.](pda_pic.png)
 
@@ -15,18 +14,10 @@ the user in the desired Discord channel of any new Patreon posts from designated
 2. **Method: Use your own bot** - *Not recommended, highly technical*
     1) Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)
     2) Extract the downloaded zip in any directory
-    3) Inside the directory containing the extracted PDA files, open config.json and replace **TOKEN**'s value **0** with your [Discord bot token](asd)
-
-
-<!-- 5) If wish to apply the PDA to your own bot and don't have one, follow the instructions in the [Setup Discord Bot](#setup-discord-bot) section.
-6) If your personal discord bot has not been added to the server where you want to use the PDA, follow the instructions in the [Add Discord Bot To A Server](#add-discord-bot-to-a-server) section.
-7) If you do not have the developer mode on discord enabled, follow the instructions in the [Enable Developer Mode](#enable-developer-mode) section.
-8) Right click the channel where you want the bot to initially send messages, at the bottom of the pop-up, click "Copy ID".
-9) Inside of the config.json file, paste your discord bot's token value into the "TOKEN" variable(if you do not have this follow the instructions in the "Setup Discord Bot" section).
-10) Inside of the config.json file, paste your discord channel ID into the "Channel" variable.
-11) Open a terminal/console and navigate to the directory where the PDA binary is stored.
-12) Run `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` in the terminal to run PDA.  **Ensure x.x is changed to the appropriate version number**
-13) The console shall then display all posts on the page shown, close the Google Chrome instance, then terminate peacefully. -->
+    3) Inside the directory containing the extracted PDA files, open config.json and replace **TOKEN**'s value **0** with your Discord Bot Token.
+    4) If you need help finding your Discord Bot Token or with the technical side of creating/setting up your bot properly for PDA, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)
+    5) Once properly configured, open a terminal/console and navigate to the directory where the PDA binary is stored, from here run the command `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` and PDA will start running. **Ensure x.x is changed to the appropriate version number**
+    6) Now you can use PDA and it's bot commands freely from your own Discord Bot, but note that when the terminal is closed PDA will no longer update your channel.
 
 ## Bot Commands
 * Displays this list of commands in your Discord channel, can also be used to test if bot is currently online.  
