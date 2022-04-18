@@ -145,8 +145,8 @@ public class PatreonThread extends Thread {
 	 * Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
 	 *
 	 * @param patreonUrl is the patreon link that we have parsed
-	 * @param guild is the reference to the guild that the patreonUrl is being parsed for
-	 * @param postCard is the container for the post found on the patreon page
+	 * @param guild      is the reference to the guild that the patreonUrl is being parsed for
+	 * @param postCard   is the container for the post found on the patreon page
 	 */
 	private void handlePost(String patreonUrl, Guild guild, PostCard postCard) {
 		if (!PDA.postCards.get(guild).contains(postCard)) {
@@ -163,11 +163,11 @@ public class PatreonThread extends Thread {
 	 * Sends the data contained in postCard to the {@link DiscordBot} object and tells it to send the data to discord
 	 *
 	 * @param postCard is the container for the post found on the patreon page
-	 * @param guild is the reference to the guild that the patreonUrl is being parsed for
+	 * @param guild    is the reference to the guild that the patreonUrl is being parsed for
 	 */
 	private void announcePost(PostCard postCard, Guild guild) {
 
-		synchronized (bot){
+		synchronized (bot) {
 			bot.setTitle((postCard.isPrivate() ? "Private: " : "Public: ") + postCard.getTitle(), postCard.getUrl(), guild);
 			bot.setDescription(postCard.getContent(), guild);
 			bot.setFooter(postCard.getPublishDate(), null, guild);
@@ -180,7 +180,7 @@ public class PatreonThread extends Thread {
 	/**
 	 * Attempts to load the patreon page, handles events where it asks you to login or has a captcha to solve
 	 *
-	 * @param driver is the reference to the WebDriver that allows us to open up an instance of FireFox
+	 * @param driver     is the reference to the WebDriver that allows us to open up an instance of FireFox
 	 * @param patreonUrl is the patreon link that we are currently trying to parse
 	 */
 	private void goToPatreonPage(WebDriver driver, String patreonUrl) {
@@ -351,24 +351,23 @@ public class PatreonThread extends Thread {
 			// Move on top of the button with a seemingly random offset
 			move.moveToElement(dragButton, 20 + new Random().nextInt(10), 20 + new Random().nextInt(10)).perform();
 
-			// Wait between 1-2 seconds
-//			this.sleep(randNum(500, 1000));
-
 			// Left mouse button down
 			move.clickAndHold().perform();
 
 			// Wait between 1-2 seconds
 			this.sleep(randNum(500, 1000));
 
-			if (1 == 1) {
-				move.moveByOffset(dragAmount + (dragAmount % 2 == 0 ? 2 : -2), 0).perform();
-				this.sleep(500);
+			// Move the cursor with slight variation
+			move.moveByOffset(dragAmount + (dragAmount % 2 == 0 ? 2 : -2), 0).perform();
 
-				if (dragAmount > 90)
-					this.sleep(randNum(500, 900));
+			// Wait some time before letting go to increase the CAPTCHA click timer
+			this.sleep(500);
 
-				move.release().perform();
-			}
+			if (dragAmount > 90)
+				this.sleep(randNum(500, 900));
+
+			// Release LMB
+			move.release().perform();
 
 			// Click the "reset" button if it exists
 			if (this.visibleElementFound(By.className("geetest_reset_tip_content"))) {
@@ -382,6 +381,7 @@ public class PatreonThread extends Thread {
 			}
 		}
 
+		// If we've failed the CAPTCHA 5 times, reset the page and cookies
 		if (loopAttempts >= 5) {
 			driver.get("https://www.example.com");
 			this.sleep(1500);
@@ -397,7 +397,7 @@ public class PatreonThread extends Thread {
 	private WebDriver createBrowser() {
 		try {
 			FirefoxOptions options = new FirefoxOptions();
-//			options.setHeadless(true);
+			options.setHeadless(true);
 			options.setLogLevel(FirefoxDriverLogLevel.FATAL);
 
 			// Marionette is required to redirect Firefox's logging
@@ -420,7 +420,7 @@ public class PatreonThread extends Thread {
 	}
 
 	/**
-	 *	Public method that calls the sleep(:int) method for testing purposes
+	 * Public method that calls the sleep(:int) method for testing purposes
 	 */
 	public void testSleep() {
 		sleep(1000);
@@ -464,10 +464,7 @@ public class PatreonThread extends Thread {
 		int seconds = timeInSeconds % 3600 % 60;
 		int minutes = (int) Math.floor(timeInSeconds % 3600 / 60);
 
-		if (minutes == 0)
-			return seconds + "s";
-
-		return minutes + "m:" + seconds + "s";
+		return (minutes == 0 ? minutes + "m:" : "") + seconds + "s";
 	}
 
 	/**
