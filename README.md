@@ -12,17 +12,17 @@ PDA is an application that utilizes Discord as a notification platform to inform
 
 ## How to Run
 **Method 1: Invite our PDA Bot** - *Recommended, quick and simple*  
-    * [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)  
-    * Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators   
+    - [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)  
+    - Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators   
     
 **Method 2: Use your own bot** - *Not recommended, highly technical*  
-    * Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)  
-    * Extract the downloaded zip in any directory  
-    * Inside the directory containing the extracted PDA files, open config.json and replace **TOKEN**'s value **0** with your Discord Bot Token.  
-    * If you need help finding your Discord Bot Token or with any other part of creating/setting up your Discord Bot, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)  
-    * Once properly configured, open a terminal/console and navigate to the directory where the PDA binary is stored, from here run the command `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` and PDA will start running.  
+    >- Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)  
+    >- Extract the downloaded zip in any directory  
+    >- Inside the directory containing the extracted PDA files, open config.json and replace **TOKEN**'s value **0** with your Discord Bot Token.  
+    >- If you need help finding your Discord Bot Token or with any other part of creating/setting up your Discord Bot, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)  
+    >- Once properly configured, open a terminal/console and navigate to the directory where the PDA binary is stored, from here run the command `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` and PDA will start running.  
     **Ensure x.x is changed to the appropriate version number**  
-    * Now you can use PDA and it's bot commands from your own Discord Bot, but note that when the terminal is closed PDA will no longer update your channel.  
+    >- Now you can use PDA and it's bot commands from your own Discord Bot, but note that when the terminal is closed PDA will no longer update your channel.  
 
 ## Bot Commands
 * Displays this list of commands in your Discord channel, can also be used to test if bot is currently online.  
