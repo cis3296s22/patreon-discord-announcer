@@ -127,20 +127,19 @@
         </dependency>
 
         <!-- Logger -->
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.2.11</version>
-        </dependency>
-
-        <!-- Logger -->
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
-            <scope>test</scope>
+        </dependency>
+
+        <!-- Logger -->
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.11</version>
         </dependency>
 
         <!-- Required for WebDriver Wait -->
