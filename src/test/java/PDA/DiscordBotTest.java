@@ -16,8 +16,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Testing the implementation of PDA.
@@ -29,7 +28,6 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class DiscordBotTest{
-
 
     String token;
 
@@ -44,6 +42,12 @@ public class DiscordBotTest{
 
     }
 
+    /**
+     * Setting up a {@link DiscordBot} object should let us see what guilds the bot is added to
+     *
+     * @throws InterruptedException in case a thread is interrupted
+     * @throws LoginException       in case the login for the discord bot token doesn't work
+     */
     @Test
     public void testDiscordBot() throws InterruptedException, LoginException {
 
@@ -57,6 +61,12 @@ public class DiscordBotTest{
         assertEquals("size should be the same: ", db.getJDA().getGuilds().size(),  guilds.size());
     }
 
+    /**
+     * Firing off the onGuildJoin() function that denotes when a bot is added to a server during runtime should run to completion
+     *
+     * @throws InterruptedException in case a thread is interrupted
+     * @throws LoginException       in case the login for the discord bot token doesn't work
+     */
     @Test
     public void testEventListener() throws LoginException, InterruptedException {
         // we need to assume that DiscordBot already has guilds in it already
@@ -73,6 +83,12 @@ public class DiscordBotTest{
         assertTrue("running onGuildJoin should set the variable to true after the entire function runs", listener.commandRan);
     }
 
+    /**
+     * The {@link PatreonThread} object should sleep for a time period when needed for loading a page
+     *
+     * @throws InterruptedException in case a thread is interrupted
+     * @throws LoginException       in case the login for the discord bot token doesn't work
+     */
     @Test
     public void testPatreonThread() throws LoginException, InterruptedException {
 
@@ -85,6 +101,12 @@ public class DiscordBotTest{
         assertTrue("running the testSleep() function should see if our sleep function works correctly and sets ranFunction to true", p.ranFunction);
     }
 
+    /**
+     * If we give a {@link PostCard} object a tag to find elements by, it should let us know if any post it finds will be private, if it can't find the post then it should be set to public
+     *
+     * @throws InterruptedException in case a thread is interrupted
+     * @throws LoginException       in case the login for the discord bot token doesn't work
+     */
     @Test
     public void testPostcard() throws LoginException, InterruptedException {
 
@@ -109,8 +131,22 @@ public class DiscordBotTest{
         PostCard post = new PostCard(driver.findElement(By.tagName("body")));
 
 
-        assertTrue("should be public because we aren't technically giving it any post to find", !post.isPrivate());
+        assertFalse("should be public because we aren't technically giving it any post to find", post.isPrivate());
     }
 
+    /**
+     * We should get a non-empty string if we try to parse through our config.json file for our discord TOKEN
+     */
+    @Test
+    public void testJSONHelper() {
 
+        JSONObject js = JSONHelper.parseJSONFile("config.json");
+
+        if (js == null){
+            fail("could not find config.json file to complete test");
+        }
+        else{
+            assertNotSame("as long as the string is not empty then we found a token or the placeholder for the token", "", js.get("TOKEN"));
+        }
+    }
 }

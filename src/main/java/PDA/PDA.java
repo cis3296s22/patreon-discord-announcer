@@ -87,6 +87,8 @@ public class PDA {
 
 	/**
 	 * parseConfig method that will read through the config.json file and get the discord token needed for initialization
+	 *
+	 * @return the token found in the config.json file
 	 */
 	private static String parseConfig() {
 		JSONObject configJson = JSONHelper.parseJSONFile("config.json");
@@ -148,12 +150,12 @@ public class PDA {
 	}
 
 	/**
+	 * Saves any new post data into the {@link JSONObject} provided to the function
 	 *
-	 *
-	 * @param patreonUrl
-	 * @param guildIds
-	 * @param guild
-	 * @param postCard
+	 * @param patreonUrl holds the patreon link that was used to get the {@link PostCard} post data
+	 * @param guildIds is the {@link JSONObject} that holds all the current data
+	 * @param guild is the reference to the discord server that the {@link PostCard} is unique to
+	 * @param postCard is the information saved from a patreon link's post saved into an object
 	 */
 	private static void saveInExistingPatreonURL(String patreonUrl, JSONObject guildIds, Guild guild, PostCard postCard) {
 		if (guildIds.has(guild.getId())) { // * This guild already contains posts from this Patreon URL
@@ -188,6 +190,12 @@ public class PDA {
 		log.info("Saved post URL '{}' to guild '{}'", postCard.getUrl(), guild.getId());
 	}
 
+	/**
+	 * Will check if a given url is a valid link and return a boolean respectively
+	 *
+	 * @param url is the String value of the url we want to check is valid or not
+	 * @return true if the url is valid, false otherwise
+	 */
 	public static boolean urlValid(String url){
 
 		//Regex for a valid URL

@@ -11,8 +11,17 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class JSONHelper {
+	/**
+	 * log holds the reference to a {@link Logger} object to output clean messages to the console
+	 */
 	private static final Logger log = (Logger) LoggerFactory.getLogger("JSONHelper");
 
+	/**
+	 * Creates a new {@link JSONObject} holding the data
+	 *
+	 * @param filename holds the String value of the json file we want to parse
+	 * @return a {@link JSONObject} holding the information from the json file parsed
+	 */
 	public static JSONObject parseJSONFile(String filename) {
 		// Container for the JSON text we will attempt to read.
 		String jsonText;
@@ -27,6 +36,12 @@ public class JSONHelper {
 		return new JSONObject(jsonText);
 	}
 
+	/**
+	 * Creates a {@link JSONObject} holding the information from the {@link PostCard} object passed through the arguments
+	 *
+	 * @param postCard holds the information from a post on a patreon link
+	 * @return a {@link JSONObject} holding the information from the postCard
+	 */
 	public static JSONObject createPostJSONObject(PostCard postCard) {
 		JSONObject postDetails = new JSONObject();
 
@@ -38,6 +53,12 @@ public class JSONHelper {
 		return postDetails;
 	}
 
+	/**
+	 * Will parse through the data saved to posts.json and add it to the posts data saved on the program's memory in HashMaps
+	 *
+	 * @param bot holds the reference to the single {@link DiscordBot} object we use to talk with discord
+	 * @param fileName holds the String value of the json file we want to parse
+	 */
 	public static void parseSavedData(DiscordBot bot, String fileName) {
 		JSONObject savedJson = JSONHelper.parseJSONFile(fileName);
 
