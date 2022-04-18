@@ -5,17 +5,21 @@ PDA is an application that utilizes Discord as a notification platform to inform
 ![This is a screenshot.](pda_pic.png)
 
 ## Features
-* 
+* Simple and efficient output from Patreon to Discord
+* Solves Patreon's Captcha to avoid bot detection
+* Utilizes JDA for seamless Discord Integration
+* Reads and labels both public and private posts
 
 ## How to Run
-1. **Method: Invite our PDA Bot** - *Recommended, quick and simple*
+**Method 1: Invite our PDA Bot** - *Recommended, quick and simple*
     1) [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)
-    2) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators
-2. **Method: Use your own bot** - *Not recommended, highly technical*
+    2) Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators  
+    
+**Method 2: Use your own bot** - *Not recommended, highly technical*
     1) Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)
     2) Extract the downloaded zip in any directory
     3) Inside the directory containing the extracted PDA files, open config.json and replace **TOKEN**'s value **0** with your Discord Bot Token.
-    4) If you need help finding your Discord Bot Token or with the technical side of creating/setting up your bot properly for PDA, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)
+    4) If you need help finding your Discord Bot Token or with any other part of creating/setting up your Discord Bot properly for PDA, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)
     5) Once properly configured, open a terminal/console and navigate to the directory where the PDA binary is stored, from here run the command `java -jar patreon-discord-announcer-x.x-jar-with-dependencies.jar` and PDA will start running. **Ensure x.x is changed to the appropriate version number**
     6) Now you can use PDA and it's bot commands freely from your own Discord Bot, but note that when the terminal is closed PDA will no longer update your channel.
 
