@@ -31,8 +31,10 @@ public class showlinks extends GenericBotCommand {
 		if (linkContainer.length() == 0)
 			linkContainer.append("no links added");
 
-		bot.setTitle("Links", "", guild);
-		bot.setDescription(linkContainer.toString(), guild);
-		bot.send(guild);
+		synchronized (bot){
+			bot.setTitle("Links", "", guild);
+			bot.setDescription(linkContainer.toString(), guild);
+			bot.send(guild);
+		}
 	}
 }

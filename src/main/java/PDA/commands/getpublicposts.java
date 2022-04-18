@@ -29,10 +29,12 @@ public class getpublicposts extends GenericBotCommand {
 			if (currentPostCard.isPrivate())
 				continue;
 
-			bot.setTitle(currentPostCard.getTitle(), null, guild);
-			bot.setDescription(currentPostCard.getContent(), guild);
-			bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
-			bot.send(guild);
+			synchronized (bot){
+				bot.setTitle(currentPostCard.getTitle(), null, guild);
+				bot.setDescription(currentPostCard.getContent(), guild);
+				bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
+				bot.send(guild);
+			}
 		}
 	}
 }
