@@ -2,7 +2,7 @@
 PDA is an application that utilizes Discord as a notification platform to inform users of new and current posts from their favorite Patreon creators. Instead of navigating to multiple Patreon pages and checking each for new or current posts, PDA allows you to view all of your Patreon content in one channel. Our Bot commands make this even more simple allowing you to add/remove content creators at any time, change where you want your posts to be displayed, or opt out entirely if you lose interest.  
   
   
-![This is a screenshot.](https://media.discordapp.net/attachments/953345391896707114/965786991788699778/unknown.png)
+![This is a screenshot.](pda_pic.png)
 
 ## Features
 * Simple and efficient output from Patreon to Discord
