@@ -47,20 +47,20 @@ PDA is an application that utilizes Discord as a notification platform to inform
     - Java JDK 8 or later
     - Maven 3.8.1 or later
     - Firefox 98 or later
-[]()  
-[]()  
+[]()   
+[]()    
 - **Manually (IntelliJ IDEA)**
     1) Open IntelliJ and clone this repository through the program
     2) After the project is cloned and opened, at the top of IntelliJ, go to **View** -> **Tool Windows** -> **Maven**
     3) You can now build the package using Maven by going to **PDA** -> **Lifecycle** -> **package**
-[]()  
-[]()  
+[]()    
+[]()    
 - **Manually (with Maven)**
     1) Clone this repository
     2) Enter the project folder in Command Prompt (Windows) or Terminal (macOS/\*nix)
     3) Use Maven to package the project by running `mvn package`
-[]()  
-[]()     
+[]()    
+[]()       
 - **Automatically (with Maven)**
     ```
     git clone https://github.com/cis3296s22/patreon-discord-announcer.git
