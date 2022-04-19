@@ -1,82 +1,228 @@
 package PDA;
 
+import ch.qos.logback.classic.Logger;
 import net.dv8tion.jda.api.entities.Guild;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Patreon Discord Announcer startup implementation.
+ * <p>
+ * Responsibilities:
+ * <p>
+ * 1) Parse config file for discord bot token
+ * 2) Declare and instantiate DiscordBot object
+ * 3) Declare and instantiate PatreonThread object
+ */
 
 public class PDA {
-	// TODO: make patreonUrl a list so we can have multiple patreon pages to check (maybe hashmap<Integer(guild id), List> so it depends on the discord server its in)
-	// public static String patreonUrl = "https://www.patreon.com/pda_example";
-	public static HashMap<Guild, ArrayList<String>> patreonUrls = new HashMap<>();
-	static String webhookUrl = ""; // https://discord.com/api/webhooks/958181437402644520/Nw6LLM7JGm176hDd6KgtUK3h3FXif-m7fRcnSAvyjrWP7p1lHuIhRJFTZ76RD1sHL0C4
-	static String discordToken = "";
-	static String discordChannel = "";
-
 	// Global variables
+	/**
+	 * patreonUrls holds each of the patreon links mapped to each server that is using that patreon link
+	 */
+	public static HashMap<String, ArrayList<Guild>> patreonUrls = new HashMap<>();
+	/**
+	 * prefix is used to denote a command in a discord message
+	 */
 	public static String prefix = "/";
+	/**
+	 * guildSet holds a HashSet of every discord server that is connected to the program
+	 */
 	public static Set<Guild> guildSet = new HashSet<>();
-	public static HashMap<Guild, LinkedList<PostCard>> publicPosts = new HashMap<>(), privatePosts = new HashMap<>();
+	/**
+	 * postCards holds each of the discord servers mapped to all the posts that each unique discord server has announced
+	 */
+	public static HashMap<Guild, LinkedList<PostCard>> postCards = new HashMap<>();
+	/**
+	 * discordToken holds the value of the discordToken provided to the program
+	 */
+	static String discordToken = "";
+	/**
+	 * log holds the reference to a {@link Logger} object to output clean messages to the console
+	 */
+	static Logger log;
 
-	public static void main(String[] arg) throws InterruptedException, LoginException {
-		disableLoggingOutput();
+	/**
+	 * Main method that will declare and initialize the {@link DiscordBot} and {@link PatreonThread} objects
+	 *
+	 * @param args holds command line arguments
+	 * @throws InterruptedException in case a thread is interrupted
+	 * @throws LoginException       in case the login for the discord bot token doesn't work
+	 */
+	public static void main(String[] args) throws InterruptedException, LoginException {
+		log = (Logger) LoggerFactory.getLogger("PDA");
 
-		JSONParser parser = new JSONParser();
+		log.info("Reading config.json...");
+		discordToken = parseConfig();
 
-		try {
-			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("config.json"));
-			System.out.println(jsonObject);
-			Object token = jsonObject.get("TOKEN");
-			discordToken = token.toString().replaceAll("[\\[\\](){}]", "");
-//			discordToken = discordToken.replaceAll("[\\[\\](){}]", "");
-			System.out.println(discordToken);
-			Object channel = jsonObject.get("Channel");
-			discordChannel = channel.toString().replaceAll("[\\[\\](){}]", "");
-//			discordChannel = discordChannel.replaceAll("[\\[\\](){}]", "");
-			System.out.println(discordChannel);
-		} catch (FileNotFoundException e) {
-			System.out.println("The configuration file 'config.json' was not found!");
+		if (discordToken.isEmpty()) {
+			log.error("config.json does not contain a 'TOKEN' key.");
 			System.exit(1);
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
 		}
 
-		DiscordBot bot = new DiscordBot(discordToken, discordChannel);
+		DiscordBot bot = new DiscordBot(discordToken);
 
+		log.info("Reading posts.json...");
+		JSONHelper.parseSavedData(bot, "posts.json");
+		log.info("Loaded {} URLs and their guild posts.", postCards.size());
 
-		// TODO: add guild(discord server id) to the config file
-		// bot.addChannel(guild, discordChannel);
+		log.info("Starting Selenium thread...");
+		PatreonThread testThread = new PatreonThread(bot);
 
-		for (Guild id : guildSet){ // initialization of all patreon links to example patreon
-
-			ArrayList<String> links = new ArrayList<>();
-			links.add("https://www.patreon.com/pda_example");
-			patreonUrls.put(id, links);
-		}
-
-		System.out.println("PatreonURLs: " + patreonUrls);
-
-		PatreonThread testThread = new PatreonThread(webhookUrl, bot, discordChannel);
 		testThread.start();
 		testThread.join();
 
-		System.out.println("Finished!");
+		log.error("An error has occurred.  Stopping...");
+		bot.getJDA().shutdown();
+		System.exit(1);
 	}
 
-	private static void disableLoggingOutput() {
-		Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
-		System.setProperty("webdriver.chrome.silentOutput", "true");
+	/**
+	 * parseConfig method that will read through the config.json file and get the discord token needed for initialization
+	 *
+	 * @return the token found in the config.json file
+	 */
+	private static String parseConfig() {
+		JSONObject configJson = JSONHelper.parseJSONFile("config.json");
+
+		if (configJson == null) {
+			log.error("An error occurred while reading config.json");
+			System.exit(1);
+		}
+
+		try {
+			return (String) configJson.get("TOKEN");
+		} catch (JSONException e) {
+			return "";
+		}
+	}
+
+	/**
+	 * Will save the announced post to the posts.json file
+	 *
+	 * @param patreonUrl is the patreonUrl that the post was created from
+	 * @param guild is the reference to the guild that we want to save the posts for
+	 * @param postCard is the object holding all the information from the post on patreon
+	 */
+	public static void saveAnnouncedPostCard(String patreonUrl, Guild guild, PostCard postCard) {
+		JSONObject savedJson = JSONHelper.parseJSONFile("posts.json");
+
+		if (savedJson == null) {
+			log.error("An error occurred while reading posts.json");
+			System.exit(1);
+		}
+
+		if (savedJson.has(patreonUrl)) { // * This Patreon URL already exists
+			JSONObject guildIds = savedJson.getJSONObject(patreonUrl);
+
+			saveInExistingPatreonURL(patreonUrl, guildIds, guild, postCard);
+		} else { // * New Patreon URL
+			JSONObject newGuildId = new JSONObject();
+			JSONObject newPost = new JSONObject();
+
+			// Put the post card details into the new post JSON Object
+			newPost.put(postCard.getUrl(), JSONHelper.createPostJSONObject(postCard));
+
+			// Put the new post JSON Object into the new guild ID JSON Object
+			newGuildId.put(guild.getId(), newPost);
+
+			// Put the new guild ID JSON Object into the master JSON file
+			savedJson.put(patreonUrl, newGuildId);
+		}
+
+		// * Finally, save the new JSON file into posts.json
+		try {
+			FileWriter file = new FileWriter("posts.json");
+			file.write(savedJson.toString());
+			file.flush();
+			file.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Saves any new post data into the {@link JSONObject} provided to the function
+	 *
+	 * @param patreonUrl holds the patreon link that was used to get the {@link PostCard} post data
+	 * @param guildIds is the {@link JSONObject} that holds all the current data
+	 * @param guild is the reference to the discord server that the {@link PostCard} is unique to
+	 * @param postCard is the information saved from a patreon link's post saved into an object
+	 */
+	private static void saveInExistingPatreonURL(String patreonUrl, JSONObject guildIds, Guild guild, PostCard postCard) {
+		if (guildIds.has(guild.getId())) { // * This guild already contains posts from this Patreon URL
+			JSONObject postUrls = guildIds.getJSONObject(guild.getId());
+
+			if (postUrls.has(postCard.getUrl())) { // ! This guild already stored this post URL
+				log.warn("The post tried storing a post that already exists.  Guild: '{}' -- URL: '{}'", guild.getId(), patreonUrl);
+			} else { // * This is a new post URL
+				postUrls.put(postCard.getUrl(), JSONHelper.createPostJSONObject(postCard));
+			}
+		} else { // * New guild ID for this Patreon URL
+			JSONObject patreonUrlObject = new JSONObject();
+
+			patreonUrlObject.put(postCard.getUrl(), JSONHelper.createPostJSONObject(postCard));
+			guildIds.put(guild.getId(), patreonUrlObject);
+		}
+	}
+
+	/**
+	 * Allows the ability to add a {@link PostCard} object to the postCards HashMap that holds all sent posts to dis
+	 *
+	 * @param postCard holds a reference to a {@link PostCard} object to be added to the postCards HashMap
+	 * @param guild    holds a reference to a {@link Guild} object that will be used to know which guild to attach the {@link PostCard} object to
+	 */
+	public static void addPostCard(PostCard postCard, Guild guild) {
+		LinkedList<PostCard> cards = postCards.get(guild);
+
+		if (!cards.contains(postCard))
+			cards.add(postCard);
+
+		postCards.put(guild, cards);
+		log.info("Saved post URL '{}' to guild '{}'", postCard.getUrl(), guild.getId());
+	}
+
+	/**
+	 * Will check if a given url is a valid link and return a boolean respectively
+	 *
+	 * @param url is the String value of the url we want to check is valid or not
+	 * @return true if the url is valid, false otherwise
+	 */
+	public static boolean urlValid(String url){
+
+		//Regex for a valid URL
+		//The URL must start with either http or https and
+		//    then followed by :// and
+		//    then it must contain www. and
+		//    then followed by subdomain of length (2, 256) and
+		//    last part contains top level domain like .com, .org etc
+		String reg = "((http|https)://)(www.)?"
+				+ "[a-zA-Z0-9@:%._\\+~#?&//=]"
+				+ "{2,256}\\.[a-z]"
+				+ "{2,6}\\b([-a-zA-Z0-9@:%"
+				+ "._\\+~#?&//=]*)";
+
+		//compiles the regex
+		Pattern p = Pattern.compile(reg);
+
+		//If string is empty return false
+		if(url == null){
+			return false;
+		}
+
+		//find a match on the string
+		Matcher m = p.matcher(url);
+
+		//return the string if matched the regex
+		return m.matches();
+
 	}
 }

@@ -5,10 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>groupId</groupId>
     <artifactId>patreon-discord-announcer</artifactId>
-    <version>0.3</version>
+    <version>1.0</version>
     <name>PDA</name>
     <packaging>jar</packaging>
 
+    <!-- Project Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>8</maven.compiler.target>
@@ -45,9 +46,13 @@
                             <mainClass>PDA.PDA</mainClass>
                         </manifest>
                     </archive>
+                    <excludes>
+                        <exclude>PDA.DiscordBotTest</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
+            <!-- Creates the output .jar file including all dependencies in it -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -105,8 +110,7 @@
         </dependency>
 
         <!-- ................. Libraries ................. -->
-
-        <!-- DatatypeConverter class -->
+        <!-- DatatypeConverter class for GeeTest -->
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -114,23 +118,27 @@
             <version>2.4.0-b180830.0359</version>
         </dependency>
 
+        <!-- Logging interface -->
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.36</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-simple</artifactId>-->
-<!--            <version>1.7.36</version>-->
-<!--        </dependency>-->
-
+        <!-- Logger -->
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+
+        <!-- Logger -->
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
             <version>1.2.11</version>
         </dependency>
 
@@ -142,36 +150,20 @@
             <version>4.1.3</version>
         </dependency>
 
-        <!-- Required to read the config file -->
-        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+        <!-- Required to read, create and write JSON objects -->
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
         </dependency>
 
-        <!-- Required to find drivers without download -->
+        <!-- Required to find web drivers without download -->
         <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-
-        <!-- Required to interface with Chrome -->
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-            <version>4.1.3</version>
-        </dependency>
-
-        <!-- Required to interface with Edge -->
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-edge-driver -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-edge-driver</artifactId>
-            <version>4.1.3</version>
+            <version>5.1.1</version>
         </dependency>
 
         <!-- Required to interface with Firefox -->
@@ -182,14 +174,6 @@
             <version>4.1.3</version>
         </dependency>
 
-        <!-- Required for Discord Webhooks -->
-        <!-- https://mvnrepository.com/artifact/club.minnced/discord-webhooks -->
-        <dependency>
-            <groupId>club.minnced</groupId>
-            <artifactId>discord-webhooks</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-
         <!-- Required for Discord Bot -->
         <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
         <dependency>
@@ -198,6 +182,22 @@
             <version>5.0.0-alpha.5</version>
         </dependency>
 
+        <!-- Required for JUnit testing -->
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Who added this?  What is this for? -->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter</artifactId>-->
+<!--            <version>RELEASE</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <developers>

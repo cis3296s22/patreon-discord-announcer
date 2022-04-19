@@ -1,14 +1,3 @@
 {
-    "CID":"0",
-
-    "TOKEN":"OTE5MDU3MTE5MjAwODA5MDMx.YbQQpA.umhBYevHzbRfWy7z8p1uInZYUGM",
-
-    "Channel":"958179986517401720",
-    
-    "drivers":
-    [
-        {"driver": "chromedriver"},
-        {"driver": "geckodriver"},
-        {"driver": "msedgedriver"}
-    ]
+  "TOKEN": "0"
 }

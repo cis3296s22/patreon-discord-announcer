@@ -1,37 +1,40 @@
 package PDA.commands;
 
+import PDA.DiscordBot;
 import PDA.PDA;
 import PDA.PostCard;
-import PDA.DiscordBot;
-import net.dv8tion.jda.api.entities.Guild;
 
-public class getprivateposts implements BotCommand {
+/**
+ * getprivateposts discord bot command.
+ *
+ * Responsibilities:
+ *
+ * 1) Will print out all private posts associated with the discord server
+ *
+ */
 
-    private Guild guild;
+public class getprivateposts extends GenericBotCommand {
 
-    @Override
-    public void execute(DiscordBot bot) {
-        bot.clearEmbed(guild);
-        bot.setTitle("Private Posts:", null, guild);
-        bot.send(guild);
+	/**
+	 * Prints out all private posts unique to the discord that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
+	@Override
+	public void execute(DiscordBot bot) {
+		bot.setTitle("Private Posts:", null, guild);
+		bot.send(guild);
 
-        bot.setTitle(null, null, guild);
-        for (PostCard currentPostCard : PDA.privatePosts.get(guild)) {
-            bot.setTitle(currentPostCard.getTitle(), null, guild);
-            bot.setDescription(currentPostCard.getContent(), guild);
-            bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
-            bot.send(guild);
-        }
-        bot.clearEmbed(guild);
-    }
+		for (PostCard currentPostCard : PDA.postCards.get(guild)) {
+			if (!currentPostCard.isPrivate())
+				continue;
 
-    @Override
-    public void setArgs(String[] args) {
-
-    }
-
-    @Override
-    public void setGuildID(Guild guild) {
-        this.guild = guild;
-    }
+			synchronized (bot){
+				bot.setTitle(currentPostCard.getTitle(), null, guild);
+				bot.setDescription(currentPostCard.getContent(), guild);
+				bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
+				bot.send(guild);
+			}
+		}
+	}
 }

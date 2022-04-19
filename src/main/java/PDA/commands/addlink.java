@@ -6,42 +6,52 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
 
-public class addlink implements BotCommand {
+/**
+ * addlink discord bot command.
+ * <p>
+ * Responsibilities:
+ * <p>
+ * 1) Check if a link was provided
+ * 2) Check if the link is already in the list of links
+ * 3) Add the guild to the list of guilds associated with the particular link
+ */
 
-    private String[] args = null;
-    private Guild guild;
+public class addlink extends GenericBotCommand {
 
-    @Override
-    public void execute(DiscordBot bot) {
-        if (args == null) {
-            System.out.println("no arguments provided");
-            return;
-        }
+	/**
+	 * Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
+	@Override
+	public void execute(DiscordBot bot) {
+		if (args.length <= 1) {
+			bot.send("No link provided", guild);
+		} else {
 
-        if (args.length <= 1) {
-            bot.send("No link provided", guild);
-        } else {
-            ArrayList<String> links = PDA.patreonUrls.get(guild);
+			if (!PDA.urlValid(args[1])){
+				bot.send(args[1] + " is not a valid link", guild);
+				return;
+			}
 
-            if (!links.contains(args[1]) && true){ // TODO: check if valid patreon link
-                links.add(args[1]);
-                PDA.patreonUrls.put(guild, links);
-                bot.send(args[1] + " has been added as a patreon link", guild);
-            }
-            else{
-                bot.send("given patreon link has already been added", guild);
-            }
-            System.out.println("all links: " + links); // temporary testing
-        }
-    }
+			ArrayList<Guild> guilds;
 
-    @Override
-    public void setArgs(String[] args) {
-        this.args = args;
-    }
+			if (PDA.patreonUrls.containsKey(args[1])) {
+				guilds = PDA.patreonUrls.get(args[1]);
 
-    @Override
-    public void setGuildID(Guild guild){
-        this.guild = guild;
-    }
+				if (guilds.contains(guild)) {
+					bot.send(args[1] + " is already in the list of links", guild);
+				} else {
+					guilds.add(guild);
+					bot.send(args[1] + " has been added to the list of links", guild);
+					PDA.patreonUrls.put(args[1], guilds);
+				}
+			} else {
+				guilds = new ArrayList<>();
+				guilds.add(guild);
+				PDA.patreonUrls.put(args[1], guilds);
+				bot.send(args[1] + " has been added to the list of links", guild);
+			}
+		}
+	}
 }

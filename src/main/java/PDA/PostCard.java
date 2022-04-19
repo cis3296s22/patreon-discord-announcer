@@ -1,19 +1,50 @@
 package PDA;
 
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-import java.util.LinkedList;
+/**
+ * Container for all information found on a patreon post.
+ * <p>
+ * Responsibilities:
+ * <p>
+ * 1) Holds an individual post's information found on patreon
+ * 2) Checks to see if the individual post is private or not
+ * 3) Allows someone to compare posts to see if they are equal or not
+ */
 
 public class PostCard {
+	/**
+	 * publishDate will hold the date that the post was published
+	 */
 	private final String publishDate;
+
+	/**
+	 * title will hold the title of the post
+	 */
 	private final String title;
+
+	/**
+	 * url will hold the url of the post
+	 */
 	private final String url;
+
+	/**
+	 * content will hold the content of the post in String form
+	 */
 	private final String content;
+
+	/**
+	 * isPrivate will hold a boolean value that will tell us if the specific post is public or private
+	 */
 	private final boolean isPrivate;
 
+	/**
+	 * Constructor initializes instance variables, checking if the post is private and setting the boolean respectively, gets and cleans up the url of the specific post.
+	 *
+	 * @param postCard is the WebElement of the post found while web scraping with selenium.
+	 */
 	public PostCard(WebElement postCard) {
 		this.isPrivate = !getTagText(postCard, By.cssSelector("[data-tag='locked-rich-text-post']")).equals("N/A");
 		this.publishDate = getTagText(postCard, By.cssSelector("[data-tag='post-published-at']"));
@@ -40,6 +71,23 @@ public class PostCard {
 		}
 
 		this.url = urlContainer;
+	}
+
+	/**
+	 * Constructor for json-loaded posts
+	 *
+	 * @param publishDate date the post was published
+	 * @param title title of the post
+	 * @param url url of the post
+	 * @param content content of the post
+	 * @param isPrivate whether the post was private or not
+	 */
+	public PostCard(String publishDate, String title, String url, String content, boolean isPrivate) {
+		this.publishDate = publishDate;
+		this.title = title;
+		this.url = url;
+		this.content = content;
+		this.isPrivate = isPrivate;
 	}
 
 	/**
@@ -87,6 +135,13 @@ public class PostCard {
 		return this.isPrivate;
 	}
 
+	/**
+	 * Gets the test of the given tag of a WebElement
+	 *
+	 * @param selector is the tag selector that is specified to find specific text
+	 * @param postCard is the WebElement we are going to be parsing to find specified text
+	 * @return String holding the text found, or "N/A" if no text was found
+	 */
 	private String getTagText(WebElement postCard, By selector) {
 		try {
 			return postCard.findElement(selector).getText();
@@ -95,6 +150,12 @@ public class PostCard {
 		}
 	}
 
+	/**
+	 * Checks if two different PostCard objects are equal
+	 *
+	 * @param o is an Object and will be used to check if they are the same object
+	 * @return true if the two objects are equal, false otherwise
+	 */
 	@Override
 	public boolean equals(Object o) {
 		// If the object is being compared with itself then return true
@@ -109,6 +170,11 @@ public class PostCard {
 		return this.url.equals(((PostCard) o).getUrl());
 	}
 
+	/**
+	 * Returns a string containing all the information in {@link PostCard}
+	 *
+	 * @return String of all the information contained in {@link PostCard}
+	 */
 	@Override
 	public String toString() {
 		return "Title: " + this.getTitle()
