@@ -12,10 +12,9 @@ PDA is an application that utilizes Discord as a notification platform to inform
 
 ## How to Run
 * **Method 1: Invite our PDA Bot** - *Quick and simple*  
-    * [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)  
-    * Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators   
-  
-  
+  * [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)  
+  * Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators   
+[]()
 * **Method 2: Use your own bot** - *Highly technical*  
     * Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)  
     * Extract the downloaded zip in any directory  
