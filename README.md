@@ -1,7 +1,7 @@
 # Patreon Discord Announcer (PDA)
-PDA is an application that utilizes Discord as a notification platform to inform users of new and current posts from their favorite Patreon creators. Instead of navigating to multiple Patreon pages and checking each for new or current posts, PDA allows you to view all of your Patreon content in one channel. Our Bot commands make this even more simple allowing you to add/remove content creators at any time, change where you want your posts to be displayed, or opt out entirely if you lose interest. 
-
-
+PDA is an application that utilizes Discord as a notification platform to inform users of new and current posts from their favorite Patreon creators. Instead of navigating to multiple Patreon pages and checking each for new or current posts, PDA allows you to view all of your Patreon content in one channel. Our Bot commands make this even more simple allowing you to add/remove content creators at any time, change where you want your posts to be displayed, or opt out entirely if you lose interest.  
+  
+  
 ![This is a screenshot.](pda_pic.png)
 
 ## Features
@@ -11,27 +11,36 @@ PDA is an application that utilizes Discord as a notification platform to inform
 * Reads and labels both public and private posts
 
 ## How to Run
-**Method 1: Invite our PDA Bot** - *Recommended, quick and simple*  
+* **Method 1: Invite our PDA Bot** - *Recommended, quick and simple*  
     * [Add PDA to your Discord server](https://discord.com/oauth2/authorize?client_id=965002259689783296&scope=bot&permissions=68608)  
     * Use [Bot Commands](#bot-commands) listed below to get updates on your favorite content creators   
-    
-**Method 2: Use your own bot** - *Not recommended, highly technical*  
+  
+  
+* **Method 2: Use your own bot** - *Not recommended, highly technical*  
     * Download the latest [PDA release](https://github.com/cis3296s22/patreon-discord-announcer/releases)  
     * Extract the downloaded zip in any directory  
     * Inside the directory containing the extracted PDA files, open config.json and replace **TOKEN**'s value **0** with your Discord Bot Token  
-    * If you need help finding your Discord Bot Token or with any other part of creating/setting up your Discord Bot, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)  
-    * Once properly configured, open a terminal/console and navigate to the directory where the PDA binary is stored, from here run the command `java -jar  patreon-discord-announcer-x.x-jar-with-dependencies.jar` and PDA will start running. **Ensure x.x is changed to the appropriate version number**  
-    * Now you can use PDA and it's bot commands from your own Discord Bot **note when the terminal is closed PDA will no longer update your channel**  
+    * For help finding your Discord Bot Token or with any other part of creating/setting up your Discord Bot, view our [Discord Bot Wiki](https://github.com/cis3296s22/patreon-discord-announcer/wiki/Technical-Information)  
+    * Once properly configured, open a terminal/console and navigate to the directory where the PDA binary is stored, from here run the command `java -jar  patreon-discord-announcer-x.x-jar-with-dependencies.jar`  
+        ** *Ensure x.x is changed to the appropriate version number* ** 
+    * Now you can use PDA and the [Bot Commands](#bot-commands) on your own Discord Server  
+        ** *Note, when the terminal window is closed PDA will no longer update your channel* **  
 
 ## Bot Commands
 * Displays this list of commands in your Discord channel, can also be used to test if bot is currently online.  
   > `/help`
 * Set the channel id the bot will announce posts in
-  > /setchannel 920036233038671953
+  > `/setchannel` 920036233038671953
 * Allows the user to select the creator page from patreon by copy and pasting the url after the command.  
-  > /addlink https://www.patreon.com/supermega
+  > `/addlink` https://www.patreon.com/supermega
 * Allows the user to remove a channel they no longer wish to recieve notifications from.  
-  > /removelink https://www.patreon.com/supermega
+  > `/removelink` https://www.patreon.com/supermega  
+* View which links are currently being followed in the server.
+  > `/showlinks`  
+* Displays all current public posts, even if they have already been displayed.  
+  > `/getpublicposts`  
+* Displays all current private posts, even if they have already been displayed.  
+  > `/getprivateposts`  
 
 ## Building
 - **System Build Requirements**
